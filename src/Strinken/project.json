@@ -5,7 +5,7 @@
   "title": "Strinken",
   "name": "Strinken",
   "authors": [ "k94ll13nn3" ],
-  "version": "1.0.0",
+  "version": "1.0.1-*",
 
   "packOptions": {
     "summary": "A parametrized string library !",

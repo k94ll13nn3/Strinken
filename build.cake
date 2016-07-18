@@ -24,6 +24,7 @@ var framework = Argument("framework", "netstandard1.1");
 // Define directories.
 var buildDir = Directory("./src/") + Directory(solution) + Directory("bin") + Directory(configuration) + Directory(framework);
 var publishDir = Directory("./artifacts");
+var versionSuffix = "";
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -50,7 +51,12 @@ Task("Update-Assembly-Info")
       var version = GitVersion(new GitVersionSettings {
 	    UpdateAssemblyInfo = true
       });
-      AppVeyor.UpdateBuildVersion(version.InformationalVersion);
+
+      if (AppVeyor.IsRunningOnAppVeyor)
+      {
+        AppVeyor.UpdateBuildVersion(version.InformationalVersion);
+      }
+      versionSuffix = version.CommitsSinceVersionSource;
   }
 });
 
@@ -111,7 +117,8 @@ Task("Nuget-Pack")
     var settings = new DotNetCorePackSettings
     {
         Configuration = configuration,
-        OutputDirectory = "./artifacts/"
+        OutputDirectory = "./artifacts/",
+        VersionSuffix = versionSuffix
     };
 
     DotNetCorePack("./src/" + solution, settings);
