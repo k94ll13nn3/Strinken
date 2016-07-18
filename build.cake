@@ -77,8 +77,11 @@ Task("Run-Unit-Tests")
 
     DotNetCoreTest("./test/Strinken.Tests/", settings);
 
-    Information("Uploading tests results ...");
-    AppVeyor.UploadTestResults("./TestResult.xml", AppVeyorTestResultsType.NUnit3);
+    if (AppVeyor.IsRunningOnAppVeyor)
+    {
+        Information("Uploading test results");
+        AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.NUnit3);
+    }
  });
 
 Task("Display-Build-Info")
