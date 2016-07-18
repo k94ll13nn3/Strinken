@@ -1,0 +1,6 @@
+version: 1.0.0.{build}
+skip_tags: true
+build_script:
+- ps: build.ps1
+artifacts:
+- path: '.\artifacts\Strinken.*.nupkg'

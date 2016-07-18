@@ -1,0 +1,60 @@
+{
+  "copyright": "© 2016 k94ll13nn3. All rights reserved.",
+  "description": "A parametrized string library !",
+  "language": "en-US",
+  "title": "Strinken",
+  "name": "Strinken",
+  "authors": [ "k94ll13nn3" ],
+  "version": "1.0.0",
+
+  "packOptions": {
+    "summary": "A parametrized string library !",
+    "projectUrl": "https://github.com/k94ll13nn3/Strinken",
+    "tags": [ "parametrized", "string", "parser", "strinken" ],
+    "licenseUrl": "https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE",
+    "iconUrl": "https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/logo_64x64.png",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/k94ll13nn3/Strinken"
+    }
+  },
+
+  "frameworks": {
+    "netstandard1.1": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net45": {}
+  },
+  "dependencies": {
+    "StyleCop.Analyzers": {
+      "version": "1.0.0",
+      "type": "build"
+    },
+    "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+      "version": "1.1.0",
+      "type": "build"
+    }
+  },
+  "buildOptions": {
+    "xmlDoc": true,
+    // https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/ca8acf2c849fd6ffffb04f29a4d22b0bd7c06b16/documentation/DotNetCli.md
+    "additionalArguments": [ "/additionalfile:../../stylecop.json" ],
+    "debugType": "portable"
+  },
+  "configurations": {
+    "Debug": {
+      "buildOptions": {
+        "define": [ "DEBUG", "TRACE" ]
+      }
+    },
+    "Release": {
+      "buildOptions": {
+        "define": [ "RELEASE", "TRACE" ],
+        "optimize": true
+        // TODO: "debugType": "none", https://github.com/dotnet/cli/issues/2246
+      }
+    }
+  }
+}
