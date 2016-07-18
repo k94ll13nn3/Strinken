@@ -75,6 +75,7 @@ Task("Run-Unit-Tests")
     };
 
     DotNetCoreTest("./test/Strinken.Tests/", settings);
+    AppVeyor.UploadTestResults("./TestResult.xml", AppVeyorTestResultsType.NUnit3);
  });
 
 Task("Display-Build-Info")
