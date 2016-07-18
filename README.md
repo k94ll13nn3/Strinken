@@ -4,6 +4,10 @@
 
 A parametrized string library !
 
+## Installation
+
+Nuget `Install-Package Strinken` ([package](https://www.nuget.org/packages/Strinken/))
+
 ## String format
 
 ### Tags
