@@ -3,3 +3,4 @@ build_script:
 artifacts:
 - path: '.\artifacts\Strinken.*.nupkg'
 test: off
+skip_tags: true
