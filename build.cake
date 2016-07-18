@@ -47,9 +47,10 @@ Task("Update-Assembly-Info")
   // does not currently run on mono 4.3.2, see https://github.com/GitTools/GitVersion/pull/890
   if(IsRunningOnWindows())
   {
-      GitVersion(new GitVersionSettings {
-	  UpdateAssemblyInfo = true
+      var version = GitVersion(new GitVersionSettings {
+	    UpdateAssemblyInfo = true
       });
+      AppVeyor.UpdateBuildVersion(version.InformationalVersion);
   }
 });
 
@@ -75,6 +76,8 @@ Task("Run-Unit-Tests")
     };
 
     DotNetCoreTest("./test/Strinken.Tests/", settings);
+
+    Information("Uploading tests results ...");
     AppVeyor.UploadTestResults("./TestResult.xml", AppVeyorTestResultsType.NUnit3);
  });
 
