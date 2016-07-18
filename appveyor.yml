@@ -1,4 +1,3 @@
-skip_tags: true
 build_script:
 - ps: .\build.ps1
 artifacts:
