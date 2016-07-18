@@ -4,3 +4,4 @@ build_script:
 - ps: .\build.ps1
 artifacts:
 - path: '.\artifacts\Strinken.*.nupkg'
+test: off
