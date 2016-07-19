@@ -56,7 +56,7 @@ Task("Update-Assembly-Info")
       nugetVersion = version.NuGetVersion;
     if(version.CommitsSinceVersionSource != "0")
     {
-        versionSuffix = "ci" + version.CommitsSinceVersionSource.PadLeft(4, '0');;
+        versionSuffix = "ci" + version.CommitsSinceVersionSource.PadLeft(4, '0');
     }    
     if (AppVeyor.IsRunningOnAppVeyor)
     {
