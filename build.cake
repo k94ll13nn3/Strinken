@@ -58,7 +58,7 @@ Task("Update-Assembly-Info")
     }    
     if (AppVeyor.IsRunningOnAppVeyor)
     {
-        AppVeyor.UpdateBuildVersion(version.MajorMinorPatch + (versionSuffix == "" ? versionSuffix : "-" + versionSuffix);
+        AppVeyor.UpdateBuildVersion(version.MajorMinorPatch + (versionSuffix == "" ? versionSuffix : "-" + versionSuffix));
     }
   }
 });
