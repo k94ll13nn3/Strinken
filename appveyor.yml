@@ -4,3 +4,4 @@ artifacts:
 - path: '.\artifacts\Strinken.*.nupkg'
 test: off
 skip_tags: true
+skip_branch_with_pr: true
