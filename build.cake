@@ -52,11 +52,14 @@ Task("Update-Assembly-Info")
 	    UpdateAssemblyInfo = true
       });
 
-      if (AppVeyor.IsRunningOnAppVeyor)
-      {
-        AppVeyor.UpdateBuildVersion(version.InformationalVersion);
-      }
-      versionSuffix = version.CommitsSinceVersionSource;
+    if(version.CommitsSinceVersionSource != "0")
+    {
+        versionSuffix = "ci" + version.CommitsSinceVersionSource;
+    }    
+    if (AppVeyor.IsRunningOnAppVeyor)
+    {
+        AppVeyor.UpdateBuildVersion(version.MajorMinorPatch + (versionSuffix == "" ? versionSuffix : "-" + versionSuffix);
+    }
   }
 });
 
