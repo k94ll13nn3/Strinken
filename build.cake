@@ -53,11 +53,10 @@ Task("Update-Assembly-Info")
 	    UpdateAssemblyInfo = true
       });
 
-      nugetVersion = version.MajorMinorPatch;
+      nugetVersion = version.NuGetVersion;
     if(version.CommitsSinceVersionSource != "0")
     {
-        versionSuffix = "ci" + version.CommitsSinceVersionSource;
-        nugetVersion += "-" + versionSuffix;
+        versionSuffix = "ci" + version.CommitsSinceVersionSource.PadLeft(4, '0');;
     }    
     if (AppVeyor.IsRunningOnAppVeyor)
     {
@@ -132,7 +131,16 @@ Task("Nuget-Pack")
     }
 
     DotNetCorePack("./src/" + solution, settings);
-    AppVeyor.UploadArtifact("./artifacts/Strinken." + nugetVersion +".nupkg");
+});
+
+Task("Upload-Artifact")
+    .IsDependentOn("Nuget-Pack")
+    .Does(() =>
+{
+    if (AppVeyor.IsRunningOnAppVeyor)
+    {
+        AppVeyor.UploadArtifact("./artifacts/Strinken." + nugetVersion +".nupkg");
+    }
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -140,7 +148,7 @@ Task("Nuget-Pack")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Nuget-Pack");
+    .IsDependentOn("Upload-Artifact");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
