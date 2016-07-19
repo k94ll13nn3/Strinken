@@ -25,6 +25,7 @@ var framework = Argument("framework", "netstandard1.1");
 var buildDir = Directory("./src/") + Directory(solution) + Directory("bin") + Directory(configuration) + Directory(framework);
 var publishDir = Directory("./artifacts");
 var versionSuffix = "";
+var nugetVersion = "";
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -52,13 +53,15 @@ Task("Update-Assembly-Info")
 	    UpdateAssemblyInfo = true
       });
 
+      nugetVersion = version.MajorMinorPatch;
     if(version.CommitsSinceVersionSource != "0")
     {
         versionSuffix = "ci" + version.CommitsSinceVersionSource;
+        nugetVersion += "-" + versionSuffix;
     }    
     if (AppVeyor.IsRunningOnAppVeyor)
     {
-        AppVeyor.UpdateBuildVersion(version.MajorMinorPatch + (versionSuffix == "" ? versionSuffix : "-" + versionSuffix));
+        AppVeyor.UpdateBuildVersion(nugetVersion);
     }
   }
 });
@@ -120,11 +123,16 @@ Task("Nuget-Pack")
     var settings = new DotNetCorePackSettings
     {
         Configuration = configuration,
-        OutputDirectory = "./artifacts/",
-        VersionSuffix = versionSuffix
+        OutputDirectory = "./artifacts/"
     };
 
+    if(versionSuffix != "")
+    {
+        settings.VersionSuffix = versionSuffix;
+    }
+
     DotNetCorePack("./src/" + solution, settings);
+    AppVeyor.UploadArtifact("./artifacts/Strinken." + nugetVersion +".nupkg");
 });
 
 //////////////////////////////////////////////////////////////////////
