@@ -25,8 +25,8 @@ var buildDir = Directory("./src/") + Directory(solution) + Directory("bin") + Di
 var publishDir = Directory("./artifacts");
 var versionSuffix = "";
 var nugetVersion = "";
-var isOnMaster = isOnAppVeyor ? EnvironmentVariable("APPVEYOR_REPO_BRANCH") == "master" : false;
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
+var isOnMaster = isOnAppVeyor ? EnvironmentVariable("APPVEYOR_REPO_BRANCH") == "master" : false;
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
