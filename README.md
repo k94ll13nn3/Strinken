@@ -8,6 +8,13 @@ A parametrized string library !
 
 Nuget `Install-Package Strinken` ([package](https://www.nuget.org/packages/Strinken/))
 
+## Idea
+
+In [Fun With Named Formats, String Parsing, and Edge Cases](http://haacked.com/archive/2009/01/04/fun-with-named-formats-string-parsing-and-edge-cases.aspx/), some String.Format modification were discussed, and one was named format methods where this was possible: `NamedFormat("{pi} first, {date} second", someObj);`. 
+This library is inspired from the format but can only parse known tokens, which allows to not use reflection or DataBinder.
+
+Parsing engine inspired from Henri's solution at [Named Formats Redux](http://haacked.com/archive/2009/01/14/named-formats-redux.aspx/)
+
 ## String format
 
 ### Tags
