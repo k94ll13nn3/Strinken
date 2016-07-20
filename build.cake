@@ -58,7 +58,6 @@ Task("Update-Assembly-Info")
     {
         versionSuffix = "ci" + version.CommitsSinceVersionSource.PadLeft(4, '0');
     }    
-    Information(branch);
     if (isOnAppVeyor)
     {
         AppVeyor.UpdateBuildVersion(nugetVersion);
