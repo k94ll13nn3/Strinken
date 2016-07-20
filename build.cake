@@ -5,7 +5,7 @@
 #tool "nuget:?package=NUnit.ConsoleRunner"
 #tool "nuget:?package=GitVersion.CommandLine"
 
-#addin "Cake.FileHelpers"
+#addin "Cake.Git"
 using System.Reflection
 
 //////////////////////////////////////////////////////////////////////
@@ -26,6 +26,8 @@ var buildDir = Directory("./src/") + Directory(solution) + Directory("bin") + Di
 var publishDir = Directory("./artifacts");
 var versionSuffix = "";
 var nugetVersion = "";
+var isOnMaster = GitBranchCurrent(Directory(".")).FriendlyName == "master";
+var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -47,8 +49,6 @@ Task("Update-Assembly-Info")
     .Does(() =>
 {
   // does not currently run on mono 4.3.2, see https://github.com/GitTools/GitVersion/pull/890
-  if(IsRunningOnWindows())
-  {
       var version = GitVersion(new GitVersionSettings {
 	    UpdateAssemblyInfo = true
       });
@@ -58,11 +58,11 @@ Task("Update-Assembly-Info")
     {
         versionSuffix = "ci" + version.CommitsSinceVersionSource.PadLeft(4, '0');
     }    
-    if (AppVeyor.IsRunningOnAppVeyor)
+    Information(branch);
+    if (isOnAppVeyor)
     {
         AppVeyor.UpdateBuildVersion(nugetVersion);
     }
-  }
 });
 
 Task("Build")
@@ -91,7 +91,13 @@ Task("Run-Unit-Tests")
     if (AppVeyor.IsRunningOnAppVeyor)
     {
         Information("Uploading test results");
-        AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.NUnit3);
+        var baseUri = EnvironmentVariable("APPVEYOR_URL").TrimEnd('/');
+        var url = string.Format("{0}/api/testresults/nunit3/{1}", baseUri, AppVeyor.Environment.JobId);
+        
+        using (var r = new System.Net.WebClient())
+        {
+            r.UploadFile(url, "TestResult.xml");
+        }     
     }
  });
 
@@ -118,6 +124,8 @@ Task("Nuget-Pack")
     .IsDependentOn("Display-Build-Info")
     .Does(() =>
 {
+if  (isOnAppVeyor && isOnMaster)
+{
     EnsureDirectoryExists(publishDir);
     var settings = new DotNetCorePackSettings
     {
@@ -131,13 +139,14 @@ Task("Nuget-Pack")
     }
 
     DotNetCorePack("./src/" + solution, settings);
+}
 });
 
 Task("Upload-Artifact")
     .IsDependentOn("Nuget-Pack")
     .Does(() =>
 {
-    if (AppVeyor.IsRunningOnAppVeyor)
+    if (isOnAppVeyor && isOnMaster)
     {
         AppVeyor.UploadArtifact("./artifacts/Strinken." + nugetVersion +".nupkg");
     }
