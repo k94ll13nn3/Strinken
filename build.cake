@@ -49,6 +49,8 @@ Task("Update-Assembly-Info")
     .Does(() =>
 {
   // does not currently run on mono 4.3.2, see https://github.com/GitTools/GitVersion/pull/890
+  if(IsRunningOnWindows())
+  {
       var version = GitVersion(new GitVersionSettings {
 	    UpdateAssemblyInfo = true
       });
@@ -62,6 +64,7 @@ Task("Update-Assembly-Info")
     {
         AppVeyor.UpdateBuildVersion(nugetVersion);
     }
+  }
 });
 
 Task("Build")

@@ -18,6 +18,8 @@ os:
   - linux
   - osx
 osx_image: xcode7.1  
+notifications:
+  email: false
 branches:  
   only:
     - master
