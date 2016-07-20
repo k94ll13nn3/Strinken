@@ -48,6 +48,7 @@ Task("Update-Assembly-Info")
     .IsDependentOn("Restore")
     .Does(() =>
 {
+    Information("Current branch:      " + (IsRunningOnWindows() ? GitBranchCurrent(Directory(".")).FriendlyName : "----"));
     Information("Master branch:       " + isOnMaster.ToString());
     Information("Running on AppVeyor: " + isOnAppVeyor.ToString());
     Information("Running on Windows:  " + IsRunningOnWindows().ToString());
