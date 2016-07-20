@@ -1,7 +1,9 @@
 # Strinken
 
-[![Build status](https://ci.appveyor.com/api/projects/status/038gqsusfw0srmst?svg=true)](https://ci.appveyor.com/project/k94ll13nn3/strinken)
-[![Build status](https://travis-ci.org/k94ll13nn3/Strinken.svg?branch=master)](https://travis-ci.org/k94ll13nn3/Strinken)
+| Build server   | Platform     | Status                                                                                                                    |
+|----------------|--------------|---------------------------------------------------------------------------------------------------------------------------|
+| AppVeyor       | Windows      | [![AppVeyor](https://ci.appveyor.com/api/projects/status/038gqsusfw0srmst?svg=true)](https://ci.appveyor.com/project/k94ll13nn3/strinken) |
+| Travis         | Linux        | [![Travis](https://travis-ci.org/k94ll13nn3/Strinken.svg?branch=master)](https://travis-ci.org/k94ll13nn3/Strinken) |
 
 A parametrized string library !
 

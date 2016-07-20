@@ -74,19 +74,17 @@ namespace Strinken.Parser
             {
                 var tagList = new List<string>();
                 var filterList = new List<Tuple<string, string[]>>();
-                var validator = new StrinkenEngine
-                (
-                    tagName =>
-                    {
-                        tagList.Add(tagName);
-                        return string.Empty;
-                    },
-                    (filterName, valueToPass, arguments) =>
-                    {
-                        filterList.Add(Tuple.Create(filterName, arguments));
-                        return string.Empty;
-                    }
-                );
+                var validator = new StrinkenEngine(
+                tagName =>
+                {
+                    tagList.Add(tagName);
+                    return string.Empty;
+                },
+                (filterName, valueToPass, arguments) =>
+                {
+                    filterList.Add(Tuple.Create(filterName, arguments));
+                    return string.Empty;
+                });
 
                 validator.Run(input);
 
