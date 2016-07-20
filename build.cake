@@ -48,6 +48,9 @@ Task("Update-Assembly-Info")
     .IsDependentOn("Restore")
     .Does(() =>
 {
+    Information("Master branch:       " + isOnMaster.ToString());
+    Information("Running on AppVeyor: " + isOnAppVeyor.ToString());
+    Information("Running on Windows:  " + IsRunningOnWindows().ToString());
   // does not currently run on mono 4.3.2, see https://github.com/GitTools/GitVersion/pull/890
   if(IsRunningOnWindows())
   {
@@ -126,7 +129,7 @@ Task("Nuget-Pack")
     .IsDependentOn("Display-Build-Info")
     .Does(() =>
 {
-if  (isOnAppVeyor && isOnMaster)
+if  (isOnMaster)
 {
     EnsureDirectoryExists(publishDir);
     var settings = new DotNetCorePackSettings
