@@ -26,7 +26,7 @@ var buildDir = Directory("./src/") + Directory(solution) + Directory("bin") + Di
 var publishDir = Directory("./artifacts");
 var versionSuffix = "";
 var nugetVersion = "";
-var isOnMaster = GitBranchCurrent(Directory(".")).FriendlyName == "master";
+var isOnMaster = IsRunningOnWindows() ? GitBranchCurrent(Directory(".")).FriendlyName == "master" : false;
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 
 //////////////////////////////////////////////////////////////////////
