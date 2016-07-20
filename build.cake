@@ -5,7 +5,6 @@
 #tool "nuget:?package=NUnit.ConsoleRunner"
 #tool "nuget:?package=GitVersion.CommandLine"
 
-#addin "Cake.Git"
 using System.Reflection
 
 //////////////////////////////////////////////////////////////////////
@@ -26,7 +25,7 @@ var buildDir = Directory("./src/") + Directory(solution) + Directory("bin") + Di
 var publishDir = Directory("./artifacts");
 var versionSuffix = "";
 var nugetVersion = "";
-var isOnMaster = IsRunningOnWindows() ? GitBranchCurrent(Directory(".")).FriendlyName == "master" : false;
+var isOnMaster = isOnAppVeyor ? EnvironmentVariable("APPVEYOR_REPO_BRANCH") == "master" : false;
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 
 //////////////////////////////////////////////////////////////////////
@@ -48,7 +47,7 @@ Task("Update-Assembly-Info")
     .IsDependentOn("Restore")
     .Does(() =>
 {
-    Information("Current branch:      " + (IsRunningOnWindows() ? GitBranchCurrent(Directory(".")).FriendlyName : "----"));
+    Information("Current branch:      " + (isOnAppVeyor ? EnvironmentVariable("APPVEYOR_REPO_BRANCH") : "----"));
     Information("Master branch:       " + isOnMaster.ToString());
     Information("Running on AppVeyor: " + isOnAppVeyor.ToString());
     Information("Running on Windows:  " + IsRunningOnWindows().ToString());
