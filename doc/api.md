@@ -34,7 +34,9 @@ public interface ITag<in T> : IToken
 ``` csharp
 public class IParser<T>
 {
-    public string Resolve(string input, T value);
-    public bool Validate(string input);
+    string Resolve(string input, T value);
+    bool Validate(string input);
+    IReadOnlyCollection<IFilter> Filters { get; }
+    IReadOnlyCollection<ITag<T>> Tags { get; }
 }
 ``` 
