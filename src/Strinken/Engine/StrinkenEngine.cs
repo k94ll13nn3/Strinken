@@ -39,6 +39,7 @@ namespace Strinken.Engine
         /// </summary>
         /// <param name="input">The string to process.</param>
         /// <returns>The parsed string.</returns>
+        /// <exception cref="FormatException">When the input is not valid.</exception>
         public string Run(string input)
         {
             if (input == null)
