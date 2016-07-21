@@ -42,14 +42,9 @@ namespace Strinken.Engine
         /// <exception cref="FormatException">When the input is not valid.</exception>
         public string Run(string input)
         {
-            if (input == null)
+            if (string.IsNullOrEmpty(input))
             {
-                throw new ArgumentNullException(nameof(input));
-            }
-
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                throw new ArgumentException("Input string should not be empty or only composed of whitespaces.", nameof(input));
+                return input;
             }
 
             using (var cursor = new Cursor(input))

@@ -16,15 +16,15 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_NullInput_ThrowsArgumentNullException()
+        public void Run_NullInput_ReturnsNull()
         {
-            Assert.That(() => this.engine.Run(null), Throws.ArgumentNullException);
+            Assert.That(() => this.engine.Run(null), Is.Null);
         }
 
         [Test]
-        public void Run_EmptyInput_ThrowsArgumentNullException()
+        public void Run_EmptyInput_ReturnsEmptyString()
         {
-            Assert.That(() => this.engine.Run(string.Empty), Throws.ArgumentException);
+            Assert.That(this.engine.Run(string.Empty), Is.Empty);
         }
 
         [Test]
