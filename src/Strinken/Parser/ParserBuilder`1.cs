@@ -179,6 +179,11 @@ namespace Strinken.Parser
                 throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
             }
 
+            if (string.IsNullOrWhiteSpace(filter.Name))
+            {
+                throw new ArgumentException("A filter cannot have an empty name.");
+            }
+
             this.filters.Add(filter.Name, filter);
         }
 
@@ -191,6 +196,11 @@ namespace Strinken.Parser
             if (this.tags.ContainsKey(tag.Name))
             {
                 throw new ArgumentException($"{tag.Name} was already registered in the tag list.");
+            }
+
+            if (string.IsNullOrWhiteSpace(tag.Name))
+            {
+                throw new ArgumentException("A tag cannot have an empty name.");
             }
 
             this.tags.Add(tag.Name, tag);

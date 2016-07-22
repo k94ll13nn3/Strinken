@@ -42,7 +42,7 @@ namespace Strinken.Engine
         /// <exception cref="FormatException">When the input is not valid.</exception>
         public string Run(string input)
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrWhiteSpace(input))
             {
                 return input;
             }

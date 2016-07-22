@@ -135,7 +135,26 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void WithTag_OnTheFlyCreation_ThrowsArgumentException()
+        public void Constructor_TagWithEmptyName_ThrowsArgumentException()
+        {
+            Assert.That(
+                () => ParserBuilder<string>.Initialize().WithTag("", "", s => s),
+                Throws.ArgumentException.With.Message.EqualTo("A tag cannot have an empty name."));
+            Assert.That(
+                () => ParserBuilder<string>.Initialize().WithTag(new EmptyNameTag()),
+                Throws.ArgumentException.With.Message.EqualTo("A tag cannot have an empty name."));
+        }
+
+        [Test]
+        public void Constructor_FilterWithEmptyName_ThrowsArgumentException()
+        {
+            Assert.That(
+                () => ParserBuilder<string>.Initialize().WithTag("tag", "tag", s => s).WithFilter(new EmptyNameFilter()),
+                Throws.ArgumentException.With.Message.EqualTo("A filter cannot have an empty name."));
+        }
+
+        [Test]
+        public void WithTag_OnTheFlyCreation_ReturnsResolvedString()
         {
             var solver = ParserBuilder<Data>.Initialize().WithTag("OTF", "OTF", a => a.Name).Build();
 
