@@ -10,7 +10,7 @@ namespace Strinken.Tests
     [TestFixture]
     public class ParserTests
     {
-        private IParser<Data> stringSolver;
+        private Parser<Data> stringSolver;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -48,43 +48,57 @@ namespace Strinken.Tests
         [Test]
         public void Validate_AllFiltersKnown_ReturnsTrue()
         {
-            Assert.That(stringSolver.Validate("The {DataName:Upper} is in the kitchen."), Is.True);
+            var validationResult = stringSolver.Validate("The {DataName:Upper} is in the kitchen.");
+            Assert.That(validationResult.IsValid, Is.True);
+            Assert.That(validationResult.Message, Is.Null);
         }
 
         [Test]
         public void Validate_AllFiltersWithGoodArguments_ReturnsTrue()
         {
-            Assert.That(stringSolver.Validate("The {DataName:Length} is in the kitchen."), Is.True);
+            var validationResult = stringSolver.Validate("The {DataName:Length} is in the kitchen.");
+            Assert.That(validationResult.IsValid, Is.True);
+            Assert.That(validationResult.Message, Is.Null);
         }
 
         [Test]
         public void Validate_AllTagsKnown_ReturnsTrue()
         {
-            Assert.That(stringSolver.Validate("The {DataName} is in the kitchen."), Is.True);
+            var validationResult = stringSolver.Validate("The {DataName} is in the kitchen.");
+            Assert.That(validationResult.IsValid, Is.True);
+            Assert.That(validationResult.Message, Is.Null);
         }
 
         [Test]
         public void Validate_FilterWithWrongArguments_ReturnsFalse()
         {
-            Assert.That(stringSolver.Validate("The {DataName:Length+Arg} is in the kitchen."), Is.False);
+            var validationResult = stringSolver.Validate("The {DataName:Length+Arg} is in the kitchen.");
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Message, Is.EqualTo("Length does not have valid arguments."));
         }
 
         [Test]
         public void Validate_InvalidInput_ReturnsFalse()
         {
-            Assert.That(stringSolver.Validate("The {DataName:} is in the kitchen."), Is.False);
+            var validationResult = stringSolver.Validate("The {DataName:} is in the kitchen.");
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Message, Is.EqualTo("The input is not correctly formatted (Empty filter)."));
         }
 
         [Test]
         public void Validate_UnknownFilter_ReturnsFalse()
         {
-            Assert.That(stringSolver.Validate("The {DataName:Bryan} is in the kitchen."), Is.False);
+            var validationResult = stringSolver.Validate("The {DataName:Bryan} is in the kitchen.");
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Message, Is.EqualTo("Bryan is not a valid filter."));
         }
 
         [Test]
         public void Validate_UnknownTag_ReturnsFalse()
         {
-            Assert.That(stringSolver.Validate("The {DataName} is in the kitchen (size {SomeTag})."), Is.False);
+            var validationResult = stringSolver.Validate("The {DataName} is in the kitchen (size {SomeTag}).");
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Message, Is.EqualTo("SomeTag is not a valid tag."));
         }
 
         [Test]

@@ -1,9 +1,6 @@
 ﻿// stylecop.header
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Strinken.Engine;
 using Strinken.Filters;
 
 namespace Strinken.Parser
@@ -12,7 +9,7 @@ namespace Strinken.Parser
     /// Base implementation of a parser.
     /// </summary>
     /// <typeparam name="T">The type related to the parser.</typeparam>
-    public class ParserBuilder<T> : IParser<T>, ICanAddTagsOrFilters<T>
+    public class ParserBuilder<T> : ICanAddTagsOrFilters<T>
     {
         /// <summary>
         /// Filters used by the parser.
@@ -43,12 +40,6 @@ namespace Strinken.Parser
             }
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyCollection<IFilter> Filters => new ReadOnlyCollection<IFilter>(this.filters.Values.ToList());
-
-        /// <inheritdoc/>
-        public IReadOnlyCollection<ITag<T>> Tags => new ReadOnlyCollection<ITag<T>>(this.tags.Values.ToList());
-
         /// <summary>
         /// Initializes the parser.
         /// </summary>
@@ -56,69 +47,7 @@ namespace Strinken.Parser
         public static ICanAddTags<T> Initialize() => new ParserBuilder<T>();
 
         /// <inheritdoc/>
-        public IParser<T> Build() => this;
-
-        /// <inheritdoc/>
-        public string Resolve(string input, T value)
-        {
-            var solver = new StrinkenEngine(
-                tagName => this.tags[tagName].Resolve(value),
-                (filterName, valueToPass, arguments) => this.filters[filterName].Resolve(valueToPass, arguments));
-            return solver.Run(input);
-        }
-
-        /// <inheritdoc/>
-        public bool Validate(string input)
-        {
-            try
-            {
-                var tagList = new List<string>();
-                var filterList = new List<Tuple<string, string[]>>();
-                var validator = new StrinkenEngine(
-                tagName =>
-                {
-                    tagList.Add(tagName);
-                    return string.Empty;
-                },
-                (filterName, valueToPass, arguments) =>
-                {
-                    filterList.Add(Tuple.Create(filterName, arguments));
-                    return string.Empty;
-                });
-
-                validator.Run(input);
-
-                // Find the first tag that was not registered in the parser.
-                var invalidParameter = tagList.FirstOrDefault(tagName => !this.tags.ContainsKey(tagName));
-                if (invalidParameter != null)
-                {
-                    // TODO: Message = {invalidParameter} is not a valid tag
-                    return false;
-                }
-
-                // Find the first filter that was not registered in the parser.
-                invalidParameter = filterList.FirstOrDefault(filter => !this.filters.ContainsKey(filter.Item1))?.Item1;
-                if (invalidParameter != null)
-                {
-                    // TODO: Message = {invalidParameter} is not a valid filter
-                    return false;
-                }
-
-                // Find the first filter that has invalid arguments.
-                invalidParameter = filterList.FirstOrDefault(filter => !this.filters[filter.Item1].Validate(filter.Item2))?.Item1;
-                if (invalidParameter != null)
-                {
-                    // TODO: Message = {invalidParameter} does not have valid arguments
-                    return false;
-                }
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-
-            return true;
-        }
+        public Parser<T> Build() => new Parser<T>(this.tags, this.filters);
 
         /// <inheritdoc/>
         public ICanAddTagsOrFilters<T> WithFilter(IFilter filter)
