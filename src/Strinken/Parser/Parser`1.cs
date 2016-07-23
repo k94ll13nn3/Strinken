@@ -28,7 +28,7 @@ namespace Strinken.Parser
         /// </summary>
         /// <param name="tags">Tags used by the parser.</param>
         /// <param name="filters">Filters used by the parser.</param>
-        public Parser(IDictionary<string, ITag<T>> tags, IDictionary<string, IFilter> filters)
+        internal Parser(IDictionary<string, ITag<T>> tags, IDictionary<string, IFilter> filters)
         {
             this.tags = tags;
             this.filters = filters;

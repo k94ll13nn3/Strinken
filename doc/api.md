@@ -8,7 +8,7 @@ public interface IToken
     string Name { get; }
     string Description { get; }
 }
-``` 
+```
 
 ## IFilter
 
@@ -19,7 +19,7 @@ public interface IFilter : IToken
     string Resolve(string value, string[] arguments);
     bool Validate(string[] arguments);
 }
-``` 
+```
 
 ## ITag\<T>
 
@@ -28,15 +28,16 @@ public interface ITag<in T> : IToken
 {
     string Resolve(T value);
 }
-``` 
+```
 
-## IParser\<T>
+## Parser\<T>
+
 ``` csharp
-public class IParser<T>
+public class Parser<T>
 {
     string Resolve(string input, T value);
     bool Validate(string input);
     IReadOnlyCollection<IFilter> Filters { get; }
     IReadOnlyCollection<ITag<T>> Tags { get; }
 }
-``` 
+```

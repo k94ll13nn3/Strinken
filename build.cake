@@ -44,6 +44,7 @@ Task("Restore")
     .Does(() =>DotNetCoreRestore());
 
 Task("Update-Assembly-Info")
+    .WithCriteria(() => IsRunningOnWindows() && isOnAppVeyor)
     .IsDependentOn("Restore")
     .Does(() =>
 {
@@ -51,14 +52,12 @@ Task("Update-Assembly-Info")
     Information("Master branch:       " + isOnMaster.ToString());
     Information("Running on AppVeyor: " + isOnAppVeyor.ToString());
     Information("Running on Windows:  " + IsRunningOnWindows().ToString());
-  // does not currently run on mono 4.3.2, see https://github.com/GitTools/GitVersion/pull/890
-  if(IsRunningOnWindows() && isOnAppVeyor)
-  {
-      var version = GitVersion(new GitVersionSettings {
-	    UpdateAssemblyInfo = true
-      });
+    // does not currently run on mono 4.3.2, see https://github.com/GitTools/GitVersion/pull/890
+    var version = GitVersion(new GitVersionSettings {
+        UpdateAssemblyInfo = true
+    });
 
-      nugetVersion = version.NuGetVersion;
+    nugetVersion = version.NuGetVersion;
     if(version.CommitsSinceVersionSource != "0")
     {
         versionSuffix = "ci" + version.CommitsSinceVersionSource.PadLeft(4, '0');
@@ -67,7 +66,6 @@ Task("Update-Assembly-Info")
     {
         AppVeyor.UpdateBuildVersion(nugetVersion);
     }
-  }
 });
 
 Task("Build")
@@ -92,22 +90,24 @@ Task("Run-Unit-Tests")
     };
 
     DotNetCoreTest("./test/Strinken.Tests/", settings);
+});
 
-    if (AppVeyor.IsRunningOnAppVeyor)
+Task("Upload-Tests")
+    .WithCriteria(() => isOnAppVeyor)
+    .IsDependentOn("Run-Unit-Tests")
+    .Does(() =>
+{
+    var baseUri = EnvironmentVariable("APPVEYOR_URL").TrimEnd('/');
+    var url = string.Format("{0}/api/testresults/nunit3/{1}", baseUri, AppVeyor.Environment.JobId);
+
+    using (var r = new System.Net.WebClient())
     {
-        Information("Uploading test results");
-        var baseUri = EnvironmentVariable("APPVEYOR_URL").TrimEnd('/');
-        var url = string.Format("{0}/api/testresults/nunit3/{1}", baseUri, AppVeyor.Environment.JobId);
-        
-        using (var r = new System.Net.WebClient())
-        {
-            r.UploadFile(url, "TestResult.xml");
-        }     
-    }
- });
+        r.UploadFile(url, "TestResult.xml");
+    }     
+});
 
 Task("Display-Build-Info")
-.IsDependentOn("Run-Unit-Tests")
+.IsDependentOn("Upload-Tests")
 .Does(() => {
     Information("Public members:");
     Assembly a = Assembly.LoadFrom("./src/" + solution + "/bin/" + configuration + "/" + framework + "/Strinken.dll");
@@ -126,10 +126,9 @@ Task("Display-Build-Info")
 });
 
 Task("Nuget-Pack")
+    .WithCriteria(() => isOnMaster)
     .IsDependentOn("Display-Build-Info")
     .Does(() =>
-{
-if  (isOnMaster)
 {
     EnsureDirectoryExists(publishDir);
     var settings = new DotNetCorePackSettings
@@ -144,17 +143,14 @@ if  (isOnMaster)
     }
 
     DotNetCorePack("./src/" + solution, settings);
-}
 });
 
 Task("Upload-Artifact")
+    .WithCriteria(() => isOnAppVeyor && isOnMaster)
     .IsDependentOn("Nuget-Pack")
     .Does(() =>
 {
-    if (isOnAppVeyor && isOnMaster)
-    {
-        AppVeyor.UploadArtifact("./artifacts/Strinken." + nugetVersion +".nupkg");
-    }
+    AppVeyor.UploadArtifact("./artifacts/Strinken." + nugetVersion +".nupkg");
 });
 
 //////////////////////////////////////////////////////////////////////

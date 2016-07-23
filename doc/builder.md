@@ -3,10 +3,10 @@
 In order to create a parser, you need to call the `ParserBuilder` class.
 
 ``` csharp
-    public class ParserBuilder<T> : IParser<T>, ...
+    public class ParserBuilder<T> : ...
     {
         static ICanAddTags<T> Initialize();
-        IParser<T> Build();
+        Parser<T> Build();
         ICanAddTagsOrFilters<T> WithFilter(IFilter filter);
         ICanAddTagsOrFilters<T> WithFilters(IEnumerable<IFilter> filters);
         ICanAddTagsOrFilters<T> WithTag(ITag<T> tag);
