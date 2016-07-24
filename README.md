@@ -26,20 +26,24 @@ Parsing engine inspired from Henri's solution at [Named Formats Redux](http://ha
 
 ### Tags
 
-Use a tag: 
+Use a tag:
+
 - `{tag}`
 
 ### Filters
 
 Use a filter:
+
 - `{tag:filter}`
 
 Use arguments:
+
 - `{tag:filter+arg}`
 - `{tag:filter+arg,arg}`
 - `{tag:filter+arg,=argTag}`
 
 Chain filters:
+
 - `{tag:filter:filter}`
 - `{tag:filter+arg:filter}`
 - `{tag:filter+arg,arg:filter+arg}`
@@ -50,6 +54,7 @@ See [filters](doc/filters.md) for the list of base filters.
 ## Parser usage
 
 Create a tag:
+
 ``` csharp
 public class ExampleTag : ITag<ExampleClass>
 {
@@ -60,6 +65,7 @@ public class ExampleTag : ITag<ExampleClass>
 ```
 
 Create a filter (example taken from the base filters):
+
 ``` csharp
 public class LowerFilter : IFilter
 {
@@ -72,21 +78,24 @@ public class LowerFilter : IFilter
 ```
 
 Create a parser:
+
 ``` csharp
 var parser = ParserBuilder<ExampleClass>
                 .Initialize()
                 .WithTag(new ExampleTag())
                 .Build();
-// returns an IParser<ExampleClass>
-``` 
+// returns a Parser<ExampleClass>
+```
 
 Validate a string:
+
 ``` csharp
 parser.Validate("My name is {Example:Lower}.")
-// returns true
+// returns a ValidationResult with IsValid = true
 ```
 
 Parse a string:
+
 ``` csharp
 var result = parser.Resolve("My name is {Example:Lower}.", new ExampleClass { Name = "Lorem" })
 // returns "My name is lorem."
