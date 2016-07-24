@@ -1,5 +1,9 @@
 # Strinken
 
+[![NuGet](https://img.shields.io/nuget/v/Strinken.svg?maxAge=2592000)](https://www.nuget.org/packages/Strinken/)
+[![GitHub release](https://img.shields.io/github/release/k94ll13nn3/Strinken.svg?maxAge=2592000)](https://github.com/k94ll13nn3/Strinken/releases/latest)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE)
+
 | Build server   | Platform     | Status                                                                                                                    |
 |----------------|--------------|---------------------------------------------------------------------------------------------------------------------------|
 | AppVeyor       | Windows      | [![AppVeyor](https://ci.appveyor.com/api/projects/status/038gqsusfw0srmst?svg=true)](https://ci.appveyor.com/project/k94ll13nn3/strinken) |
@@ -9,7 +13,7 @@ A parametrized string library !
 
 ## Installation
 
-Nuget `Install-Package Strinken` ([package](https://www.nuget.org/packages/Strinken/))
+Nuget `Install-Package Strinken`
 
 ## Idea
 
