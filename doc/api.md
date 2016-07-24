@@ -36,7 +36,7 @@ public interface ITag<in T> : IToken
 public class Parser<T>
 {
     string Resolve(string input, T value);
-    bool Validate(string input);
+    ValidationResult Validate(string input);
     IReadOnlyCollection<IFilter> Filters { get; }
     IReadOnlyCollection<ITag<T>> Tags { get; }
 }
