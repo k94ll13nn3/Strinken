@@ -11,6 +11,6 @@ namespace Strinken.Machine
         /// Builds the current machine.
         /// </summary>
         /// <returns>The built machine.</returns>
-        IStateMachine Build();
+        StateMachine Build();
     }
 }

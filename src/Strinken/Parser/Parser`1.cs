@@ -8,7 +8,7 @@ using Strinken.Engine;
 namespace Strinken.Parser
 {
     /// <summary>
-    /// Base interface for a parser.
+    /// Strinken parser.
     /// </summary>
     /// <typeparam name="T">The type related to the parser.</typeparam>
     public class Parser<T>

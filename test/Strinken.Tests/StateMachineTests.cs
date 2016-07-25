@@ -10,7 +10,7 @@ namespace Strinken.Tests
         [Test]
         public void On_StateAlreadyRegistered_ThrowsInvalidOperationException()
         {
-            Func<IStateMachine> createMachine = () => StateMachineBuilder
+            Func<StateMachine> createMachine = () => StateMachineBuilder
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
