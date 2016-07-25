@@ -14,14 +14,14 @@ using System.Reflection
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var solution = Argument("solution", "Strinken/");
-var framework = Argument("framework", "netstandard1.1");
+var framework = Argument("framework", "netstandard1.0");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
 //////////////////////////////////////////////////////////////////////
 
 // Define directories.
-var buildDir = Directory("./src/") + Directory(solution) + Directory("bin") + Directory(configuration) + Directory(framework);
+var buildDir = Directory("./src/") + Directory(solution) + Directory("bin");
 var publishDir = Directory("./artifacts");
 var versionSuffix = "";
 var nugetVersion = "";
