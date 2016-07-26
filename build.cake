@@ -6,6 +6,7 @@
 #tool "nuget:?package=GitVersion.CommandLine"
 
 using System.Reflection
+using System.Diagnostics
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -97,6 +98,7 @@ Task("Upload-Tests")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
+    // NB: UploadTestResults should be fixed in 0.15
     var baseUri = EnvironmentVariable("APPVEYOR_URL").TrimEnd('/');
     var url = string.Format("{0}/api/testresults/nunit3/{1}", baseUri, AppVeyor.Environment.JobId);
 
@@ -118,11 +120,10 @@ Task("Display-Build-Info")
         MemberInfo[] members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod);
         foreach (MemberInfo member in members) Console.WriteLine("\t" + type.Name + "." + member.Name);
     }
-    var assemblyInfo = ParseAssemblyInfo("./src/Strinken/Properties/AssemblyInfo.cs");
     Information("Version:");
-    Information("\tAssembly Version: {0}", assemblyInfo.AssemblyVersion);
-    Information("\tFile version: {0}", assemblyInfo.AssemblyFileVersion);
-    Information("\tInformational version: {0}", assemblyInfo.AssemblyInformationalVersion);
+    Information("\tAssembly Version: {0}", a.GetName().Version.ToString());
+    Information("\tFile Version: {0}", FileVersionInfo.GetVersionInfo(a.Location).FileVersion);
+    Information("\tInformational Version: {0}", FileVersionInfo.GetVersionInfo(a.Location).ProductVersion);
 });
 
 Task("Nuget-Pack")
