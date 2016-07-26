@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 Thanks to [Keep a CHANGELOG](http://keepachangelog.com/) for the formating.
 
-## 2.0.0 (2016-07-27)
+## 2.0.0 (2016-07-26)
 
 ### Changed
 
