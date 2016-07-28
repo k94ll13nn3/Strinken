@@ -98,14 +98,7 @@ Task("Upload-Tests")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-    // NB: UploadTestResults should be fixed in 0.15
-    var baseUri = EnvironmentVariable("APPVEYOR_URL").TrimEnd('/');
-    var url = string.Format("{0}/api/testresults/nunit3/{1}", baseUri, AppVeyor.Environment.JobId);
-
-    using (var r = new System.Net.WebClient())
-    {
-        r.UploadFile(url, "TestResult.xml");
-    }     
+    AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.NUnit3);   
 });
 
 Task("Display-Build-Info")
