@@ -2,8 +2,8 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool "nuget:?package=NUnit.ConsoleRunner"
-#tool "nuget:?package=GitVersion.CommandLine"
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.4.1
+#tool nuget:?package=GitVersion.CommandLine&version=3.6.2
 
 using System.Reflection
 using System.Diagnostics
