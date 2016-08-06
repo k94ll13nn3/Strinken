@@ -37,7 +37,7 @@ namespace Strinken.Tests.FiltersTests
         [Test]
         public void Resolve__ReturnsResolvedString()
         {
-            var stringSolver = ParserBuilder<Data>.Initialize().WithTag(new DataNameTag()).Build();
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             Assert.That(stringSolver.Resolve("The {DataName:Lower} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The lorem is in the kitchen."));
         }
     }

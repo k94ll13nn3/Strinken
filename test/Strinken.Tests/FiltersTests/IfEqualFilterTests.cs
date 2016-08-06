@@ -52,7 +52,7 @@ namespace Strinken.Tests.FiltersTests
         [Test]
         public void Resolve__ReturnsResolvedString()
         {
-            var stringSolver = ParserBuilder<Data>.Initialize().WithTag(new DataNameTag()).Build();
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             Assert.That(stringSolver.Resolve("The {DataName:IfEqual+Lorem,T,F} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The T is in the kitchen."));
             Assert.That(stringSolver.Resolve("The {DataName:IfEqual+Ipsum,T,F} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The F is in the kitchen."));
         }

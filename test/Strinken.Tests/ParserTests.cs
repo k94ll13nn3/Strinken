@@ -15,7 +15,7 @@ namespace Strinken.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            this.stringSolver = ParserBuilder<Data>.Initialize().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).Build();
+            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter());
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace Strinken.Tests
         public void Constructor_TwoTagWithSameName_ThrowsArgumentException()
         {
             Assert.That(
-                () => ParserBuilder<Data>.Initialize().WithTag(new DataNameTag()).WithTag(new DataNameTag()),
+                () => new Parser<Data>().WithTag(new DataNameTag()).WithTag(new DataNameTag()),
                 Throws.ArgumentException.With.Message.EqualTo("DataName was already registered in the tag list."));
         }
 
@@ -144,7 +144,7 @@ namespace Strinken.Tests
         public void Constructor_TwoFilterWithSameName_ThrowsArgumentException()
         {
             Assert.That(
-                () => ParserBuilder<Data>.Initialize().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new AppendFilter(), new AppendFilter() }),
+                () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new AppendFilter(), new AppendFilter() }),
                 Throws.ArgumentException.With.Message.EqualTo("Append was already registered in the filter list."));
         }
 
@@ -152,10 +152,10 @@ namespace Strinken.Tests
         public void Constructor_TagWithEmptyName_ThrowsArgumentException()
         {
             Assert.That(
-                () => ParserBuilder<string>.Initialize().WithTag("", "", s => s),
+                () => new Parser<string>().WithTag("", "", s => s),
                 Throws.ArgumentException.With.Message.EqualTo("A tag cannot have an empty name."));
             Assert.That(
-                () => ParserBuilder<string>.Initialize().WithTag(new EmptyNameTag()),
+                () => new Parser<string>().WithTag(new EmptyNameTag()),
                 Throws.ArgumentException.With.Message.EqualTo("A tag cannot have an empty name."));
         }
 
@@ -163,14 +163,14 @@ namespace Strinken.Tests
         public void Constructor_FilterWithEmptyName_ThrowsArgumentException()
         {
             Assert.That(
-                () => ParserBuilder<string>.Initialize().WithTag("tag", "tag", s => s).WithFilter(new EmptyNameFilter()),
+                () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new EmptyNameFilter()),
                 Throws.ArgumentException.With.Message.EqualTo("A filter cannot have an empty name."));
         }
 
         [Test]
         public void WithTag_OnTheFlyCreation_ReturnsResolvedString()
         {
-            var solver = ParserBuilder<Data>.Initialize().WithTag("OTF", "OTF", a => a.Name).Build();
+            var solver = new Parser<Data>().WithTag("OTF", "OTF", a => a.Name);
 
             Assert.That(solver.Tags, Has.Count.EqualTo(1));
             Assert.That(solver.Tags.First().Name, Is.EqualTo("OTF"));

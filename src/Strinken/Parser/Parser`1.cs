@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Strinken.Engine;
+using Strinken.Filters;
 
 namespace Strinken.Parser
 {
@@ -26,12 +27,20 @@ namespace Strinken.Parser
         /// <summary>
         /// Initializes a new instance of the <see cref="Parser{T}"/> class.
         /// </summary>
-        /// <param name="tags">Tags used by the parser.</param>
-        /// <param name="filters">Filters used by the parser.</param>
-        internal Parser(IDictionary<string, ITag<T>> tags, IDictionary<string, IFilter> filters)
+        internal Parser()
         {
-            this.tags = tags;
-            this.filters = filters;
+            this.tags = new Dictionary<string, ITag<T>>();
+            this.filters = new Dictionary<string, IFilter>();
+
+            foreach (var filter in FilterHelpers.BaseFilters)
+            {
+                if (this.filters.ContainsKey(filter.Name))
+                {
+                    throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
+                }
+
+                this.filters.Add(filter.Name, filter);
+            }
         }
 
         /// <summary>
@@ -110,6 +119,44 @@ namespace Strinken.Parser
             }
 
             return new ValidationResult { Message = null, IsValid = true };
+        }
+
+        /// <summary>
+        /// Add a filter to the list of filter.
+        /// </summary>
+        /// <param name="filter">The filter to add.</param>
+        public void AddFilter(IFilter filter)
+        {
+            if (this.filters.ContainsKey(filter.Name))
+            {
+                throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
+            }
+
+            if (string.IsNullOrWhiteSpace(filter.Name))
+            {
+                throw new ArgumentException("A filter cannot have an empty name.");
+            }
+
+            this.filters.Add(filter.Name, filter);
+        }
+
+        /// <summary>
+        /// Add a tag to the list of tags.
+        /// </summary>
+        /// <param name="tag">The tag to add.</param>
+        public void AddTag(ITag<T> tag)
+        {
+            if (this.tags.ContainsKey(tag.Name))
+            {
+                throw new ArgumentException($"{tag.Name} was already registered in the tag list.");
+            }
+
+            if (string.IsNullOrWhiteSpace(tag.Name))
+            {
+                throw new ArgumentException("A tag cannot have an empty name.");
+            }
+
+            this.tags.Add(tag.Name, tag);
         }
     }
 }
