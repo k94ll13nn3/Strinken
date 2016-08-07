@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Strinken.Common;
 using Strinken.Engine;
 using Strinken.Filters;
 
@@ -132,11 +133,7 @@ namespace Strinken.Parser
                 throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
             }
 
-            if (string.IsNullOrWhiteSpace(filter.Name))
-            {
-                throw new ArgumentException("A filter cannot have an empty name.");
-            }
-
+            ThrowIfInvalidName(filter.Name);
             this.filters.Add(filter.Name, filter);
         }
 
@@ -151,12 +148,28 @@ namespace Strinken.Parser
                 throw new ArgumentException($"{tag.Name} was already registered in the tag list.");
             }
 
-            if (string.IsNullOrWhiteSpace(tag.Name))
+            ThrowIfInvalidName(tag.Name);
+            this.tags.Add(tag.Name, tag);
+        }
+
+        /// <summary>
+        /// Validates a name and throws a <see cref="ArgumentException"/> if the name is invalid.
+        /// </summary>
+        /// <param name="name">The name to validate.</param>
+        private static void ThrowIfInvalidName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("A tag cannot have an empty name.");
+                throw new ArgumentException("A name cannot be empty.");
             }
 
-            this.tags.Add(tag.Name, tag);
+            for (int i = 0; i < name.Length; i++)
+            {
+                if (name[i].IsValidTokenNameCharacter())
+                {
+                    throw new ArgumentException($"{name[i]} is an invalid character for a name.");
+                }
+            }
         }
     }
 }

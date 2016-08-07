@@ -1,6 +1,7 @@
 // stylecop.header
 using System;
 using System.Text;
+using Strinken.Common;
 using Strinken.Machine;
 
 namespace Strinken.Engine
@@ -438,7 +439,7 @@ namespace Strinken.Engine
         private static void ThrowIfInvalidCharacter(Cursor cursor)
         {
             var value = (char)cursor.Value;
-            if (!char.IsLetter(value) && cursor.Value != '-' && cursor.Value != '_')
+            if (value.IsValidTokenNameCharacter())
             {
                 throw new FormatException($"Illegal '{(char)cursor.Value}' at position {cursor.Position}");
             }

@@ -153,10 +153,10 @@ namespace Strinken.Tests
         {
             Assert.That(
                 () => new Parser<string>().WithTag("", "", s => s),
-                Throws.ArgumentException.With.Message.EqualTo("A tag cannot have an empty name."));
+                Throws.ArgumentException.With.Message.EqualTo("A name cannot be empty."));
             Assert.That(
                 () => new Parser<string>().WithTag(new EmptyNameTag()),
-                Throws.ArgumentException.With.Message.EqualTo("A tag cannot have an empty name."));
+                Throws.ArgumentException.With.Message.EqualTo("A name cannot be empty."));
         }
 
         [Test]
@@ -164,7 +164,26 @@ namespace Strinken.Tests
         {
             Assert.That(
                 () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new EmptyNameFilter()),
-                Throws.ArgumentException.With.Message.EqualTo("A filter cannot have an empty name."));
+                Throws.ArgumentException.With.Message.EqualTo("A name cannot be empty."));
+        }
+
+        [Test]
+        public void Constructor_TagWithInvalidName_ThrowsArgumentException()
+        {
+            Assert.That(
+                () => new Parser<string>().WithTag("st*r", "", s => s),
+                Throws.ArgumentException.With.Message.EqualTo("* is an invalid character for a name."));
+            Assert.That(
+                () => new Parser<string>().WithTag(new InvalidNameTag()),
+                Throws.ArgumentException.With.Message.EqualTo("$ is an invalid character for a name."));
+        }
+
+        [Test]
+        public void Constructor_FilterWithInvalidName_ThrowsArgumentException()
+        {
+            Assert.That(
+                () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new InvalidNameFilter()),
+                Throws.ArgumentException.With.Message.EqualTo("! is an invalid character for a name."));
         }
 
         [Test]
