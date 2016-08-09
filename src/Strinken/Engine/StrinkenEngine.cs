@@ -467,7 +467,7 @@ namespace Strinken.Engine
         private static State ValidateCursor(EngineParameters parameters, State stateIfValid)
         {
             var value = (char)parameters.Cursor.Value;
-            if (value.IsValidTokenNameCharacter())
+            if (value.IsInvalidTokenNameCharacter())
             {
                 parameters.ErrorMessage = $"Illegal '{(char)parameters.Cursor.Value}' at position {parameters.Cursor.Position}";
                 return State.InvalidString;

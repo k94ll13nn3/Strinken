@@ -184,7 +184,7 @@ namespace Strinken.Parser
 
             for (int i = 0; i < name.Length; i++)
             {
-                if (name[i].IsValidTokenNameCharacter())
+                if (name[i].IsInvalidTokenNameCharacter())
                 {
                     throw new ArgumentException($"{name[i]} is an invalid character for a name.");
                 }

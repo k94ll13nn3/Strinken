@@ -7,10 +7,10 @@ namespace Strinken.Common
     internal static class Extensions
     {
         /// <summary>
-        /// Tests if a <see cref="char"/> is a valid token name character : a-z, A-Z, 0-9, - and _
+        /// Tests if a <see cref="char"/> is an invalid token name character i.e. not a-z, A-Z, 0-9, - or _
         /// </summary>
         /// <param name="c">The <see cref="char"/> to test.</param>
-        /// <returns>A value indicating whether the <see cref="char"/> is a valid token name character</returns>
-        public static bool IsValidTokenNameCharacter(this char c) => !char.IsLetter(c) && c != '-' && c != '_';
+        /// <returns>A value indicating whether the <see cref="char"/> is an invalid token name character</returns>
+        public static bool IsInvalidTokenNameCharacter(this char c) => !char.IsLetter(c) && c != '-' && c != '_';
     }
 }
