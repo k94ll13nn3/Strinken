@@ -69,7 +69,7 @@ namespace Strinken.Engine
 
             if (disposing)
             {
-                this.reader.Dispose();
+                this.reader?.Dispose();
             }
 
             this.disposed = true;

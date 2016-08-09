@@ -48,72 +48,65 @@ namespace Strinken.Engine
                 return input;
             }
 
-            using (var cursor = new Cursor(input))
+            using (var parameters = new EngineParameters(input, this.actionOnTags, this.actionOnFilters))
             {
-                var result = new StringBuilder();
-                var token = new StringBuilder();
-                var tokenStack = new TokenStack(this.actionOnTags, this.actionOnFilters);
-
                 var machine = StateMachineBuilder
                     .Initialize()
                     .StartOn(State.OutsideToken)
                     .StopOn(State.EndOfString)
-                    .BeforeEachStep(cursor.Next)
-                    .On(State.OutsideToken).Do(() => ProcessOutsideToken(cursor, result))
-                    .On(State.OnOpenBracket).Do(() => ProcessOnOpenBracket(cursor, result, token))
-                    .On(State.InsideTag).Do(() => ProcessInsideTag(cursor, result, token, tokenStack))
-                    .On(State.OnCloseBracket).Do(() => ProcessOnCloseBracket(cursor, result))
-                    .On(State.OnFilterSeparator).Do(() => ProcessOnFilterSeparator(cursor, token))
-                    .On(State.InsideFilter).Do(() => ProcessInsideFilter(cursor, result, token, tokenStack))
-                    .On(State.OnArgumentInitializer).Do(() => ProcessOnArgumentInitializer(cursor, token))
-                    .On(State.OnArgumentSeparator).Do(() => ProcessOnArgumentSeparator(cursor, token))
-                    .On(State.InsideArgument).Do(() => ProcessInsideArgument(cursor, result, token, tokenStack))
-                    .On(State.OnArgumentTagIndicator).Do(() => ProcessOnArgumentTagIndicator(cursor, token))
-                    .On(State.InsideArgumentTag).Do(() => ProcessInsideArgumentTag(cursor, result, token, tokenStack))
+                    .BeforeEachStep(parameters.Cursor.Next)
+                    .On(State.OutsideToken).Do(() => ProcessOutsideToken(parameters))
+                    .On(State.OnOpenBracket).Do(() => ProcessOnOpenBracket(parameters))
+                    .On(State.InsideTag).Do(() => ProcessInsideTag(parameters))
+                    .On(State.OnCloseBracket).Do(() => ProcessOnCloseBracket(parameters))
+                    .On(State.OnFilterSeparator).Do(() => ProcessOnFilterSeparator(parameters))
+                    .On(State.InsideFilter).Do(() => ProcessInsideFilter(parameters))
+                    .On(State.OnArgumentInitializer).Do(() => ProcessOnArgumentInitializer(parameters))
+                    .On(State.OnArgumentSeparator).Do(() => ProcessOnArgumentSeparator(parameters))
+                    .On(State.InsideArgument).Do(() => ProcessInsideArgument(parameters))
+                    .On(State.OnArgumentTagIndicator).Do(() => ProcessOnArgumentTagIndicator(parameters))
+                    .On(State.InsideArgumentTag).Do(() => ProcessInsideArgumentTag(parameters))
                     .Build();
 
                 machine.Run();
 
-                return result.ToString();
+                return parameters.Result.ToString();
             }
         }
 
         /// <summary>
         /// Processes the <see cref="State.InsideArgument"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
-        /// <param name="tokenStack">The stack of tokens.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessInsideArgument(Cursor cursor, StringBuilder result, StringBuilder token, TokenStack tokenStack)
+        private static State ProcessInsideArgument(EngineParameters parameters)
         {
             var state = State.InsideArgument;
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("End of string reached while inside a token");
                 case ',':
                     state = State.OnArgumentSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.Argument);
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Argument);
+                    parameters.Token.Length = 0;
                     break;
 
                 case ':':
                     state = State.OnFilterSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.Argument);
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Argument);
+                    parameters.Token.Length = 0;
                     break;
 
                 case '}':
-                    tokenStack.Push(token.ToString(), TokenType.Argument);
-                    result.Append(tokenStack.Resolve());
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Argument);
+                    parameters.Result.Append(parameters.TokenStack.Resolve());
+                    parameters.Token.Length = 0;
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    token.Append((char)cursor.Value);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     break;
             }
 
@@ -123,40 +116,37 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.InsideArgumentTag"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
-        /// <param name="tokenStack">The stack of tokens.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessInsideArgumentTag(Cursor cursor, StringBuilder result, StringBuilder token, TokenStack tokenStack)
+        private static State ProcessInsideArgumentTag(EngineParameters parameters)
         {
             var state = State.InsideArgumentTag;
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("End of string reached while inside a token");
                 case ',':
                     state = State.OnArgumentSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.ArgumentTag);
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.ArgumentTag);
+                    parameters.Token.Length = 0;
                     break;
 
                 case ':':
                     state = State.OnFilterSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.ArgumentTag);
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.ArgumentTag);
+                    parameters.Token.Length = 0;
                     break;
 
                 case '}':
-                    tokenStack.Push(token.ToString(), TokenType.ArgumentTag);
-                    result.Append(tokenStack.Resolve());
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.ArgumentTag);
+                    parameters.Result.Append(parameters.TokenStack.Resolve());
+                    parameters.Token.Length = 0;
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    ThrowIfInvalidCharacter(parameters.Cursor);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     break;
             }
 
@@ -166,40 +156,37 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.InsideFilter"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
-        /// <param name="tokenStack">The stack of tokens.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessInsideFilter(Cursor cursor, StringBuilder result, StringBuilder token, TokenStack tokenStack)
+        private static State ProcessInsideFilter(EngineParameters parameters)
         {
             var state = State.InsideFilter;
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("End of string reached while inside a token");
                 case ':':
                     state = State.OnFilterSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.Filter);
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Filter);
+                    parameters.Token.Length = 0;
                     break;
 
                 case '+':
                     state = State.OnArgumentInitializer;
-                    tokenStack.Push(token.ToString(), TokenType.Filter);
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Filter);
+                    parameters.Token.Length = 0;
                     break;
 
                 case '}':
-                    tokenStack.Push(token.ToString(), TokenType.Filter);
-                    result.Append(tokenStack.Resolve());
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Filter);
+                    parameters.Result.Append(parameters.TokenStack.Resolve());
+                    parameters.Token.Length = 0;
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    ThrowIfInvalidCharacter(parameters.Cursor);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     break;
             }
 
@@ -209,34 +196,31 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.InsideTag"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
-        /// <param name="tokenStack">The stack of tokens.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessInsideTag(Cursor cursor, StringBuilder result, StringBuilder token, TokenStack tokenStack)
+        private static State ProcessInsideTag(EngineParameters parameters)
         {
             var state = State.InsideTag;
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("End of string reached while inside a token");
                 case ':':
                     state = State.OnFilterSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.Tag);
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Tag);
+                    parameters.Token.Length = 0;
                     break;
 
                 case '}':
-                    tokenStack.Push(token.ToString(), TokenType.Tag);
-                    result.Append(tokenStack.Resolve());
-                    token.Length = 0;
+                    parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Tag);
+                    parameters.Result.Append(parameters.TokenStack.Resolve());
+                    parameters.Token.Length = 0;
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    ThrowIfInvalidCharacter(parameters.Cursor);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     break;
             }
 
@@ -246,13 +230,12 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnArgumentInitializer"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnArgumentInitializer(Cursor cursor, StringBuilder token)
+        private static State ProcessOnArgumentInitializer(EngineParameters parameters)
         {
             var state = State.InsideArgument;
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("End of string reached while inside a token");
@@ -263,7 +246,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    token.Append((char)cursor.Value);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     break;
             }
 
@@ -273,13 +256,12 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnArgumentSeparator"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnArgumentSeparator(Cursor cursor, StringBuilder token)
+        private static State ProcessOnArgumentSeparator(EngineParameters parameters)
         {
             var state = State.InsideArgument;
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("End of string reached while inside a token");
@@ -291,7 +273,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    token.Append((char)cursor.Value);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     break;
             }
 
@@ -301,12 +283,11 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnArgumentTagIndicator"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnArgumentTagIndicator(Cursor cursor, StringBuilder token)
+        private static State ProcessOnArgumentTagIndicator(EngineParameters parameters)
         {
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("End of string reached while inside a token");
@@ -314,8 +295,8 @@ namespace Strinken.Engine
                     throw new FormatException("Empty argument");
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    ThrowIfInvalidCharacter(parameters.Cursor);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     break;
             }
 
@@ -325,20 +306,19 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnCloseBracket"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnCloseBracket(Cursor cursor, StringBuilder result)
+        private static State ProcessOnCloseBracket(EngineParameters parameters)
         {
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case '}':
                     // Escaped '}'
-                    result.Append('}');
+                    parameters.Result.Append('}');
                     break;
 
                 default:
-                    throw new FormatException($"Illegal '}}' at position {cursor.Position - 1}");
+                    throw new FormatException($"Illegal '}}' at position {parameters.Cursor.Position - 1}");
             }
 
             return State.OutsideToken;
@@ -347,20 +327,19 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnFilterSeparator"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnFilterSeparator(Cursor cursor, StringBuilder token)
+        private static State ProcessOnFilterSeparator(EngineParameters parameters)
         {
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("End of string reached while inside a token");
                 case '}':
                     throw new FormatException("Empty filter");
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    ThrowIfInvalidCharacter(parameters.Cursor);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     break;
             }
 
@@ -370,14 +349,12 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnOpenBracket"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnOpenBracket(Cursor cursor, StringBuilder result, StringBuilder token)
+        private static State ProcessOnOpenBracket(EngineParameters parameters)
         {
             State state;
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     throw new FormatException("Illegal '{' at the end of the string");
@@ -386,13 +363,13 @@ namespace Strinken.Engine
                     throw new FormatException("Empty tag");
                 case '{':
                     // Escaped '{'
-                    result.Append('{');
+                    parameters.Result.Append('{');
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    ThrowIfInvalidCharacter(parameters.Cursor);
+                    parameters.Token.Append((char)parameters.Cursor.Value);
                     state = State.InsideTag;
                     break;
             }
@@ -403,14 +380,13 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OutsideToken"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOutsideToken(Cursor cursor, StringBuilder result)
+        private static State ProcessOutsideToken(EngineParameters parameters)
         {
             var state = State.OutsideToken;
 
-            switch (cursor.Value)
+            switch (parameters.Cursor.Value)
             {
                 case -1:
                     state = State.EndOfString;
@@ -425,7 +401,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    result.Append((char)cursor.Value);
+                    parameters.Result.Append((char)parameters.Cursor.Value);
                     break;
             }
 
