@@ -28,7 +28,7 @@ namespace Strinken.Parser
         /// <summary>
         /// Initializes a new instance of the <see cref="Parser{T}"/> class.
         /// </summary>
-        internal Parser()
+        public Parser()
         {
             this.tags = new Dictionary<string, ITag<T>>();
             this.filters = new Dictionary<string, IFilter>();
