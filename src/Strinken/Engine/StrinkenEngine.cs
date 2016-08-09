@@ -439,7 +439,7 @@ namespace Strinken.Engine
         private static void ThrowIfInvalidCharacter(Cursor cursor)
         {
             var value = (char)cursor.Value;
-            if (value.IsValidTokenNameCharacter())
+            if (value.IsInvalidTokenNameCharacter())
             {
                 throw new FormatException($"Illegal '{(char)cursor.Value}' at position {cursor.Position}");
             }
