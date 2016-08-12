@@ -18,9 +18,9 @@ namespace Strinken.Parser
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithFilter<T>(this Parser<T> parser, IFilter filter)
         {
-            parser.AddFilter(filter);
-
-            return parser;
+            var copiedParser = parser.DeepCopy();
+            copiedParser.AddFilter(filter);
+            return copiedParser;
         }
 
         /// <summary>
@@ -32,12 +32,13 @@ namespace Strinken.Parser
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithFilters<T>(this Parser<T> parser, IEnumerable<IFilter> filters)
         {
+            var copiedParser = parser.DeepCopy();
             foreach (var filter in filters)
             {
-                parser.AddFilter(filter);
+                copiedParser.AddFilter(filter);
             }
 
-            return parser;
+            return copiedParser;
         }
 
         /// <summary>
@@ -49,9 +50,9 @@ namespace Strinken.Parser
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithTag<T>(this Parser<T> parser, ITag<T> tag)
         {
-            parser.AddTag(tag);
-
-            return parser;
+            var copiedParser = parser.DeepCopy();
+            copiedParser.AddTag(tag);
+            return copiedParser;
         }
 
         /// <summary>
@@ -65,11 +66,10 @@ namespace Strinken.Parser
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithTag<T>(this Parser<T> parser, string tagName, string tagDescription, Func<T, string> resolveAction)
         {
+            var copiedParser = parser.DeepCopy();
             var tag = TagFactory.Create(tagName, tagDescription, resolveAction);
-
-            parser.AddTag(tag);
-
-            return parser;
+            copiedParser.AddTag(tag);
+            return copiedParser;
         }
 
         /// <summary>
@@ -81,12 +81,13 @@ namespace Strinken.Parser
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithTags<T>(this Parser<T> parser, IEnumerable<ITag<T>> tags)
         {
+            var copiedParser = parser.DeepCopy();
             foreach (var tag in tags)
             {
-                parser.AddTag(tag);
+                copiedParser.AddTag(tag);
             }
 
-            return parser;
+            return copiedParser;
         }
     }
 }

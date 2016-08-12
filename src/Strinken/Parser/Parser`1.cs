@@ -153,6 +153,27 @@ namespace Strinken.Parser
         }
 
         /// <summary>
+        /// Creates a deep copy of the current parser.
+        /// </summary>
+        /// <returns>A deep copy of the parser.</returns>
+        internal Parser<T> DeepCopy()
+        {
+            var newParser = new Parser<T>();
+            foreach (var tag in this.tags.Values)
+            {
+                newParser.AddTag(tag);
+            }
+
+            var parserOwnFilters = this.filters.Where(f => !FilterHelpers.BaseFilters.Select(bf => bf.Name).Contains(f.Value.Name));
+            foreach (var filter in parserOwnFilters)
+            {
+                newParser.AddFilter(filter.Value);
+            }
+
+            return newParser;
+        }
+
+        /// <summary>
         /// Validates a name and throws a <see cref="ArgumentException"/> if the name is invalid.
         /// </summary>
         /// <param name="name">The name to validate.</param>
