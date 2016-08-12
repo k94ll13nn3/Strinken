@@ -1,6 +1,5 @@
 // stylecop.header
 using System;
-using System.Text;
 using Strinken.Common;
 using Strinken.Machine;
 
@@ -50,25 +49,25 @@ namespace Strinken.Engine
 
             using (var parameters = new EngineParameters(input, this.actionOnTags, this.actionOnFilters))
             {
-                var machine = StateMachineBuilder
+                var machine = StateMachineBuilder<State, EngineParameters>
                     .Initialize()
                     .StartOn(State.OutsideToken)
                     .StopOn(State.EndOfString)
                     .BeforeEachStep(parameters.Cursor.Next)
-                    .On(State.OutsideToken).Do(() => ProcessOutsideToken(parameters))
-                    .On(State.OnOpenBracket).Do(() => ProcessOnOpenBracket(parameters))
-                    .On(State.InsideTag).Do(() => ProcessInsideTag(parameters))
-                    .On(State.OnCloseBracket).Do(() => ProcessOnCloseBracket(parameters))
-                    .On(State.OnFilterSeparator).Do(() => ProcessOnFilterSeparator(parameters))
-                    .On(State.InsideFilter).Do(() => ProcessInsideFilter(parameters))
-                    .On(State.OnArgumentInitializer).Do(() => ProcessOnArgumentInitializer(parameters))
-                    .On(State.OnArgumentSeparator).Do(() => ProcessOnArgumentSeparator(parameters))
-                    .On(State.InsideArgument).Do(() => ProcessInsideArgument(parameters))
-                    .On(State.OnArgumentTagIndicator).Do(() => ProcessOnArgumentTagIndicator(parameters))
-                    .On(State.InsideArgumentTag).Do(() => ProcessInsideArgumentTag(parameters))
+                    .On(State.OutsideToken).Do(ProcessOutsideToken)
+                    .On(State.OnOpenBracket).Do(ProcessOnOpenBracket)
+                    .On(State.InsideTag).Do(ProcessInsideTag)
+                    .On(State.OnCloseBracket).Do(ProcessOnCloseBracket)
+                    .On(State.OnFilterSeparator).Do(ProcessOnFilterSeparator)
+                    .On(State.InsideFilter).Do(ProcessInsideFilter)
+                    .On(State.OnArgumentInitializer).Do(ProcessOnArgumentInitializer)
+                    .On(State.OnArgumentSeparator).Do(ProcessOnArgumentSeparator)
+                    .On(State.InsideArgument).Do(ProcessInsideArgument)
+                    .On(State.OnArgumentTagIndicator).Do(ProcessOnArgumentTagIndicator)
+                    .On(State.InsideArgumentTag).Do(ProcessInsideArgumentTag)
                     .Build();
 
-                machine.Run();
+                machine.Run(parameters);
 
                 return parameters.Result.ToString();
             }

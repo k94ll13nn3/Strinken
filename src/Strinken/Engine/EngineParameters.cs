@@ -1,13 +1,14 @@
 ﻿// stylecop.header
 using System;
 using System.Text;
+using Strinken.Machine;
 
 namespace Strinken.Engine
 {
     /// <summary>
     /// Parameters used by the engine to process a string.
     /// </summary>
-    internal class EngineParameters : IDisposable
+    internal class EngineParameters : IDisposable, IParameters<State>
     {
         /// <summary>
         /// A value indicating whether the <see cref="Dispose()"/> method has already been called.
@@ -31,10 +32,16 @@ namespace Strinken.Engine
             this.TokenStack = new TokenStack(actionOnTags, actionOnFilters);
         }
 
+        /// <inheritdoc/>
+        public State CurrentState { get; set; }
+
         /// <summary>
         /// Gets or sets the cursor used to read the string.
         /// </summary>
         public Cursor Cursor { get; set; }
+
+        /// <inheritdoc/>
+        public string Message { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="StringBuilder"/> used to generate the resulting string.

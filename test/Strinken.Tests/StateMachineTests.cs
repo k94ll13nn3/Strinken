@@ -10,7 +10,7 @@ namespace Strinken.Tests
         [Test]
         public void On_StateAlreadyRegistered_ThrowsInvalidOperationException()
         {
-            Func<StateMachine> createMachine = () => StateMachineBuilder
+            Func<StateMachine<State, BaseParameters>> createMachine = () => StateMachineBuilder<State, BaseParameters>
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
@@ -24,14 +24,20 @@ namespace Strinken.Tests
         [Test]
         public void On_StateWithNoAction_ThrowsInvalidOperationException()
         {
-            var machine = StateMachineBuilder
+            var machine = StateMachineBuilder<State, BaseParameters>
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
-                .On(State.OutsideToken).Do(() => State.InsideArgument)
+                .On(State.OutsideToken).Do(p => State.InsideArgument)
                 .Build();
 
-            Assert.That(() => machine.Run(), Throws.InvalidOperationException.With.Message.EqualTo("The state InsideArgument does not have a corresponding action."));
+            Assert.That(() => machine.Run(new BaseParameters()), Throws.InvalidOperationException.With.Message.EqualTo("The state InsideArgument does not have a corresponding action."));
+        }
+
+        private class BaseParameters : IParameters<State>
+        {
+            public string Message { get; set; }
+            public State CurrentState { get; set; }
         }
     }
 }

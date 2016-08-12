@@ -1,5 +1,4 @@
 // stylecop.header
-
 using System;
 using System.Collections.Generic;
 
@@ -8,15 +7,18 @@ namespace Strinken.Machine
     /// <summary>
     /// State machine.
     /// </summary>
-    internal class StateMachine
+    /// <typeparam name="TState">The type of the states.</typeparam>
+    /// <typeparam name="TParameter">The type of the parameters passed to the machine.</typeparam>
+    internal class StateMachine<TState, TParameter>
+        where TParameter : IParameters<TState>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StateMachine"/> class.
+        /// Initializes a new instance of the <see cref="StateMachine{TState, TParameter}"/> class.
         /// </summary>
         public StateMachine()
         {
-            this.StateMapper = new Dictionary<State, Func<State>>();
-            this.StoppingStates = new List<State>();
+            this.StateMapper = new Dictionary<TState, Func<TParameter, TState>>();
+            this.StoppingStates = new List<TState>();
         }
 
         /// <summary>
@@ -25,29 +27,30 @@ namespace Strinken.Machine
         public Action BeforeAction { get; set; }
 
         /// <summary>
-        /// Gets or sets the current state added specified by the <see cref="ICanAddState.On(State)"/> method.
+        /// Gets or sets the current state added specified by the <see cref="ICanAddState{TState, TParameter}.On(TState)"/> method.
         /// </summary>
-        public State CurrentState { get; set; }
+        public TState CurrentState { get; set; }
 
         /// <summary>
         /// Gets or sets the starting state of the machine.
         /// </summary>
-        public State StartingState { get; set; }
+        public TState StartingState { get; set; }
 
         /// <summary>
         /// Gets the mapper used to resolve action depending on state.
         /// </summary>
-        public Dictionary<State, Func<State>> StateMapper { get; }
+        public Dictionary<TState, Func<TParameter, TState>> StateMapper { get; }
 
         /// <summary>
         /// Gets the list of states that stops the machine.
         /// </summary>
-        public ICollection<State> StoppingStates { get; }
+        public ICollection<TState> StoppingStates { get; }
 
         /// <summary>
         /// Run the machine.
         /// </summary>
-        internal void Run()
+        /// <param name="parameter">Parameter used by the state machine.</param>
+        internal void Run(TParameter parameter)
         {
             var runningState = this.StartingState;
 
@@ -59,7 +62,7 @@ namespace Strinken.Machine
                     throw new InvalidOperationException($"The state {runningState} does not have a corresponding action.");
                 }
 
-                runningState = this.StateMapper[runningState]();
+                runningState = this.StateMapper[runningState](parameter);
             }
             while (!this.StoppingStates.Contains(runningState));
         }
