@@ -18,6 +18,7 @@ namespace Strinken.Machine
         public StateMachine()
         {
             this.StateMapper = new Dictionary<TState, Func<TParameter, TState>>();
+            this.SinkingStates = new List<TState>();
             this.StoppingStates = new List<TState>();
         }
 
@@ -47,10 +48,16 @@ namespace Strinken.Machine
         public ICollection<TState> StoppingStates { get; }
 
         /// <summary>
+        /// Gets the list of states that stops the machine and returns a failure.
+        /// </summary>
+        public ICollection<TState> SinkingStates { get; }
+
+        /// <summary>
         /// Run the machine.
         /// </summary>
         /// <param name="parameter">Parameter used by the state machine.</param>
-        internal void Run(TParameter parameter)
+        /// <returns>A value indicating whether the machine successfully ran.</returns>
+        internal bool Run(TParameter parameter)
         {
             var runningState = this.StartingState;
 
@@ -63,8 +70,16 @@ namespace Strinken.Machine
                 }
 
                 runningState = this.StateMapper[runningState](parameter);
+
+                // if the machine goes into a sink state, stop it and returns false (= failure)
+                if (this.SinkingStates.Contains(runningState))
+                {
+                    return false;
+                }
             }
             while (!this.StoppingStates.Contains(runningState));
+
+            return true;
         }
     }
 }

@@ -60,6 +60,13 @@ namespace Strinken.Machine
         }
 
         /// <inheritdoc/>
+        public ICanAddState<TState, TParameter> Sink()
+        {
+            this.machine.SinkingStates.Add(this.machine.CurrentState);
+            return this;
+        }
+
+        /// <inheritdoc/>
         public ICanAddStop<TState, TParameter> StartOn(TState state)
         {
             this.machine.StartingState = state;

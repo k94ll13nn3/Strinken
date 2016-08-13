@@ -34,10 +34,33 @@ namespace Strinken.Tests
             Assert.That(() => machine.Run(new BaseParameters()), Throws.InvalidOperationException.With.Message.EqualTo("The state InsideArgument does not have a corresponding action."));
         }
 
-        private class BaseParameters : IParameters<State>
+        [Test]
+        public void Run_WithSinkState_ReturnsFailure()
         {
-            public string Message { get; set; }
-            public State CurrentState { get; set; }
+            var machine = StateMachineBuilder<State, BaseParameters>
+                .Initialize()
+                .StartOn(State.OutsideToken)
+                .StopOn(State.OutsideToken)
+                .On(State.OutsideToken).Do(p => State.InsideArgument)
+                .On(State.InsideArgument).Sink()
+                .Build();
+
+            Assert.That(() => machine.Run(new BaseParameters()), Is.False);
         }
+
+        [Test]
+        public void Run_BaseMachine_ReturnsSuccess()
+        {
+            var machine = StateMachineBuilder<State, BaseParameters>
+                .Initialize()
+                .StartOn(State.OutsideToken)
+                .StopOn(State.OutsideToken)
+                .On(State.OutsideToken).Do(p => State.OutsideToken)
+                .Build();
+
+            Assert.That(() => machine.Run(new BaseParameters()), Is.True);
+        }
+
+        private class BaseParameters : IParameters<State> { }
     }
 }

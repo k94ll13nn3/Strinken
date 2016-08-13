@@ -32,16 +32,15 @@ namespace Strinken.Engine
             this.TokenStack = new TokenStack(actionOnTags, actionOnFilters);
         }
 
-        /// <inheritdoc/>
-        public State CurrentState { get; set; }
-
         /// <summary>
         /// Gets or sets the cursor used to read the string.
         /// </summary>
         public Cursor Cursor { get; set; }
 
-        /// <inheritdoc/>
-        public string Message { get; set; }
+        /// <summary>
+        /// Gets or sets the error message in case of failure.
+        /// </summary>
+        public string ErrorMessage { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="StringBuilder"/> used to generate the resulting string.
