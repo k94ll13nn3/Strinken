@@ -18,168 +18,218 @@ namespace Strinken.Tests
         [Test]
         public void Run_NullInput_ReturnsNull()
         {
-            Assert.That(() => this.engine.Run(null), Is.Null);
+            var result = this.engine.Run(null);
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.ErrorMessage, Is.Null);
+            Assert.That(result.ParsedString, Is.Null);
         }
 
         [Test]
         public void Run_EmptyInput_ReturnsEmptyString()
         {
-            Assert.That(this.engine.Run(string.Empty), Is.Empty);
+            var result = this.engine.Run(string.Empty);
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.ErrorMessage, Is.Null);
+            Assert.That(result.ParsedString, Is.Empty);
         }
 
         [Test]
         public void Run_OpenBracketAtStringEnd_ThrowsFormatException()
         {
             const string input = "lorem ipsum{";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '{' at the end of the string"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '{' at the end of the string"));
         }
 
         [Test]
         public void Run_EmptyTag_ThrowsFormatException()
         {
             const string input = "lorem{}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Empty tag"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Empty tag"));
         }
 
         [Test]
         public void Run_TagNotClosed_ThrowsFormatException()
         {
             const string input = "lorem{a";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
         }
 
         [Test]
         public void Run_OpenBracketInTag_ThrowsFormatException()
         {
             const string input = "lorem{test{tm";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '{' at position 10"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '{' at position 10"));
         }
 
         [Test]
         public void Run_EmptyFilter_ThrowsFormatException()
         {
             const string input = "lorem{test:}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Empty filter"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Empty filter"));
         }
 
         [Test]
         public void Run_EmptyFirstArgument_ThrowsFormatException()
         {
             const string input = "lorem{test:filter+}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Empty argument"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
         }
 
         [Test]
         public void Run_EmptySecondArgument_ThrowsFormatException()
         {
             const string input = "lorem{test:filter+arg,}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Empty argument"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
         }
 
         [Test]
         public void Run_EmptyArgumentTag_ThrowsFormatException()
         {
             const string input = "lorem{test:filter+arg,=}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Empty argument"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
         }
 
         [Test]
         public void Run_OpenBracketInsideFilter_ThrowsFormatException()
         {
             const string input = "lorem{test:a{r}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '{' at position 12"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '{' at position 12"));
         }
 
         [Test]
         public void Run_FilterSeparatorInsideFilter_ThrowsFormatException()
         {
             const string input = "lorem{test:a:}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Empty filter"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Empty filter"));
         }
 
         [Test]
         public void Run_TwoArgumentTagSeparator_ThrowsFormatException()
         {
             const string input = "lorem{test:a+==}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '=' at position 14"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '=' at position 14"));
         }
 
         [Test]
         public void Run_CloseBracketOutisdeToken_ThrowsFormatException()
         {
             const string input = "lorem}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '}' at position 5"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '}' at position 5"));
         }
 
         [Test]
         public void Run_EndOfStringOnFilterSeparator_ThrowsFormatException()
         {
             const string input = "lorem{ispum:";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
         }
 
         [Test]
         public void Run_FilterNotClosed_ThrowsFormatException()
         {
             const string input = "lorem{ispum:abc";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
         }
 
-        [Test]
-        public void Run_ArgumentNotClosed_ThrowsFormatException()
+        [TestCase("lorem{ispum:abc+p")]
+        [TestCase("lorem{ispum:abc+p,t")]
+        public void Run_ArgumentNotClosed_ThrowsFormatException(string input)
         {
-            Assert.That(() => this.engine.Run("lorem{ispum:abc+p"), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
-            Assert.That(() => this.engine.Run("lorem{ispum:abc+p,t"), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
         }
 
         [Test]
         public void Run_EndOfStringOnArgumentSeparator_ThrowsFormatException()
         {
             const string input = "lorem{ispum:tot+h,";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
         }
 
         [Test]
         public void Run_EndOfStringOnArgumentTagIndicator_ThrowsFormatException()
         {
             const string input = "lorem{ispum:tot+h,=";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
         }
 
         [Test]
         public void Run_EndOfStringInsideArgumentTag_ThrowsFormatException()
         {
             const string input = "lorem{ispum:tot+h,=a";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
         }
 
         [Test]
         public void Run_EndOfStringOnArgumentInitializer_ThrowsFormatException()
         {
             const string input = "lorem{ispum:tot+";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("End of string reached while inside a token"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
         }
 
         [Test]
         public void Run_ArgumentAfterTag_ThrowsFormatException()
         {
             const string input = "lorem{ispum+arg}";
-            Assert.That(() => this.engine.Run(input), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '+' at position 11"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '+' at position 11"));
         }
 
         [Test]
         public void Run_ValidString_DoesNotThrow()
         {
             const string input = "lorem{ispum:abc}";
-            Assert.That(() => this.engine.Run(input), Throws.Nothing);
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.ErrorMessage, Is.Null);
         }
 
-        [Test]
-        public void Run_InvalidCharacterInString_ThrowsFormatException()
+        [TestCase("lorem{isp+um:abc}", '+')]
+        [TestCase("lorem{isp°um:abc}", '°')]
+        [TestCase("lorem{isp um:abc}", ' ')]
+        public void Run_InvalidCharacterInString_ThrowsFormatException(string input, char illegalChar)
         {
-            Assert.That(() => this.engine.Run("lorem{isp+um:abc}"), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '+' at position 9"));
-            Assert.That(() => this.engine.Run("lorem{isp°um:abc}"), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '°' at position 9"));
-            Assert.That(() => this.engine.Run("lorem{isp um:abc}"), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal ' ' at position 9"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo($"Illegal '{illegalChar}' at position 9"));
         }
 
         [TestCase("lorem{ispum:abc}")]
@@ -188,26 +238,31 @@ namespace Strinken.Tests
         [TestCase("lorem{ispSIK_}")]
         [TestCase("lorem{JuF-_}")]
         [TestCase("lorem{JuF-m}09à9")]
-        public void Run_ValidCharacterInString_DoesNotThrow(string value)
+        public void Run_ValidCharacterInString_DoesNotThrow(string input)
         {
-            Assert.That(() => this.engine.Run(value), Throws.Nothing);
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.ErrorMessage, Is.Null);
         }
 
         [TestCase("{lorem:ispum+abc}")]
         [TestCase("{lorem:ispum+abc9}")]
         [TestCase("{lorem:ispum+abc-+}")]
-        public void Run_ArgumentValue_ChecksCharacters(string value)
+        public void Run_ArgumentValue_ChecksCharacters(string input)
         {
-            Assert.That(() => this.engine.Run(value), Throws.Nothing);
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.True);
+            Assert.That(result.ErrorMessage, Is.Null);
         }
 
-        [Test]
-        public void Run_ArgumentTagValue_ChecksCharacters()
+        [TestCase("{lorem:ispum+=abc9}",  '9', 17)]
+        [TestCase("{lorem:ispum+=abc-+}",  '+', 18)]
+        [TestCase("{lorem:ispum+=abc*}",  '*', 17)]
+        public void Run_ArgumentTagValue_ChecksCharacters(string input, char illegalChar, int position)
         {
-            Assert.That(() => this.engine.Run("{lorem:ispum+=abc}"), Throws.Nothing);
-            Assert.That(() => this.engine.Run("{lorem:ispum+=abc9}"), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '9' at position 17"));
-            Assert.That(() => this.engine.Run("{lorem:ispum+=abc-+}"), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '+' at position 18"));
-            Assert.That(() => this.engine.Run("{lorem:ispum+=abc*}"), Throws.TypeOf<FormatException>().With.Message.EqualTo("Illegal '*' at position 17"));
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo($"Illegal '{illegalChar}' at position {position}"));
         }
     }
 }

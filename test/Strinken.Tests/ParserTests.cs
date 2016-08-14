@@ -82,7 +82,7 @@ namespace Strinken.Tests
         {
             var validationResult = stringSolver.Validate("The {DataName:} is in the kitchen.");
             Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Message, Is.EqualTo("The input is not correctly formatted (Empty filter)."));
+            Assert.That(validationResult.Message, Is.EqualTo("Empty filter"));
         }
 
         [Test]

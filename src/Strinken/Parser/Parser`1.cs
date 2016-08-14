@@ -65,7 +65,8 @@ namespace Strinken.Parser
             var solver = new StrinkenEngine(
                 tagName => this.tags[tagName].Resolve(value),
                 (filterName, valueToPass, arguments) => this.filters[filterName].Resolve(valueToPass, arguments));
-            return solver.Run(input);
+            var runResult = solver.Run(input);
+            return runResult.Success ? runResult.ParsedString : null;
         }
 
         /// <summary>
@@ -75,48 +76,45 @@ namespace Strinken.Parser
         /// <returns>A value indicating whether the input is valid.</returns>
         public ValidationResult Validate(string input)
         {
-            try
+            var tagList = new List<string>();
+            var filterList = new List<Tuple<string, string[]>>();
+            var validator = new StrinkenEngine(
+            tagName =>
             {
-                var tagList = new List<string>();
-                var filterList = new List<Tuple<string, string[]>>();
-                var validator = new StrinkenEngine(
-                tagName =>
-                {
-                    tagList.Add(tagName);
-                    return string.Empty;
-                },
-                (filterName, valueToPass, arguments) =>
-                {
-                    filterList.Add(Tuple.Create(filterName, arguments));
-                    return string.Empty;
-                });
+                tagList.Add(tagName);
+                return string.Empty;
+            },
+            (filterName, valueToPass, arguments) =>
+            {
+                filterList.Add(Tuple.Create(filterName, arguments));
+                return string.Empty;
+            });
 
-                validator.Run(input);
-
-                // Find the first tag that was not registered in the parser.
-                var invalidParameter = tagList.FirstOrDefault(tagName => !this.tags.ContainsKey(tagName));
-                if (invalidParameter != null)
-                {
-                    return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
-                }
-
-                // Find the first filter that was not registered in the parser.
-                invalidParameter = filterList.FirstOrDefault(filter => !this.filters.ContainsKey(filter.Item1))?.Item1;
-                if (invalidParameter != null)
-                {
-                    return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
-                }
-
-                // Find the first filter that has invalid arguments.
-                invalidParameter = filterList.FirstOrDefault(filter => !this.filters[filter.Item1].Validate(filter.Item2))?.Item1;
-                if (invalidParameter != null)
-                {
-                    return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
-                }
+            var runResult = validator.Run(input);
+            if (!runResult.Success)
+            {
+                return new ValidationResult { Message = runResult.ErrorMessage, IsValid = false };
             }
-            catch (FormatException e)
+
+            // Find the first tag that was not registered in the parser.
+            var invalidParameter = tagList.FirstOrDefault(tagName => !this.tags.ContainsKey(tagName));
+            if (invalidParameter != null)
             {
-                return new ValidationResult { Message = $"The input is not correctly formatted ({e.Message}).", IsValid = false };
+                return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
+            }
+
+            // Find the first filter that was not registered in the parser.
+            invalidParameter = filterList.FirstOrDefault(filter => !this.filters.ContainsKey(filter.Item1))?.Item1;
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
+            }
+
+            // Find the first filter that has invalid arguments.
+            invalidParameter = filterList.FirstOrDefault(filter => !this.filters[filter.Item1].Validate(filter.Item2))?.Item1;
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
             }
 
             return new ValidationResult { Message = null, IsValid = true };

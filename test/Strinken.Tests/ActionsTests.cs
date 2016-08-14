@@ -58,7 +58,7 @@ namespace Strinken.Tests
             const string input = "loremtute";
             var result = engine.Run(input);
 
-            Assert.That(result, Is.EqualTo("loremtute"));
+            Assert.That(result.ParsedString, Is.EqualTo("loremtute"));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Strinken.Tests
             const string input = "lorem{ipsum}tu{ti}te";
             var result = engine.Run(input);
 
-            Assert.That(result, Is.EqualTo("loremtute"));
+            Assert.That(result.ParsedString, Is.EqualTo("loremtute"));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Strinken.Tests
             const string input = "lorem{{te";
             var result = engine.Run(input);
 
-            Assert.That(result, Is.EqualTo("lorem{te"));
+            Assert.That(result.ParsedString, Is.EqualTo("lorem{te"));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Strinken.Tests
             const string input = "lorem}}te";
             var result = engine.Run(input);
 
-            Assert.That(result, Is.EqualTo("lorem}te"));
+            Assert.That(result.ParsedString, Is.EqualTo("lorem}te"));
         }
 
         [Test]
@@ -324,7 +324,7 @@ namespace Strinken.Tests
             Assert.That(filterSeen["kuki"], Is.EqualTo("patsebelliIPSUMtutepaku|MALO"));
             Assert.That(filterSeen["patse"], Is.EqualTo("belliIPSUMtute"));
             Assert.That(filterSeen["belli"], Is.EqualTo("IPSUM"));
-            Assert.That(result, Is.EqualTo("loremkukipatsebelliIPSUMtutepaku|MALO"));
+            Assert.That(result.ParsedString, Is.EqualTo("loremkukipatsebelliIPSUMtutepaku|MALO"));
         }
 
         [Test]
@@ -347,7 +347,7 @@ namespace Strinken.Tests
             Assert.That(filterSeen, Has.Count.EqualTo(1));
             Assert.That(filterSeen, Contains.Key("patse"));
             Assert.That(filterSeen["patse"], Is.Null);
-            Assert.That(result, Is.EqualTo("lorempatsepaku|"));
+            Assert.That(result.ParsedString, Is.EqualTo("lorempatsepaku|"));
         }
     }
 }

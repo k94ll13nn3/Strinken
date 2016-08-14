@@ -38,13 +38,18 @@ namespace Strinken.Engine
         /// Run the engine on a string.
         /// </summary>
         /// <param name="input">The string to process.</param>
-        /// <returns>The parsed string.</returns>
+        /// <returns>A <see cref="EngineResult"/> containing data about the run.</returns>
         /// <exception cref="FormatException">When the input is not valid.</exception>
-        public string Run(string input)
+        public EngineResult Run(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return input;
+                return new EngineResult
+                {
+                    Success = true,
+                    ParsedString = input,
+                    ErrorMessage = null
+                };
             }
 
             using (var parameters = new EngineParameters(input, this.actionOnTags, this.actionOnFilters))
@@ -65,11 +70,17 @@ namespace Strinken.Engine
                     .On(State.InsideArgument).Do(ProcessInsideArgument)
                     .On(State.OnArgumentTagIndicator).Do(ProcessOnArgumentTagIndicator)
                     .On(State.InsideArgumentTag).Do(ProcessInsideArgumentTag)
+                    .On(State.InvalidString).Sink()
                     .Build();
 
-                machine.Run(parameters);
-
-                return parameters.Result.ToString();
+                var success = machine.Run(parameters);
+                var result = new EngineResult
+                {
+                    Success = success,
+                    ParsedString = parameters.Result.ToString(),
+                    ErrorMessage = parameters.ErrorMessage
+                };
+                return result;
             }
         }
 
@@ -80,11 +91,14 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private static State ProcessInsideArgument(EngineParameters parameters)
         {
-            var state = State.InsideArgument;
+            State state;
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "End of string reached while inside a token";
+                    break;
+
                 case ',':
                     state = State.OnArgumentSeparator;
                     parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Argument);
@@ -106,6 +120,7 @@ namespace Strinken.Engine
 
                 default:
                     parameters.Token.Append((char)parameters.Cursor.Value);
+                    state = State.InsideArgument;
                     break;
             }
 
@@ -119,11 +134,14 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private static State ProcessInsideArgumentTag(EngineParameters parameters)
         {
-            var state = State.InsideArgumentTag;
+            State state;
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "End of string reached while inside a token";
+                    break;
+
                 case ',':
                     state = State.OnArgumentSeparator;
                     parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.ArgumentTag);
@@ -144,8 +162,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(parameters.Cursor);
-                    parameters.Token.Append((char)parameters.Cursor.Value);
+                    state = ValidateCursor(parameters, State.InsideArgumentTag);
                     break;
             }
 
@@ -159,11 +176,14 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private static State ProcessInsideFilter(EngineParameters parameters)
         {
-            var state = State.InsideFilter;
+            State state;
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "End of string reached while inside a token";
+                    break;
+
                 case ':':
                     state = State.OnFilterSeparator;
                     parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Filter);
@@ -184,8 +204,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(parameters.Cursor);
-                    parameters.Token.Append((char)parameters.Cursor.Value);
+                    state = ValidateCursor(parameters, State.InsideFilter);
                     break;
             }
 
@@ -199,11 +218,14 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private static State ProcessInsideTag(EngineParameters parameters)
         {
-            var state = State.InsideTag;
+            State state;
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "End of string reached while inside a token";
+                    break;
+
                 case ':':
                     state = State.OnFilterSeparator;
                     parameters.TokenStack.Push(parameters.Token.ToString(), TokenType.Tag);
@@ -218,8 +240,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(parameters.Cursor);
-                    parameters.Token.Append((char)parameters.Cursor.Value);
+                    state = ValidateCursor(parameters, State.InsideTag);
                     break;
             }
 
@@ -233,19 +254,26 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private static State ProcessOnArgumentInitializer(EngineParameters parameters)
         {
-            var state = State.InsideArgument;
+            State state;
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "End of string reached while inside a token";
+                    break;
+
                 case '}':
-                    throw new FormatException("Empty argument");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "Empty argument";
+                    break;
+
                 case '=':
                     state = State.OnArgumentTagIndicator;
                     break;
 
                 default:
                     parameters.Token.Append((char)parameters.Cursor.Value);
+                    state = State.InsideArgument;
                     break;
             }
 
@@ -263,9 +291,14 @@ namespace Strinken.Engine
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "End of string reached while inside a token";
+                    break;
+
                 case '}':
-                    throw new FormatException("Empty argument");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "Empty argument";
+                    break;
 
                 case '=':
                     state = State.OnArgumentTagIndicator;
@@ -286,20 +319,25 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private static State ProcessOnArgumentTagIndicator(EngineParameters parameters)
         {
+            State state;
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "End of string reached while inside a token";
+                    break;
+
                 case '}':
-                    throw new FormatException("Empty argument");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "Empty argument";
+                    break;
 
                 default:
-                    ThrowIfInvalidCharacter(parameters.Cursor);
-                    parameters.Token.Append((char)parameters.Cursor.Value);
+                    state = ValidateCursor(parameters, State.InsideArgumentTag);
                     break;
             }
 
-            return State.InsideArgumentTag;
+            return state;
         }
 
         /// <summary>
@@ -309,18 +347,22 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private static State ProcessOnCloseBracket(EngineParameters parameters)
         {
+            State state;
             switch (parameters.Cursor.Value)
             {
                 case '}':
                     // Escaped '}'
                     parameters.Result.Append('}');
+                    state = State.OutsideToken;
                     break;
 
                 default:
-                    throw new FormatException($"Illegal '}}' at position {parameters.Cursor.Position - 1}");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = $"Illegal '}}' at position {parameters.Cursor.Position - 1}";
+                    break;
             }
 
-            return State.OutsideToken;
+            return state;
         }
 
         /// <summary>
@@ -330,19 +372,25 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private static State ProcessOnFilterSeparator(EngineParameters parameters)
         {
+            State state;
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "End of string reached while inside a token";
+                    break;
+
                 case '}':
-                    throw new FormatException("Empty filter");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "Empty filter";
+                    break;
+
                 default:
-                    ThrowIfInvalidCharacter(parameters.Cursor);
-                    parameters.Token.Append((char)parameters.Cursor.Value);
+                    state = ValidateCursor(parameters, State.InsideFilter);
                     break;
             }
 
-            return State.InsideFilter;
+            return state;
         }
 
         /// <summary>
@@ -356,10 +404,15 @@ namespace Strinken.Engine
             switch (parameters.Cursor.Value)
             {
                 case -1:
-                    throw new FormatException("Illegal '{' at the end of the string");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "Illegal '{' at the end of the string";
+                    break;
                 case ':':
                 case '}':
-                    throw new FormatException("Empty tag");
+                    state = State.InvalidString;
+                    parameters.ErrorMessage = "Empty tag";
+                    break;
+
                 case '{':
                     // Escaped '{'
                     parameters.Result.Append('{');
@@ -367,9 +420,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(parameters.Cursor);
-                    parameters.Token.Append((char)parameters.Cursor.Value);
-                    state = State.InsideTag;
+                    state = ValidateCursor(parameters, State.InsideTag);
                     break;
             }
 
@@ -408,15 +459,23 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Validates a <see cref="Cursor"/> and throws a <see cref="FormatException"/> if the data in the cursor is invalid.
+        /// Validates the current <see cref="Cursor"/> of a <see cref="EngineParameters"/>.
         /// </summary>
-        /// <param name="cursor">The <see cref="Cursor"/> to validate.</param>
-        private static void ThrowIfInvalidCharacter(Cursor cursor)
+        /// <param name="parameters">The parameters used by the engine to process a string.</param>
+        /// <param name="stateIfValid">The <see cref="State"/> to return if the cursor is valid..</param>
+        /// <returns>The new state.</returns>
+        private static State ValidateCursor(EngineParameters parameters, State stateIfValid)
         {
-            var value = (char)cursor.Value;
+            var value = (char)parameters.Cursor.Value;
             if (value.IsValidTokenNameCharacter())
             {
-                throw new FormatException($"Illegal '{(char)cursor.Value}' at position {cursor.Position}");
+                parameters.ErrorMessage = $"Illegal '{(char)parameters.Cursor.Value}' at position {parameters.Cursor.Position}";
+                return State.InvalidString;
+            }
+            else
+            {
+                parameters.Token.Append((char)parameters.Cursor.Value);
+                return stateIfValid;
             }
         }
     }
