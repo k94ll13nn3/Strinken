@@ -35,12 +35,7 @@ namespace Strinken.Parser
 
             foreach (var filter in FilterHelpers.BaseFilters)
             {
-                if (this.filters.ContainsKey(filter.Name))
-                {
-                    throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
-                }
-
-                this.filters.Add(filter.Name, filter);
+                this.AddFilter(filter);
             }
         }
 
