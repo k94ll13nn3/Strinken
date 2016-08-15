@@ -6,49 +6,46 @@ namespace Strinken.Machine
     /// <summary>
     /// Builder used for creating a state machine.
     /// </summary>
-    /// <typeparam name="TState">The type of the states.</typeparam>
-    /// <typeparam name="TParameter">The type of the parameters passed to the machine.</typeparam>
-    internal class StateMachineBuilder<TState, TParameter> : ICanAddStateOrSteppingMethodOrStop<TState, TParameter>, ICanAddAction<TState, TParameter>, ICanAddStart<TState, TParameter>
-        where TParameter : IParameters<TState>
+    internal class StateMachineBuilder : ICanAddStateOrSteppingMethodOrStop, ICanAddAction, ICanAddStart
     {
         /// <summary>
         /// State machine that is being built.
         /// </summary>
-        private readonly StateMachine<TState, TParameter> machine;
+        private readonly StateMachine machine;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StateMachineBuilder{TState, TParameter}"/> class.
+        /// Initializes a new instance of the <see cref="StateMachineBuilder"/> class.
         /// </summary>
         private StateMachineBuilder()
         {
-            this.machine = new StateMachine<TState, TParameter>();
+            this.machine = new StateMachine();
         }
 
         /// <summary>
         /// Initializes the builder.
         /// </summary>
-        /// <returns>A <see cref="ICanAddStart{TState, TParameter}"/> for chaining.</returns>
-        public static ICanAddStart<TState, TParameter> Initialize() => new StateMachineBuilder<TState, TParameter>();
+        /// <returns>A <see cref="ICanAddStart"/> for chaining.</returns>
+        public static ICanAddStart Initialize() => new StateMachineBuilder();
 
         /// <inheritdoc/>
-        public ICanAddState<TState, TParameter> BeforeEachStep(Action action)
+        public ICanAddState BeforeEachStep(Action action)
         {
             this.machine.BeforeAction = action;
             return this;
         }
 
         /// <inheritdoc/>
-        public StateMachine<TState, TParameter> Build() => this.machine;
+        public StateMachine Build() => this.machine;
 
         /// <inheritdoc/>
-        public ICanAddState<TState, TParameter> Do(Func<TParameter, TState> action)
+        public ICanAddState Do(Func<State> action)
         {
             this.machine.StateMapper.Add(this.machine.CurrentState, action);
             return this;
         }
 
         /// <inheritdoc/>
-        public ICanAddAction<TState, TParameter> On(TState state)
+        public ICanAddAction On(State state)
         {
             if (this.machine.StateMapper.ContainsKey(state))
             {
@@ -60,21 +57,21 @@ namespace Strinken.Machine
         }
 
         /// <inheritdoc/>
-        public ICanAddState<TState, TParameter> Sink()
+        public ICanAddState Sink()
         {
             this.machine.SinkingStates.Add(this.machine.CurrentState);
             return this;
         }
 
         /// <inheritdoc/>
-        public ICanAddStop<TState, TParameter> StartOn(TState state)
+        public ICanAddStop StartOn(State state)
         {
             this.machine.StartingState = state;
             return this;
         }
 
         /// <inheritdoc/>
-        public ICanAddStateOrSteppingMethodOrStop<TState, TParameter> StopOn(TState state)
+        public ICanAddStateOrSteppingMethodOrStop StopOn(State state)
         {
             this.machine.StoppingStates.Add(state);
             return this;

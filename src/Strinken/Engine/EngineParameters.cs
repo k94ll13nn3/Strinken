@@ -1,14 +1,13 @@
 ﻿// stylecop.header
 using System;
 using System.Text;
-using Strinken.Machine;
 
 namespace Strinken.Engine
 {
     /// <summary>
     /// Parameters used by the engine to process a string.
     /// </summary>
-    internal class EngineParameters : IDisposable, IParameters<State>
+    internal class EngineParameters : IDisposable
     {
         /// <summary>
         /// A value indicating whether the <see cref="Dispose()"/> method has already been called.

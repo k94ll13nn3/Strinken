@@ -10,7 +10,7 @@ namespace Strinken.Tests
         [Test]
         public void On_StateAlreadyRegistered_ThrowsInvalidOperationException()
         {
-            Func<StateMachine<State, BaseParameters>> createMachine = () => StateMachineBuilder<State, BaseParameters>
+            Func<StateMachine> createMachine = () => StateMachineBuilder
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
@@ -24,43 +24,41 @@ namespace Strinken.Tests
         [Test]
         public void On_StateWithNoAction_ThrowsInvalidOperationException()
         {
-            var machine = StateMachineBuilder<State, BaseParameters>
+            var machine = StateMachineBuilder
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
-                .On(State.OutsideToken).Do(p => State.InsideArgument)
+                .On(State.OutsideToken).Do(() => State.InsideArgument)
                 .Build();
 
-            Assert.That(() => machine.Run(new BaseParameters()), Throws.InvalidOperationException.With.Message.EqualTo("The state InsideArgument does not have a corresponding action."));
+            Assert.That(() => machine.Run(), Throws.InvalidOperationException.With.Message.EqualTo("The state InsideArgument does not have a corresponding action."));
         }
 
         [Test]
         public void Run_WithSinkState_ReturnsFailure()
         {
-            var machine = StateMachineBuilder<State, BaseParameters>
+            var machine = StateMachineBuilder
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
-                .On(State.OutsideToken).Do(p => State.InsideArgument)
+                .On(State.OutsideToken).Do(() => State.InsideArgument)
                 .On(State.InsideArgument).Sink()
                 .Build();
 
-            Assert.That(() => machine.Run(new BaseParameters()), Is.False);
+            Assert.That(() => machine.Run(), Is.False);
         }
 
         [Test]
         public void Run_BaseMachine_ReturnsSuccess()
         {
-            var machine = StateMachineBuilder<State, BaseParameters>
+            var machine = StateMachineBuilder
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
-                .On(State.OutsideToken).Do(p => State.OutsideToken)
+                .On(State.OutsideToken).Do(() => State.OutsideToken)
                 .Build();
 
-            Assert.That(() => machine.Run(new BaseParameters()), Is.True);
+            Assert.That(() => machine.Run(), Is.True);
         }
-
-        private class BaseParameters : IParameters<State> { }
     }
 }
