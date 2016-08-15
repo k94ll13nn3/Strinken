@@ -47,8 +47,8 @@ namespace Strinken.Tests
 
             Assert.That(numberOfCall, Is.EqualTo(2));
             Assert.That(tagSeen.Count, Is.EqualTo(2));
-            Assert.That(tagSeen[0], Is.EqualTo("ispum"));
-            Assert.That(tagSeen[1], Is.EqualTo("belli"));
+            Assert.That(tagSeen[0], Is.EqualTo("belli"));
+            Assert.That(tagSeen[1], Is.EqualTo("ispum"));
         }
 
         [Test]

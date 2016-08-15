@@ -32,11 +32,6 @@ namespace Strinken.Engine
         private string errorMessage;
 
         /// <summary>
-        /// The <see cref="StringBuilder"/> used to generate the resulting string.
-        /// </summary>
-        private StringBuilder result;
-
-        /// <summary>
         /// The <see cref="StringBuilder"/> used store the current token.
         /// </summary>
         private StringBuilder token;
@@ -78,7 +73,6 @@ namespace Strinken.Engine
                 };
             }
 
-            this.result = new StringBuilder();
             this.token = new StringBuilder();
             this.tokenStack = new TokenStack(this.actionOnTags, this.actionOnFilters);
             this.errorMessage = null;
@@ -108,7 +102,7 @@ namespace Strinken.Engine
                 return new EngineResult
                 {
                     Success = success,
-                    ParsedString = this.result.ToString(),
+                    ParsedString = this.tokenStack.Resolve(),
                     ErrorMessage = this.errorMessage
                 };
             }
@@ -142,7 +136,6 @@ namespace Strinken.Engine
 
                 case '}':
                     this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
-                    this.result.Append(this.tokenStack.Resolve());
                     this.token.Length = 0;
                     state = State.OutsideToken;
                     break;
@@ -184,7 +177,6 @@ namespace Strinken.Engine
 
                 case '}':
                     this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
-                    this.result.Append(this.tokenStack.Resolve());
                     this.token.Length = 0;
                     state = State.OutsideToken;
                     break;
@@ -225,7 +217,6 @@ namespace Strinken.Engine
 
                 case '}':
                     this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
-                    this.result.Append(this.tokenStack.Resolve());
                     this.token.Length = 0;
                     state = State.OutsideToken;
                     break;
@@ -260,7 +251,6 @@ namespace Strinken.Engine
 
                 case '}':
                     this.tokenStack.Push(this.token.ToString(), TokenType.Tag);
-                    this.result.Append(this.tokenStack.Resolve());
                     this.token.Length = 0;
                     state = State.OutsideToken;
                     break;
@@ -374,7 +364,7 @@ namespace Strinken.Engine
             {
                 case '}':
                     // Escaped '}'
-                    this.result.Append('}');
+                    this.tokenStack.Push("}", TokenType.VerbatimString);
                     state = State.OutsideToken;
                     break;
 
@@ -436,7 +426,7 @@ namespace Strinken.Engine
 
                 case '{':
                     // Escaped '{'
-                    this.result.Append('{');
+                    this.tokenStack.Push("{", TokenType.VerbatimString);
                     state = State.OutsideToken;
                     break;
 
@@ -471,7 +461,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    this.result.Append((char)this.cursor.Value);
+                    this.tokenStack.Push(((char)this.cursor.Value).ToString(), TokenType.VerbatimString);
                     break;
             }
 

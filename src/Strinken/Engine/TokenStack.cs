@@ -1,6 +1,7 @@
 ﻿// stylecop.header
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Strinken.Engine
 {
@@ -46,7 +47,15 @@ namespace Strinken.Engine
         /// <param name="type">The type of the token.</param>
         public void Push(string data, TokenType type)
         {
-            this.tokenStack.Push(new Token(data, type));
+            if (this.tokenStack.Count > 0 && type == TokenType.VerbatimString && this.tokenStack.Peek().Type == TokenType.VerbatimString)
+            {
+                var lastToken = this.tokenStack.Pop();
+                this.tokenStack.Push(new Token(lastToken.Data + data, TokenType.VerbatimString));
+            }
+            else
+            {
+                this.tokenStack.Push(new Token(data, type));
+            }
         }
 
         /// <summary>
@@ -54,6 +63,33 @@ namespace Strinken.Engine
         /// </summary>
         /// <returns>The result of the resolution of the stack.</returns>
         public string Resolve()
+        {
+            var result = new StringBuilder();
+
+            while (this.tokenStack.Count > 0)
+            {
+                var nextToken = this.tokenStack.Peek();
+                switch (nextToken.Type)
+                {
+                    case TokenType.VerbatimString:
+                        var currentToken = this.tokenStack.Pop();
+                        result.Insert(0, currentToken.Data);
+                        break;
+
+                    default:
+                        result.Insert(0, this.ResolveTagOrFilter());
+                        break;
+                }
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Resolve a tag or a filter.
+        /// </summary>
+        /// <returns>The result of the resolution of the tag or the filter.</returns>
+        public string ResolveTagOrFilter()
         {
             var arguments = new List<string>();
 
@@ -71,7 +107,7 @@ namespace Strinken.Engine
                         break;
 
                     case TokenType.Filter:
-                        var temporaryResult = this.Resolve();
+                        var temporaryResult = this.ResolveTagOrFilter();
                         return this.actionOnFilters?.Invoke(currentToken.Data, temporaryResult, arguments.ToArray());
 
                     case TokenType.Tag:
