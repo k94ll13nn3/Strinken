@@ -12,108 +12,115 @@ namespace Strinken.Engine
     internal class StrinkenEngine
     {
         /// <summary>
-        /// Action to perform on filters. The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
+        /// The cursor used to read the string.
         /// </summary>
-        private readonly Func<string, string, string[], string> actionOnFilters;
+        private Cursor cursor;
 
         /// <summary>
-        /// Action to perform on tags. The argument is the tag name.
+        /// The error message in case of failure.
         /// </summary>
-        private readonly Func<string, string> actionOnTags;
+        private string errorMessage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StrinkenEngine"/> class.
+        /// The <see cref="StringBuilder"/> used store the current token.
         /// </summary>
-        /// <param name="actionOnTags">Action to perform on tags. The argument is the tag name.</param>
-        /// <param name="actionOnFilters">
-        ///     Action to perform on filters.
-        ///     The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
-        /// </param>
-        public StrinkenEngine(Func<string, string> actionOnTags, Func<string, string, string[], string> actionOnFilters)
-        {
-            this.actionOnTags = actionOnTags;
-            this.actionOnFilters = actionOnFilters;
-        }
+        private StringBuilder token;
+
+        /// <summary>
+        /// The stack of tokens.
+        /// </summary>
+        private TokenStack tokenStack;
 
         /// <summary>
         /// Run the engine on a string.
         /// </summary>
         /// <param name="input">The string to process.</param>
-        /// <returns>The parsed string.</returns>
+        /// <returns>A <see cref="EngineResult"/> containing data about the run.</returns>
         /// <exception cref="FormatException">When the input is not valid.</exception>
-        public string Run(string input)
+        public EngineResult Run(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return input;
+                var stack = new TokenStack();
+                stack.Push(input, TokenType.VerbatimString);
+                return new EngineResult
+                {
+                    Success = true,
+                    Stack = stack,
+                    ErrorMessage = null
+                };
             }
 
-            using (var cursor = new Cursor(input))
-            {
-                var result = new StringBuilder();
-                var token = new StringBuilder();
-                var tokenStack = new TokenStack(this.actionOnTags, this.actionOnFilters);
+            this.token = new StringBuilder();
+            this.tokenStack = new TokenStack();
+            this.errorMessage = null;
 
+            using (this.cursor = new Cursor(input))
+            {
                 var machine = StateMachineBuilder
                     .Initialize()
                     .StartOn(State.OutsideToken)
                     .StopOn(State.EndOfString)
-                    .BeforeEachStep(cursor.Next)
-                    .On(State.OutsideToken).Do(() => ProcessOutsideToken(cursor, result))
-                    .On(State.OnOpenBracket).Do(() => ProcessOnOpenBracket(cursor, result, token))
-                    .On(State.InsideTag).Do(() => ProcessInsideTag(cursor, result, token, tokenStack))
-                    .On(State.OnCloseBracket).Do(() => ProcessOnCloseBracket(cursor, result))
-                    .On(State.OnFilterSeparator).Do(() => ProcessOnFilterSeparator(cursor, token))
-                    .On(State.InsideFilter).Do(() => ProcessInsideFilter(cursor, result, token, tokenStack))
-                    .On(State.OnArgumentInitializer).Do(() => ProcessOnArgumentInitializer(cursor, token))
-                    .On(State.OnArgumentSeparator).Do(() => ProcessOnArgumentSeparator(cursor, token))
-                    .On(State.InsideArgument).Do(() => ProcessInsideArgument(cursor, result, token, tokenStack))
-                    .On(State.OnArgumentTagIndicator).Do(() => ProcessOnArgumentTagIndicator(cursor, token))
-                    .On(State.InsideArgumentTag).Do(() => ProcessInsideArgumentTag(cursor, result, token, tokenStack))
+                    .BeforeEachStep(this.cursor.Next)
+                    .On(State.OutsideToken).Do(this.ProcessOutsideToken)
+                    .On(State.OnOpenBracket).Do(this.ProcessOnOpenBracket)
+                    .On(State.InsideTag).Do(this.ProcessInsideTag)
+                    .On(State.OnCloseBracket).Do(this.ProcessOnCloseBracket)
+                    .On(State.OnFilterSeparator).Do(this.ProcessOnFilterSeparator)
+                    .On(State.InsideFilter).Do(this.ProcessInsideFilter)
+                    .On(State.OnArgumentInitializer).Do(this.ProcessOnArgumentInitializer)
+                    .On(State.OnArgumentSeparator).Do(this.ProcessOnArgumentSeparator)
+                    .On(State.InsideArgument).Do(this.ProcessInsideArgument)
+                    .On(State.OnArgumentTagIndicator).Do(this.ProcessOnArgumentTagIndicator)
+                    .On(State.InsideArgumentTag).Do(this.ProcessInsideArgumentTag)
+                    .On(State.InvalidString).Sink()
                     .Build();
 
-                machine.Run();
-
-                return result.ToString();
+                var success = machine.Run();
+                return new EngineResult
+                {
+                    Success = success,
+                    Stack = success ? this.tokenStack : null,
+                    ErrorMessage = this.errorMessage
+                };
             }
         }
 
         /// <summary>
         /// Processes the <see cref="State.InsideArgument"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
-        /// <param name="tokenStack">The stack of tokens.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessInsideArgument(Cursor cursor, StringBuilder result, StringBuilder token, TokenStack tokenStack)
+        private State ProcessInsideArgument()
         {
-            var state = State.InsideArgument;
-            switch (cursor.Value)
+            State state;
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    this.errorMessage = "End of string reached while inside a token";
+                    break;
+
                 case ',':
                     state = State.OnArgumentSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.Argument);
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
+                    this.token.Length = 0;
                     break;
 
                 case ':':
                     state = State.OnFilterSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.Argument);
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
+                    this.token.Length = 0;
                     break;
 
                 case '}':
-                    tokenStack.Push(token.ToString(), TokenType.Argument);
-                    result.Append(tokenStack.Resolve());
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
+                    this.token.Length = 0;
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    token.Append((char)cursor.Value);
+                    this.token.Append((char)this.cursor.Value);
+                    state = State.InsideArgument;
                     break;
             }
 
@@ -123,40 +130,37 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.InsideArgumentTag"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
-        /// <param name="tokenStack">The stack of tokens.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessInsideArgumentTag(Cursor cursor, StringBuilder result, StringBuilder token, TokenStack tokenStack)
+        private State ProcessInsideArgumentTag()
         {
-            var state = State.InsideArgumentTag;
-            switch (cursor.Value)
+            State state;
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    this.errorMessage = "End of string reached while inside a token";
+                    break;
+
                 case ',':
                     state = State.OnArgumentSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.ArgumentTag);
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
+                    this.token.Length = 0;
                     break;
 
                 case ':':
                     state = State.OnFilterSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.ArgumentTag);
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
+                    this.token.Length = 0;
                     break;
 
                 case '}':
-                    tokenStack.Push(token.ToString(), TokenType.ArgumentTag);
-                    result.Append(tokenStack.Resolve());
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
+                    this.token.Length = 0;
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    state = this.ValidateCursor(State.InsideArgumentTag);
                     break;
             }
 
@@ -166,40 +170,37 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.InsideFilter"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
-        /// <param name="tokenStack">The stack of tokens.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessInsideFilter(Cursor cursor, StringBuilder result, StringBuilder token, TokenStack tokenStack)
+        private State ProcessInsideFilter()
         {
-            var state = State.InsideFilter;
-            switch (cursor.Value)
+            State state;
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    this.errorMessage = "End of string reached while inside a token";
+                    break;
+
                 case ':':
                     state = State.OnFilterSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.Filter);
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
+                    this.token.Length = 0;
                     break;
 
                 case '+':
                     state = State.OnArgumentInitializer;
-                    tokenStack.Push(token.ToString(), TokenType.Filter);
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
+                    this.token.Length = 0;
                     break;
 
                 case '}':
-                    tokenStack.Push(token.ToString(), TokenType.Filter);
-                    result.Append(tokenStack.Resolve());
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
+                    this.token.Length = 0;
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    state = this.ValidateCursor(State.InsideFilter);
                     break;
             }
 
@@ -209,34 +210,31 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.InsideTag"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
-        /// <param name="tokenStack">The stack of tokens.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessInsideTag(Cursor cursor, StringBuilder result, StringBuilder token, TokenStack tokenStack)
+        private State ProcessInsideTag()
         {
-            var state = State.InsideTag;
-            switch (cursor.Value)
+            State state;
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    this.errorMessage = "End of string reached while inside a token";
+                    break;
+
                 case ':':
                     state = State.OnFilterSeparator;
-                    tokenStack.Push(token.ToString(), TokenType.Tag);
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.Tag);
+                    this.token.Length = 0;
                     break;
 
                 case '}':
-                    tokenStack.Push(token.ToString(), TokenType.Tag);
-                    result.Append(tokenStack.Resolve());
-                    token.Length = 0;
+                    this.tokenStack.Push(this.token.ToString(), TokenType.Tag);
+                    this.token.Length = 0;
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    state = this.ValidateCursor(State.InsideTag);
                     break;
             }
 
@@ -246,24 +244,29 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnArgumentInitializer"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnArgumentInitializer(Cursor cursor, StringBuilder token)
+        private State ProcessOnArgumentInitializer()
         {
-            var state = State.InsideArgument;
-            switch (cursor.Value)
+            State state;
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    this.errorMessage = "End of string reached while inside a token";
+                    break;
+
                 case '}':
-                    throw new FormatException("Empty argument");
+                    state = State.InvalidString;
+                    this.errorMessage = "Empty argument";
+                    break;
+
                 case '=':
                     state = State.OnArgumentTagIndicator;
                     break;
 
                 default:
-                    token.Append((char)cursor.Value);
+                    this.token.Append((char)this.cursor.Value);
+                    state = State.InsideArgument;
                     break;
             }
 
@@ -273,25 +276,28 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnArgumentSeparator"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnArgumentSeparator(Cursor cursor, StringBuilder token)
+        private State ProcessOnArgumentSeparator()
         {
             var state = State.InsideArgument;
-            switch (cursor.Value)
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    this.errorMessage = "End of string reached while inside a token";
+                    break;
+
                 case '}':
-                    throw new FormatException("Empty argument");
+                    state = State.InvalidString;
+                    this.errorMessage = "Empty argument";
+                    break;
 
                 case '=':
                     state = State.OnArgumentTagIndicator;
                     break;
 
                 default:
-                    token.Append((char)cursor.Value);
+                    this.token.Append((char)this.cursor.Value);
                     break;
             }
 
@@ -301,99 +307,109 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OnArgumentTagIndicator"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnArgumentTagIndicator(Cursor cursor, StringBuilder token)
+        private State ProcessOnArgumentTagIndicator()
         {
-            switch (cursor.Value)
+            State state;
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    this.errorMessage = "End of string reached while inside a token";
+                    break;
+
                 case '}':
-                    throw new FormatException("Empty argument");
+                    state = State.InvalidString;
+                    this.errorMessage = "Empty argument";
+                    break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    state = this.ValidateCursor(State.InsideArgumentTag);
                     break;
             }
 
-            return State.InsideArgumentTag;
+            return state;
         }
 
         /// <summary>
         /// Processes the <see cref="State.OnCloseBracket"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnCloseBracket(Cursor cursor, StringBuilder result)
+        private State ProcessOnCloseBracket()
         {
-            switch (cursor.Value)
+            State state;
+            switch (this.cursor.Value)
             {
                 case '}':
                     // Escaped '}'
-                    result.Append('}');
+                    this.tokenStack.Push("}", TokenType.VerbatimString);
+                    state = State.OutsideToken;
                     break;
 
                 default:
-                    throw new FormatException($"Illegal '}}' at position {cursor.Position - 1}");
+                    state = State.InvalidString;
+                    this.errorMessage = $"Illegal '}}' at position {this.cursor.Position - 1}";
+                    break;
             }
 
-            return State.OutsideToken;
+            return state;
         }
 
         /// <summary>
         /// Processes the <see cref="State.OnFilterSeparator"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnFilterSeparator(Cursor cursor, StringBuilder token)
+        private State ProcessOnFilterSeparator()
         {
-            switch (cursor.Value)
+            State state;
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("End of string reached while inside a token");
+                    state = State.InvalidString;
+                    this.errorMessage = "End of string reached while inside a token";
+                    break;
+
                 case '}':
-                    throw new FormatException("Empty filter");
+                    state = State.InvalidString;
+                    this.errorMessage = "Empty filter";
+                    break;
+
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
+                    state = this.ValidateCursor(State.InsideFilter);
                     break;
             }
 
-            return State.InsideFilter;
+            return state;
         }
 
         /// <summary>
         /// Processes the <see cref="State.OnOpenBracket"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
-        /// <param name="token">The <see cref="StringBuilder"/> used store the current token.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOnOpenBracket(Cursor cursor, StringBuilder result, StringBuilder token)
+        private State ProcessOnOpenBracket()
         {
             State state;
-            switch (cursor.Value)
+            switch (this.cursor.Value)
             {
                 case -1:
-                    throw new FormatException("Illegal '{' at the end of the string");
+                    state = State.InvalidString;
+                    this.errorMessage = "Illegal '{' at the end of the string";
+                    break;
+
                 case ':':
                 case '}':
-                    throw new FormatException("Empty tag");
+                    state = State.InvalidString;
+                    this.errorMessage = "Empty tag";
+                    break;
+
                 case '{':
                     // Escaped '{'
-                    result.Append('{');
+                    this.tokenStack.Push("{", TokenType.VerbatimString);
                     state = State.OutsideToken;
                     break;
 
                 default:
-                    ThrowIfInvalidCharacter(cursor);
-                    token.Append((char)cursor.Value);
-                    state = State.InsideTag;
+                    state = this.ValidateCursor(State.InsideTag);
                     break;
             }
 
@@ -403,14 +419,12 @@ namespace Strinken.Engine
         /// <summary>
         /// Processes the <see cref="State.OutsideToken"/> state.
         /// </summary>
-        /// <param name="cursor">The cursor used to read the string.</param>
-        /// <param name="result">The <see cref="StringBuilder"/> used to generate the resulting string.</param>
         /// <returns>The new state.</returns>
-        private static State ProcessOutsideToken(Cursor cursor, StringBuilder result)
+        private State ProcessOutsideToken()
         {
             var state = State.OutsideToken;
 
-            switch (cursor.Value)
+            switch (this.cursor.Value)
             {
                 case -1:
                     state = State.EndOfString;
@@ -425,7 +439,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    result.Append((char)cursor.Value);
+                    this.tokenStack.Push(((char)this.cursor.Value).ToString(), TokenType.VerbatimString);
                     break;
             }
 
@@ -433,15 +447,22 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Validates a <see cref="Cursor"/> and throws a <see cref="FormatException"/> if the data in the cursor is invalid.
+        /// Validates the current <see cref="Cursor"/>.
         /// </summary>
-        /// <param name="cursor">The <see cref="Cursor"/> to validate.</param>
-        private static void ThrowIfInvalidCharacter(Cursor cursor)
+        /// <param name="stateIfValid">The <see cref="State"/> to return if the cursor is valid..</param>
+        /// <returns>The new state.</returns>
+        private State ValidateCursor(State stateIfValid)
         {
-            var value = (char)cursor.Value;
+            var value = (char)this.cursor.Value;
             if (value.IsInvalidTokenNameCharacter())
             {
-                throw new FormatException($"Illegal '{(char)cursor.Value}' at position {cursor.Position}");
+                this.errorMessage = $"Illegal '{(char)this.cursor.Value}' at position {this.cursor.Position}";
+                return State.InvalidString;
+            }
+            else
+            {
+                this.token.Append((char)this.cursor.Value);
+                return stateIfValid;
             }
         }
     }

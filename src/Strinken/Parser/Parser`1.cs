@@ -57,10 +57,15 @@ namespace Strinken.Parser
         /// <returns>The resolved input.</returns>
         public string Resolve(string input, T value)
         {
-            var solver = new StrinkenEngine(
-                tagName => this.tags[tagName].Resolve(value),
-                (filterName, valueToPass, arguments) => this.filters[filterName].Resolve(valueToPass, arguments));
-            return solver.Run(input);
+            var runResult = new StrinkenEngine().Run(input);
+            if (runResult.Success)
+            {
+                return runResult.Stack.Resolve(
+                    tagName => this.tags[tagName].Resolve(value),
+                    (filterName, valueToPass, arguments) => this.filters[filterName].Resolve(valueToPass, arguments));
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -70,48 +75,47 @@ namespace Strinken.Parser
         /// <returns>A value indicating whether the input is valid.</returns>
         public ValidationResult Validate(string input)
         {
-            try
+            var tagList = new List<string>();
+            var filterList = new List<Tuple<string, string[]>>();
+            var validator = new StrinkenEngine();
+
+            var runResult = validator.Run(input);
+            if (!runResult.Success)
             {
-                var tagList = new List<string>();
-                var filterList = new List<Tuple<string, string[]>>();
-                var validator = new StrinkenEngine(
-                tagName =>
-                {
-                    tagList.Add(tagName);
-                    return string.Empty;
-                },
+                return new ValidationResult { Message = runResult.ErrorMessage, IsValid = false };
+            }
+
+            runResult.Stack.Resolve(
+                 tagName =>
+                 {
+                     tagList.Add(tagName);
+                     return string.Empty;
+                 },
                 (filterName, valueToPass, arguments) =>
                 {
                     filterList.Add(Tuple.Create(filterName, arguments));
                     return string.Empty;
                 });
 
-                validator.Run(input);
-
-                // Find the first tag that was not registered in the parser.
-                var invalidParameter = tagList.FirstOrDefault(tagName => !this.tags.ContainsKey(tagName));
-                if (invalidParameter != null)
-                {
-                    return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
-                }
-
-                // Find the first filter that was not registered in the parser.
-                invalidParameter = filterList.FirstOrDefault(filter => !this.filters.ContainsKey(filter.Item1))?.Item1;
-                if (invalidParameter != null)
-                {
-                    return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
-                }
-
-                // Find the first filter that has invalid arguments.
-                invalidParameter = filterList.FirstOrDefault(filter => !this.filters[filter.Item1].Validate(filter.Item2))?.Item1;
-                if (invalidParameter != null)
-                {
-                    return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
-                }
-            }
-            catch (FormatException e)
+            // Find the first tag that was not registered in the parser.
+            var invalidParameter = tagList.FirstOrDefault(tagName => !this.tags.ContainsKey(tagName));
+            if (invalidParameter != null)
             {
-                return new ValidationResult { Message = $"The input is not correctly formatted ({e.Message}).", IsValid = false };
+                return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
+            }
+
+            // Find the first filter that was not registered in the parser.
+            invalidParameter = filterList.FirstOrDefault(filter => !this.filters.ContainsKey(filter.Item1))?.Item1;
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
+            }
+
+            // Find the first filter that has invalid arguments.
+            invalidParameter = filterList.FirstOrDefault(filter => !this.filters[filter.Item1].Validate(filter.Item2))?.Item1;
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
             }
 
             return new ValidationResult { Message = null, IsValid = true };
@@ -145,6 +149,27 @@ namespace Strinken.Parser
 
             ThrowIfInvalidName(tag.Name);
             this.tags.Add(tag.Name, tag);
+        }
+
+        /// <summary>
+        /// Creates a deep copy of the current parser.
+        /// </summary>
+        /// <returns>A deep copy of the parser.</returns>
+        internal Parser<T> DeepCopy()
+        {
+            var newParser = new Parser<T>();
+            foreach (var tag in this.tags.Values)
+            {
+                newParser.AddTag(tag);
+            }
+
+            var parserOwnFilters = this.filters.Where(f => !FilterHelpers.BaseFilters.Select(bf => bf.Name).Contains(f.Value.Name));
+            foreach (var filter in parserOwnFilters)
+            {
+                newParser.AddFilter(filter.Value);
+            }
+
+            return newParser;
         }
 
         /// <summary>

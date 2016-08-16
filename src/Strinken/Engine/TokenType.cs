@@ -25,6 +25,11 @@ namespace Strinken.Engine
         /// <summary>
         /// The token is a tag.
         /// </summary>
-        Tag
+        Tag,
+
+        /// <summary>
+        /// The token is a string that will be rendered without modifications.
+        /// </summary>
+        VerbatimString
     }
 }

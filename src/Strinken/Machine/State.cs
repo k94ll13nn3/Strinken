@@ -65,6 +65,11 @@ namespace Strinken.Machine
         /// <summary>
         /// The machine is inside an argument tag.
         /// </summary>
-        InsideArgumentTag
+        InsideArgumentTag,
+
+        /// <summary>
+        /// The machine has seen an invalid string.
+        /// </summary>
+        InvalidString
     }
 }

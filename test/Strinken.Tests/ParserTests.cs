@@ -82,7 +82,7 @@ namespace Strinken.Tests
         {
             var validationResult = stringSolver.Validate("The {DataName:} is in the kitchen.");
             Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Message, Is.EqualTo("The input is not correctly formatted (Empty filter)."));
+            Assert.That(validationResult.Message, Is.EqualTo("Empty filter"));
         }
 
         [Test]
@@ -194,6 +194,26 @@ namespace Strinken.Tests
             Assert.That(solver.Tags, Has.Count.EqualTo(1));
             Assert.That(solver.Tags.First().Name, Is.EqualTo("OTF"));
             Assert.That(solver.Resolve("The {OTF} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The Lorem is in the kitchen."));
+        }
+
+        [Test]
+        public void WithTag_Called_DoesNotModifyCallingInstance()
+        {
+            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
+            var solver2 = solver.WithTag("TagBis", "TagBis", a => a.Name);
+
+            Assert.That(solver.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid, Is.False);
+            Assert.That(solver2.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid, Is.True);
+        }
+
+        [Test]
+        public void WithFilter_Called_DoesNotModifyCallingInstance()
+        {
+            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new CustomFilter());
+            var solver2 = solver.WithFilter(new AppendFilter());
+
+            Assert.That(solver.Validate("The {Tag:Append+One:Custom} is in the kitchen.").IsValid, Is.False);
+            Assert.That(solver2.Validate("The {Tag:Append+One:Custom} is in the kitchen.").IsValid, Is.True);
         }
     }
 }

@@ -33,5 +33,32 @@ namespace Strinken.Tests
 
             Assert.That(() => machine.Run(), Throws.InvalidOperationException.With.Message.EqualTo("The state InsideArgument does not have a corresponding action."));
         }
+
+        [Test]
+        public void Run_WithSinkState_ReturnsFailure()
+        {
+            var machine = StateMachineBuilder
+                .Initialize()
+                .StartOn(State.OutsideToken)
+                .StopOn(State.OutsideToken)
+                .On(State.OutsideToken).Do(() => State.InsideArgument)
+                .On(State.InsideArgument).Sink()
+                .Build();
+
+            Assert.That(() => machine.Run(), Is.False);
+        }
+
+        [Test]
+        public void Run_BaseMachine_ReturnsSuccess()
+        {
+            var machine = StateMachineBuilder
+                .Initialize()
+                .StartOn(State.OutsideToken)
+                .StopOn(State.OutsideToken)
+                .On(State.OutsideToken).Do(() => State.OutsideToken)
+                .Build();
+
+            Assert.That(() => machine.Run(), Is.True);
+        }
     }
 }

@@ -1,5 +1,4 @@
 // stylecop.header
-
 using System;
 using System.Collections.Generic;
 
@@ -16,6 +15,7 @@ namespace Strinken.Machine
         public StateMachine()
         {
             this.StateMapper = new Dictionary<State, Func<State>>();
+            this.SinkingStates = new List<State>();
             this.StoppingStates = new List<State>();
         }
 
@@ -45,9 +45,15 @@ namespace Strinken.Machine
         public ICollection<State> StoppingStates { get; }
 
         /// <summary>
+        /// Gets the list of states that stops the machine and returns a failure.
+        /// </summary>
+        public ICollection<State> SinkingStates { get; }
+
+        /// <summary>
         /// Run the machine.
         /// </summary>
-        internal void Run()
+        /// <returns>A value indicating whether the machine successfully ran.</returns>
+        internal bool Run()
         {
             var runningState = this.StartingState;
 
@@ -60,8 +66,16 @@ namespace Strinken.Machine
                 }
 
                 runningState = this.StateMapper[runningState]();
+
+                // if the machine goes into a sink state, stop it and returns false (= failure)
+                if (this.SinkingStates.Contains(runningState))
+                {
+                    return false;
+                }
             }
             while (!this.StoppingStates.Contains(runningState));
+
+            return true;
         }
     }
 }

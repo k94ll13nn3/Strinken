@@ -11,7 +11,7 @@ namespace Strinken.Machine
         /// Defines on which state the machine should start.
         /// </summary>
         /// <param name="state">The state.</param>
-        /// <returns>A <see cref="ICanAddStateOrSteppingMethod"/> for chaining.</returns>
+        /// <returns>A <see cref="ICanAddStop"/> for chaining.</returns>
         ICanAddStop StartOn(State state);
     }
 }
