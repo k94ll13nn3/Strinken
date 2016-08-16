@@ -256,6 +256,7 @@ namespace Strinken.Engine
                     break;
 
                 case '}':
+                case ',':
                     state = State.InvalidString;
                     this.errorMessage = "Empty argument";
                     break;
@@ -288,6 +289,7 @@ namespace Strinken.Engine
                     break;
 
                 case '}':
+                case ',':
                     state = State.InvalidString;
                     this.errorMessage = "Empty argument";
                     break;

@@ -96,6 +96,24 @@ namespace Strinken.Tests
         }
 
         [Test]
+        public void Run_EmptySecondArgumentAndThreeArgument_ThrowsFormatException()
+        {
+            const string input = "lorem{test:filter+someThing,,}";
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
+        }
+
+        [Test]
+        public void Run_EmptyFirstAndSecond_ThrowsFormatException()
+        {
+            const string input = "lorem{tag:filter+,}";
+            var result = this.engine.Run(input);
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
+        }
+
+        [Test]
         public void Run_EmptyArgumentTag_ThrowsFormatException()
         {
             const string input = "lorem{test:filter+arg,=}";
