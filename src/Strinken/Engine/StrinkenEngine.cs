@@ -12,16 +12,6 @@ namespace Strinken.Engine
     internal class StrinkenEngine
     {
         /// <summary>
-        /// Action to perform on filters. The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
-        /// </summary>
-        private readonly Func<string, string, string[], string> actionOnFilters;
-
-        /// <summary>
-        /// Action to perform on tags. The argument is the tag name.
-        /// </summary>
-        private readonly Func<string, string> actionOnTags;
-
-        /// <summary>
         /// The cursor used to read the string.
         /// </summary>
         private Cursor cursor;
@@ -42,20 +32,6 @@ namespace Strinken.Engine
         private TokenStack tokenStack;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StrinkenEngine"/> class.
-        /// </summary>
-        /// <param name="actionOnTags">Action to perform on tags. The argument is the tag name.</param>
-        /// <param name="actionOnFilters">
-        ///     Action to perform on filters.
-        ///     The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
-        /// </param>
-        public StrinkenEngine(Func<string, string> actionOnTags, Func<string, string, string[], string> actionOnFilters)
-        {
-            this.actionOnTags = actionOnTags;
-            this.actionOnFilters = actionOnFilters;
-        }
-
-        /// <summary>
         /// Run the engine on a string.
         /// </summary>
         /// <param name="input">The string to process.</param>
@@ -65,16 +41,18 @@ namespace Strinken.Engine
         {
             if (string.IsNullOrWhiteSpace(input))
             {
+                var stack = new TokenStack();
+                stack.Push(input, TokenType.VerbatimString);
                 return new EngineResult
                 {
                     Success = true,
-                    ParsedString = input,
+                    Stack = stack,
                     ErrorMessage = null
                 };
             }
 
             this.token = new StringBuilder();
-            this.tokenStack = new TokenStack(this.actionOnTags, this.actionOnFilters);
+            this.tokenStack = new TokenStack();
             this.errorMessage = null;
 
             using (this.cursor = new Cursor(input))
@@ -102,7 +80,7 @@ namespace Strinken.Engine
                 return new EngineResult
                 {
                     Success = success,
-                    ParsedString = this.tokenStack.Resolve(),
+                    Stack = success ? this.tokenStack : null,
                     ErrorMessage = this.errorMessage
                 };
             }

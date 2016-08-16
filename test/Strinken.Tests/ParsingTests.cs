@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Strinken.Engine;
-using System;
 
 namespace Strinken.Tests
 {
@@ -12,7 +11,7 @@ namespace Strinken.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            this.engine = new StrinkenEngine(null, null);
+            this.engine = new StrinkenEngine();
         }
 
         [Test]
@@ -21,7 +20,7 @@ namespace Strinken.Tests
             var result = this.engine.Run(null);
             Assert.That(result.Success, Is.True);
             Assert.That(result.ErrorMessage, Is.Null);
-            Assert.That(result.ParsedString, Is.Null);
+            Assert.That(result.Stack.Resolve(null, null), Is.Null);
         }
 
         [Test]
@@ -30,7 +29,7 @@ namespace Strinken.Tests
             var result = this.engine.Run(string.Empty);
             Assert.That(result.Success, Is.True);
             Assert.That(result.ErrorMessage, Is.Null);
-            Assert.That(result.ParsedString, Is.Empty);
+            Assert.That(result.Stack.Resolve(null, null), Is.Empty);
         }
 
         [Test]
@@ -255,9 +254,9 @@ namespace Strinken.Tests
             Assert.That(result.ErrorMessage, Is.Null);
         }
 
-        [TestCase("{lorem:ispum+=abc9}",  '9', 17)]
-        [TestCase("{lorem:ispum+=abc-+}",  '+', 18)]
-        [TestCase("{lorem:ispum+=abc*}",  '*', 17)]
+        [TestCase("{lorem:ispum+=abc9}", '9', 17)]
+        [TestCase("{lorem:ispum+=abc-+}", '+', 18)]
+        [TestCase("{lorem:ispum+=abc*}", '*', 17)]
         public void Run_ArgumentTagValue_ChecksCharacters(string input, char illegalChar, int position)
         {
             var result = this.engine.Run(input);

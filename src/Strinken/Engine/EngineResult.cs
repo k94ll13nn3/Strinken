@@ -1,5 +1,4 @@
 // stylecop.header
-using System;
 
 namespace Strinken.Engine
 {
@@ -14,9 +13,9 @@ namespace Strinken.Engine
         public bool Success { get; set; }
 
         /// <summary>
-        /// Gets or sets the resulting string created after the run in case of success.
+        /// Gets or sets the resulting stack created after the run in case of success.
         /// </summary>
-        public string ParsedString { get; set; }
+        public TokenStack Stack { get; set; }
 
         /// <summary>
         /// Gets or sets an error message describing the failure in case of failure.

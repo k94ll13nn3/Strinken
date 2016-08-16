@@ -11,16 +11,6 @@ namespace Strinken.Engine
     internal class TokenStack
     {
         /// <summary>
-        /// Action to perform on filters. The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
-        /// </summary>
-        private readonly Func<string, string, string[], string> actionOnFilters;
-
-        /// <summary>
-        /// Action to perform on tags. The argument is the tag name.
-        /// </summary>
-        private readonly Func<string, string> actionOnTags;
-
-        /// <summary>
         /// Internal stack.
         /// </summary>
         private readonly Stack<Token> tokenStack;
@@ -28,15 +18,8 @@ namespace Strinken.Engine
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenStack"/> class.
         /// </summary>
-        /// <param name="actionOnTags">Action to perform on tags. The argument is the tag name.</param>
-        /// <param name="actionOnFilters">
-        ///     Action to perform on filters.
-        ///     The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
-        /// </param>
-        public TokenStack(Func<string, string> actionOnTags, Func<string, string, string[], string> actionOnFilters)
+        public TokenStack()
         {
-            this.actionOnTags = actionOnTags;
-            this.actionOnFilters = actionOnFilters;
             this.tokenStack = new Stack<Token>();
         }
 
@@ -61,11 +44,20 @@ namespace Strinken.Engine
         /// <summary>
         /// Resolve the stack.
         /// </summary>
+        /// <param name="actionOnTags">Action to perform on tags. The argument is the tag name.</param>
+        /// <param name="actionOnFilters">
+        ///     Action to perform on filters.
+        ///     The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
+        /// </param>
         /// <returns>The result of the resolution of the stack.</returns>
-        public string Resolve()
+        public string Resolve(Func<string, string> actionOnTags, Func<string, string, string[], string> actionOnFilters)
         {
-            var result = new StringBuilder();
+            if (this.tokenStack.Count == 1 && this.tokenStack.Peek().Type == TokenType.VerbatimString)
+            {
+                return this.tokenStack.Peek().Data;
+            }
 
+            var result = new StringBuilder();
             while (this.tokenStack.Count > 0)
             {
                 var nextToken = this.tokenStack.Peek();
@@ -77,7 +69,7 @@ namespace Strinken.Engine
                         break;
 
                     default:
-                        result.Insert(0, this.ResolveTagOrFilter());
+                        result.Insert(0, this.ResolveTagOrFilter(actionOnTags, actionOnFilters));
                         break;
                 }
             }
@@ -88,8 +80,13 @@ namespace Strinken.Engine
         /// <summary>
         /// Resolve a tag or a filter.
         /// </summary>
+        /// <param name="actionOnTags">Action to perform on tags. The argument is the tag name.</param>
+        /// <param name="actionOnFilters">
+        ///     Action to perform on filters.
+        ///     The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
+        /// </param>
         /// <returns>The result of the resolution of the tag or the filter.</returns>
-        public string ResolveTagOrFilter()
+        private string ResolveTagOrFilter(Func<string, string> actionOnTags, Func<string, string, string[], string> actionOnFilters)
         {
             var arguments = new List<string>();
 
@@ -99,7 +96,7 @@ namespace Strinken.Engine
                 switch (currentToken.Type)
                 {
                     case TokenType.ArgumentTag:
-                        arguments.Insert(0, this.actionOnTags?.Invoke(currentToken.Data));
+                        arguments.Insert(0, actionOnTags?.Invoke(currentToken.Data));
                         break;
 
                     case TokenType.Argument:
@@ -107,11 +104,11 @@ namespace Strinken.Engine
                         break;
 
                     case TokenType.Filter:
-                        var temporaryResult = this.ResolveTagOrFilter();
-                        return this.actionOnFilters?.Invoke(currentToken.Data, temporaryResult, arguments.ToArray());
+                        var temporaryResult = this.ResolveTagOrFilter(actionOnTags, actionOnFilters);
+                        return actionOnFilters?.Invoke(currentToken.Data, temporaryResult, arguments.ToArray());
 
                     case TokenType.Tag:
-                        return this.actionOnTags?.Invoke(currentToken.Data);
+                        return actionOnTags?.Invoke(currentToken.Data);
                 }
             }
 

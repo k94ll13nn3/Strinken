@@ -57,11 +57,15 @@ namespace Strinken.Parser
         /// <returns>The resolved input.</returns>
         public string Resolve(string input, T value)
         {
-            var solver = new StrinkenEngine(
-                tagName => this.tags[tagName].Resolve(value),
-                (filterName, valueToPass, arguments) => this.filters[filterName].Resolve(valueToPass, arguments));
-            var runResult = solver.Run(input);
-            return runResult.Success ? runResult.ParsedString : null;
+            var runResult = new StrinkenEngine().Run(input);
+            if (runResult.Success)
+            {
+                return runResult.Stack.Resolve(
+                    tagName => this.tags[tagName].Resolve(value),
+                    (filterName, valueToPass, arguments) => this.filters[filterName].Resolve(valueToPass, arguments));
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -73,23 +77,25 @@ namespace Strinken.Parser
         {
             var tagList = new List<string>();
             var filterList = new List<Tuple<string, string[]>>();
-            var validator = new StrinkenEngine(
-            tagName =>
-            {
-                tagList.Add(tagName);
-                return string.Empty;
-            },
-            (filterName, valueToPass, arguments) =>
-            {
-                filterList.Add(Tuple.Create(filterName, arguments));
-                return string.Empty;
-            });
+            var validator = new StrinkenEngine();
 
             var runResult = validator.Run(input);
             if (!runResult.Success)
             {
                 return new ValidationResult { Message = runResult.ErrorMessage, IsValid = false };
             }
+
+            runResult.Stack.Resolve(
+                 tagName =>
+                 {
+                     tagList.Add(tagName);
+                     return string.Empty;
+                 },
+                (filterName, valueToPass, arguments) =>
+                {
+                    filterList.Add(Tuple.Create(filterName, arguments));
+                    return string.Empty;
+                });
 
             // Find the first tag that was not registered in the parser.
             var invalidParameter = tagList.FirstOrDefault(tagName => !this.tags.ContainsKey(tagName));
