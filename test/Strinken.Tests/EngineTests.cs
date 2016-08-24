@@ -4,7 +4,7 @@ using Strinken.Engine;
 namespace Strinken.Tests
 {
     [TestFixture]
-    public class ParsingTests
+    public class EngineTests
     {
         private StrinkenEngine engine;
 
