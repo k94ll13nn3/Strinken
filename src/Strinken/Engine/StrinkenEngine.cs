@@ -97,7 +97,7 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "End of string reached while inside a token";
+                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case ',':
@@ -138,7 +138,7 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "End of string reached while inside a token";
+                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case ',':
@@ -178,7 +178,7 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "End of string reached while inside a token";
+                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case ':':
@@ -218,7 +218,7 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "End of string reached while inside a token";
+                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case ':':
@@ -252,13 +252,13 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "End of string reached while inside a token";
+                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case '}':
                 case ',':
                     state = State.InvalidString;
-                    this.errorMessage = "Empty argument";
+                    this.errorMessage = Errors.EmptyArgument;
                     break;
 
                 case '=':
@@ -285,13 +285,13 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "End of string reached while inside a token";
+                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case '}':
                 case ',':
                     state = State.InvalidString;
-                    this.errorMessage = "Empty argument";
+                    this.errorMessage = Errors.EmptyArgument;
                     break;
 
                 case '=':
@@ -317,12 +317,12 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "End of string reached while inside a token";
+                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case '}':
                     state = State.InvalidString;
-                    this.errorMessage = "Empty argument";
+                    this.errorMessage = Errors.EmptyArgument;
                     break;
 
                 default:
@@ -350,7 +350,7 @@ namespace Strinken.Engine
 
                 default:
                     state = State.InvalidString;
-                    this.errorMessage = $"Illegal '}}' at position {this.cursor.Position - 1}";
+                    this.errorMessage = string.Format(Errors.IllegalCharacter, "}", this.cursor.Position - 1);
                     break;
             }
 
@@ -368,12 +368,12 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "End of string reached while inside a token";
+                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case '}':
                     state = State.InvalidString;
-                    this.errorMessage = "Empty filter";
+                    this.errorMessage = Errors.EmptyFilter;
                     break;
 
                 default:
@@ -395,13 +395,13 @@ namespace Strinken.Engine
             {
                 case -1:
                     state = State.InvalidString;
-                    this.errorMessage = "Illegal '{' at the end of the string";
+                    this.errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, "{");
                     break;
 
                 case ':':
                 case '}':
                     state = State.InvalidString;
-                    this.errorMessage = "Empty tag";
+                    this.errorMessage = Errors.EmptyTag;
                     break;
 
                 case '{':
@@ -458,7 +458,7 @@ namespace Strinken.Engine
             var value = (char)this.cursor.Value;
             if (value.IsInvalidTokenNameCharacter())
             {
-                this.errorMessage = $"Illegal '{(char)this.cursor.Value}' at position {this.cursor.Position}";
+                this.errorMessage = string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position);
                 return State.InvalidString;
             }
             else
