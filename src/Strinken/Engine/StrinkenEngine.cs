@@ -1,5 +1,4 @@
 // stylecop.header
-using System;
 using System.Text;
 using Strinken.Common;
 using Strinken.Machine;
@@ -36,7 +35,6 @@ namespace Strinken.Engine
         /// </summary>
         /// <param name="input">The string to process.</param>
         /// <returns>A <see cref="EngineResult"/> containing data about the run.</returns>
-        /// <exception cref="FormatException">When the input is not valid.</exception>
         public EngineResult Run(string input)
         {
             if (string.IsNullOrWhiteSpace(input))

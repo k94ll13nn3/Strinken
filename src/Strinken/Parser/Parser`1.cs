@@ -65,7 +65,7 @@ namespace Strinken.Parser
                     (filterName, valueToPass, arguments) => this.filters[filterName].Resolve(valueToPass, arguments));
             }
 
-            return null;
+            throw new FormatException(runResult.ErrorMessage);
         }
 
         /// <summary>
@@ -176,6 +176,7 @@ namespace Strinken.Parser
         /// Validates a name and throws a <see cref="ArgumentException"/> if the name is invalid.
         /// </summary>
         /// <param name="name">The name to validate.</param>
+        /// <exception cref="ArgumentException">When the name is invalid.</exception>
         private static void ThrowIfInvalidName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))

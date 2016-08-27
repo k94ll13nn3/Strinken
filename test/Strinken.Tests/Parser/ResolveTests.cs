@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
+using System;
 
 namespace Strinken.Tests.Parser
 {
@@ -44,6 +45,14 @@ namespace Strinken.Tests.Parser
         {
             Assert.That(stringSolver.Resolve("The {DataName:Append+=DataName} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The LoremLorem is in the kitchen."));
             Assert.That(stringSolver.Resolve("The {DataName:Append+DataName} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The LoremDataName is in the kitchen."));
+        }
+
+        [Test]
+        public void Resolve_InvalidString_ThrowsFormatException()
+        {
+            Assert.That(
+                () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", new Data { Name = "Lorem" }),
+                Throws.TypeOf<FormatException>().With.Message.EqualTo("Empty argument"));
         }
     }
 }
