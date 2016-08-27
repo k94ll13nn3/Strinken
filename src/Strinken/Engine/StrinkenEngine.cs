@@ -158,7 +158,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = this.ValidateCursor(State.InsideArgumentTag);
+                    state = this.ValidateAndAppend(State.InsideArgumentTag);
                     break;
             }
 
@@ -198,7 +198,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = this.ValidateCursor(State.InsideFilter);
+                    state = this.ValidateAndAppend(State.InsideFilter);
                     break;
             }
 
@@ -232,7 +232,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = this.ValidateCursor(State.InsideTag);
+                    state = this.ValidateAndAppend(State.InsideTag);
                     break;
             }
 
@@ -324,7 +324,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = this.ValidateCursor(State.InsideArgumentTag);
+                    state = this.ValidateAndAppend(State.InsideArgumentTag);
                     break;
             }
 
@@ -375,7 +375,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = this.ValidateCursor(State.InsideFilter);
+                    state = this.ValidateAndAppend(State.InsideFilter);
                     break;
             }
 
@@ -409,7 +409,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = this.ValidateCursor(State.InsideTag);
+                    state = this.ValidateAndAppend(State.InsideTag);
                     break;
             }
 
@@ -447,11 +447,11 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Validates the current <see cref="Cursor"/>.
+        /// Validates the current <see cref="Cursor"/> and append its value to the current token if valid.
         /// </summary>
         /// <param name="stateIfValid">The <see cref="State"/> to return if the cursor is valid..</param>
         /// <returns>The new state.</returns>
-        private State ValidateCursor(State stateIfValid)
+        private State ValidateAndAppend(State stateIfValid)
         {
             var value = (char)this.cursor.Value;
             if (value.IsInvalidTokenNameCharacter())
