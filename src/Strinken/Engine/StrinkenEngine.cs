@@ -93,24 +93,24 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EndOfString;
                     break;
 
-                case ',':
+                case SpecialCharacter.ArgumentSeparator:
                     state = State.OnArgumentSeparator;
                     this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
                     this.token.Length = 0;
                     break;
 
-                case ':':
+                case SpecialCharacter.FilterSeparator:
                     state = State.OnFilterSeparator;
                     this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
                     this.token.Length = 0;
                     break;
 
-                case '}':
+                case SpecialCharacter.TokenEndIndicator:
                     this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
                     this.token.Length = 0;
                     state = State.OutsideToken;
@@ -134,24 +134,24 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EndOfString;
                     break;
 
-                case ',':
+                case SpecialCharacter.ArgumentSeparator:
                     state = State.OnArgumentSeparator;
                     this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
                     this.token.Length = 0;
                     break;
 
-                case ':':
+                case SpecialCharacter.FilterSeparator:
                     state = State.OnFilterSeparator;
                     this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
                     this.token.Length = 0;
                     break;
 
-                case '}':
+                case SpecialCharacter.TokenEndIndicator:
                     this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
                     this.token.Length = 0;
                     state = State.OutsideToken;
@@ -174,24 +174,24 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EndOfString;
                     break;
 
-                case ':':
+                case SpecialCharacter.FilterSeparator:
                     state = State.OnFilterSeparator;
                     this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
                     this.token.Length = 0;
                     break;
 
-                case '+':
+                case SpecialCharacter.ArgumentIndicator:
                     state = State.OnArgumentInitializer;
                     this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
                     this.token.Length = 0;
                     break;
 
-                case '}':
+                case SpecialCharacter.TokenEndIndicator:
                     this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
                     this.token.Length = 0;
                     state = State.OutsideToken;
@@ -214,18 +214,18 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EndOfString;
                     break;
 
-                case ':':
+                case SpecialCharacter.FilterSeparator:
                     state = State.OnFilterSeparator;
                     this.tokenStack.Push(this.token.ToString(), TokenType.Tag);
                     this.token.Length = 0;
                     break;
 
-                case '}':
+                case SpecialCharacter.TokenEndIndicator:
                     this.tokenStack.Push(this.token.ToString(), TokenType.Tag);
                     this.token.Length = 0;
                     state = State.OutsideToken;
@@ -248,18 +248,18 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EndOfString;
                     break;
 
-                case '}':
-                case ',':
+                case SpecialCharacter.TokenEndIndicator:
+                case SpecialCharacter.ArgumentSeparator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EmptyArgument;
                     break;
 
-                case '=':
+                case SpecialCharacter.ArgumentTagIndicator:
                     state = State.OnArgumentTagIndicator;
                     break;
 
@@ -281,18 +281,18 @@ namespace Strinken.Engine
             var state = State.InsideArgument;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EndOfString;
                     break;
 
-                case '}':
-                case ',':
+                case SpecialCharacter.TokenEndIndicator:
+                case SpecialCharacter.ArgumentSeparator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EmptyArgument;
                     break;
 
-                case '=':
+                case SpecialCharacter.ArgumentTagIndicator:
                     state = State.OnArgumentTagIndicator;
                     break;
 
@@ -313,12 +313,12 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EndOfString;
                     break;
 
-                case '}':
+                case SpecialCharacter.TokenEndIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EmptyArgument;
                     break;
@@ -340,15 +340,15 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case '}':
-                    // Escaped '}'
-                    this.tokenStack.Push("}", TokenType.VerbatimString);
+                case SpecialCharacter.TokenEndIndicator:
+                    // Escaped TokenEnd
+                    this.tokenStack.Push(((char)SpecialCharacter.TokenEndIndicator).ToString(), TokenType.VerbatimString);
                     state = State.OutsideToken;
                     break;
 
                 default:
                     state = State.InvalidString;
-                    this.errorMessage = string.Format(Errors.IllegalCharacter, "}", this.cursor.Position - 1);
+                    this.errorMessage = string.Format(Errors.IllegalCharacter, (char)SpecialCharacter.TokenEndIndicator, this.cursor.Position - 1);
                     break;
             }
 
@@ -364,12 +364,12 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EndOfString;
                     break;
 
-                case '}':
+                case SpecialCharacter.TokenEndIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EmptyFilter;
                     break;
@@ -391,20 +391,20 @@ namespace Strinken.Engine
             State state;
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.InvalidString;
-                    this.errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, "{");
+                    this.errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, (char)SpecialCharacter.TokenStartIndicator);
                     break;
 
-                case ':':
-                case '}':
+                case SpecialCharacter.FilterSeparator:
+                case SpecialCharacter.TokenEndIndicator:
                     state = State.InvalidString;
                     this.errorMessage = Errors.EmptyTag;
                     break;
 
-                case '{':
-                    // Escaped '{'
-                    this.tokenStack.Push("{", TokenType.VerbatimString);
+                case SpecialCharacter.TokenStartIndicator:
+                    // Escaped TokenStart
+                    this.tokenStack.Push(((char)SpecialCharacter.TokenStartIndicator).ToString(), TokenType.VerbatimString);
                     state = State.OutsideToken;
                     break;
 
@@ -426,15 +426,15 @@ namespace Strinken.Engine
 
             switch (this.cursor.Value)
             {
-                case -1:
+                case SpecialCharacter.EndOfStringIndicator:
                     state = State.EndOfString;
                     break;
 
-                case '{':
+                case SpecialCharacter.TokenStartIndicator:
                     state = State.OnOpenBracket;
                     break;
 
-                case '}':
+                case SpecialCharacter.TokenEndIndicator:
                     state = State.OnCloseBracket;
                     break;
 
