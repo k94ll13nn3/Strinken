@@ -42,6 +42,15 @@ namespace Strinken.Engine
         }
 
         /// <summary>
+        /// Add a new verbatim token to the stack.
+        /// </summary>
+        /// <param name="data">The data of the token.</param>
+        public void PushVerbatim(char data)
+        {
+            this.Push(data.ToString(), TokenType.VerbatimString);
+        }
+
+        /// <summary>
         /// Resolve the stack.
         /// </summary>
         /// <param name="actionOnTags">Action to perform on tags. The argument is the tag name.</param>

@@ -342,7 +342,7 @@ namespace Strinken.Engine
             {
                 case SpecialCharacter.TokenEndIndicator:
                     // Escaped TokenEnd
-                    this.tokenStack.Push(((char)SpecialCharacter.TokenEndIndicator).ToString(), TokenType.VerbatimString);
+                    this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenEndIndicator);
                     state = State.OutsideToken;
                     break;
 
@@ -404,7 +404,7 @@ namespace Strinken.Engine
 
                 case SpecialCharacter.TokenStartIndicator:
                     // Escaped TokenStart
-                    this.tokenStack.Push(((char)SpecialCharacter.TokenStartIndicator).ToString(), TokenType.VerbatimString);
+                    this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenStartIndicator);
                     state = State.OutsideToken;
                     break;
 
@@ -439,7 +439,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    this.tokenStack.Push(((char)this.cursor.Value).ToString(), TokenType.VerbatimString);
+                    this.tokenStack.PushVerbatim((char)this.cursor.Value);
                     break;
             }
 
