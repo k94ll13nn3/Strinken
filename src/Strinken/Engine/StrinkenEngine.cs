@@ -1,4 +1,5 @@
 // stylecop.header
+using System;
 using System.Text;
 using Strinken.Common;
 using Strinken.Machine;
@@ -61,16 +62,15 @@ namespace Strinken.Engine
                     .StopOn(State.EndOfString)
                     .BeforeEachStep(this.cursor.Next)
                     .On(State.OutsideToken).Do(this.ProcessOutsideToken)
-                    .On(State.OnOpenBracket).Do(this.ProcessOnOpenBracket)
-                    .On(State.InsideTag).Do(this.ProcessInsideTag)
+                    .On(State.OnOpenBracket).Do(() => this.ProcessOnSpecialCharacter(TokenType.Tag, State.InsideTag))
+                    .On(State.InsideTag).Do(() => this.ProcessInsideToken(TokenType.Tag, State.InsideTag))
                     .On(State.OnCloseBracket).Do(this.ProcessOnCloseBracket)
-                    .On(State.OnFilterSeparator).Do(this.ProcessOnFilterSeparator)
-                    .On(State.InsideFilter).Do(this.ProcessInsideFilter)
-                    .On(State.OnArgumentInitializer).Do(this.ProcessOnArgumentInitializer)
-                    .On(State.OnArgumentSeparator).Do(this.ProcessOnArgumentSeparator)
-                    .On(State.InsideArgument).Do(this.ProcessInsideArgument)
-                    .On(State.OnArgumentTagIndicator).Do(this.ProcessOnArgumentTagIndicator)
-                    .On(State.InsideArgumentTag).Do(this.ProcessInsideArgumentTag)
+                    .On(State.OnFilterSeparator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Filter, State.InsideFilter))
+                    .On(State.InsideFilter).Do(() => this.ProcessInsideToken(TokenType.Filter, State.InsideFilter))
+                    .On(State.OnArgumentInitializerOrSeparator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Argument, State.InsideArgument))
+                    .On(State.InsideArgument).Do(() => this.ProcessInsideToken(TokenType.Argument, State.InsideArgument))
+                    .On(State.OnArgumentTagIndicator).Do(() => this.ProcessOnSpecialCharacter(TokenType.ArgumentTag, State.InsideArgumentTag))
+                    .On(State.InsideArgumentTag).Do(() => this.ProcessInsideToken(TokenType.ArgumentTag, State.InsideArgumentTag))
                     .On(State.InvalidString).Sink()
                     .Build();
 
@@ -85,154 +85,60 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Processes the <see cref="State.InsideArgument"/> state.
+        /// Processes an inside token state.
         /// </summary>
+        /// <param name="tokenType">The type of token associated to the state.</param>
+        /// <param name="currentState">The current state.</param>
         /// <returns>The new state.</returns>
-        private State ProcessInsideArgument()
+        private State ProcessInsideToken(TokenType tokenType, State currentState)
         {
             State state;
             switch (this.cursor.Value)
             {
                 case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EndOfString;
-                    break;
-
-                case SpecialCharacter.ArgumentSeparator:
-                    state = State.OnArgumentSeparator;
-                    this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
-                    this.token.Length = 0;
-                    break;
-
-                case SpecialCharacter.FilterSeparator:
-                    state = State.OnFilterSeparator;
-                    this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
-                    this.token.Length = 0;
-                    break;
-
-                case SpecialCharacter.TokenEndIndicator:
-                    this.tokenStack.Push(this.token.ToString(), TokenType.Argument);
-                    this.token.Length = 0;
-                    state = State.OutsideToken;
-                    break;
-
-                default:
-                    this.token.Append((char)this.cursor.Value);
-                    state = State.InsideArgument;
-                    break;
-            }
-
-            return state;
-        }
-
-        /// <summary>
-        /// Processes the <see cref="State.InsideArgumentTag"/> state.
-        /// </summary>
-        /// <returns>The new state.</returns>
-        private State ProcessInsideArgumentTag()
-        {
-            State state;
-            switch (this.cursor.Value)
-            {
-                case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EndOfString;
-                    break;
-
-                case SpecialCharacter.ArgumentSeparator:
-                    state = State.OnArgumentSeparator;
-                    this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
-                    this.token.Length = 0;
-                    break;
-
-                case SpecialCharacter.FilterSeparator:
-                    state = State.OnFilterSeparator;
-                    this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
-                    this.token.Length = 0;
-                    break;
-
-                case SpecialCharacter.TokenEndIndicator:
-                    this.tokenStack.Push(this.token.ToString(), TokenType.ArgumentTag);
-                    this.token.Length = 0;
-                    state = State.OutsideToken;
-                    break;
-
-                default:
-                    state = this.ValidateAndAppend(State.InsideArgumentTag);
-                    break;
-            }
-
-            return state;
-        }
-
-        /// <summary>
-        /// Processes the <see cref="State.InsideFilter"/> state.
-        /// </summary>
-        /// <returns>The new state.</returns>
-        private State ProcessInsideFilter()
-        {
-            State state;
-            switch (this.cursor.Value)
-            {
-                case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EndOfString;
-                    break;
-
-                case SpecialCharacter.FilterSeparator:
-                    state = State.OnFilterSeparator;
-                    this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
-                    this.token.Length = 0;
+                    state = this.RaiseError(Errors.EndOfString);
                     break;
 
                 case SpecialCharacter.ArgumentIndicator:
-                    state = State.OnArgumentInitializer;
-                    this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
-                    this.token.Length = 0;
-                    break;
+                    if (tokenType == TokenType.Filter)
+                    {
+                        state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, tokenType);
+                    }
+                    else if (tokenType != TokenType.Argument)
+                    {
+                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                    }
+                    else
+                    {
+                        state = this.AppendAndMove(currentState);
+                    }
 
-                case SpecialCharacter.TokenEndIndicator:
-                    this.tokenStack.Push(this.token.ToString(), TokenType.Filter);
-                    this.token.Length = 0;
-                    state = State.OutsideToken;
-                    break;
-
-                default:
-                    state = this.ValidateAndAppend(State.InsideFilter);
-                    break;
-            }
-
-            return state;
-        }
-
-        /// <summary>
-        /// Processes the <see cref="State.InsideTag"/> state.
-        /// </summary>
-        /// <returns>The new state.</returns>
-        private State ProcessInsideTag()
-        {
-            State state;
-            switch (this.cursor.Value)
-            {
-                case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EndOfString;
                     break;
 
                 case SpecialCharacter.FilterSeparator:
                     state = State.OnFilterSeparator;
-                    this.tokenStack.Push(this.token.ToString(), TokenType.Tag);
+                    this.tokenStack.Push(this.token.ToString(), tokenType);
                     this.token.Length = 0;
+                    break;
+
+                case SpecialCharacter.ArgumentSeparator:
+                    if (tokenType == TokenType.Tag || tokenType == TokenType.Filter)
+                    {
+                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                    }
+                    else
+                    {
+                        state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, tokenType);
+                    }
+
                     break;
 
                 case SpecialCharacter.TokenEndIndicator:
-                    this.tokenStack.Push(this.token.ToString(), TokenType.Tag);
-                    this.token.Length = 0;
-                    state = State.OutsideToken;
+                    state = this.PushAndMove(State.OutsideToken, tokenType);
                     break;
 
                 default:
-                    state = this.ValidateAndAppend(State.InsideTag);
+                    state = this.AppendAndMove(currentState, tokenType != TokenType.Argument);
                     break;
             }
 
@@ -240,91 +146,85 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Processes the <see cref="State.OnArgumentInitializer"/> state.
+        /// Processes an on special character state.
         /// </summary>
+        /// <param name="tokenType">The type of token associated to the state.</param>
+        /// <param name="nextState">The next state.</param>
         /// <returns>The new state.</returns>
-        private State ProcessOnArgumentInitializer()
+        private State ProcessOnSpecialCharacter(TokenType tokenType, State nextState)
         {
             State state;
             switch (this.cursor.Value)
             {
                 case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EndOfString;
+                    if (tokenType == TokenType.Tag)
+                    {
+                        // tokenType.Tag means OnOpenBracket so it is an OpenBracket at the end of the string.
+                        state = this.RaiseError(string.Format(Errors.IllegalCharacterAtStringEnd, (char)SpecialCharacter.TokenStartIndicator));
+                    }
+                    else
+                    {
+                        state = this.RaiseError(Errors.EndOfString);
+                    }
+
                     break;
 
                 case SpecialCharacter.TokenEndIndicator:
+                    state = this.EmptyTokenError(tokenType);
+                    break;
+
                 case SpecialCharacter.ArgumentSeparator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EmptyArgument;
+                    if (tokenType == TokenType.Argument)
+                    {
+                        state = this.RaiseError(Errors.EmptyArgument);
+                    }
+                    else
+                    {
+                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                    }
+
                     break;
 
                 case SpecialCharacter.ArgumentTagIndicator:
-                    state = State.OnArgumentTagIndicator;
+                    if (tokenType == TokenType.Argument)
+                    {
+                        state = State.OnArgumentTagIndicator;
+                    }
+                    else
+                    {
+                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                    }
+
+                    break;
+
+                case SpecialCharacter.FilterSeparator:
+                    if (tokenType == TokenType.Tag)
+                    {
+                        state = this.RaiseError(Errors.EmptyTag);
+                    }
+                    else
+                    {
+                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                    }
+
+                    break;
+
+                case SpecialCharacter.TokenStartIndicator:
+                    // Escaped TokenStart
+                    if (tokenType == TokenType.Tag)
+                    {
+                        this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenStartIndicator);
+                        state = State.OutsideToken;
+                    }
+                    else
+                    {
+                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                    }
+
                     break;
 
                 default:
-                    this.token.Append((char)this.cursor.Value);
-                    state = State.InsideArgument;
-                    break;
-            }
-
-            return state;
-        }
-
-        /// <summary>
-        /// Processes the <see cref="State.OnArgumentSeparator"/> state.
-        /// </summary>
-        /// <returns>The new state.</returns>
-        private State ProcessOnArgumentSeparator()
-        {
-            var state = State.InsideArgument;
-            switch (this.cursor.Value)
-            {
-                case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EndOfString;
-                    break;
-
-                case SpecialCharacter.TokenEndIndicator:
-                case SpecialCharacter.ArgumentSeparator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EmptyArgument;
-                    break;
-
-                case SpecialCharacter.ArgumentTagIndicator:
-                    state = State.OnArgumentTagIndicator;
-                    break;
-
-                default:
-                    this.token.Append((char)this.cursor.Value);
-                    break;
-            }
-
-            return state;
-        }
-
-        /// <summary>
-        /// Processes the <see cref="State.OnArgumentTagIndicator"/> state.
-        /// </summary>
-        /// <returns>The new state.</returns>
-        private State ProcessOnArgumentTagIndicator()
-        {
-            State state;
-            switch (this.cursor.Value)
-            {
-                case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EndOfString;
-                    break;
-
-                case SpecialCharacter.TokenEndIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EmptyArgument;
-                    break;
-
-                default:
-                    state = this.ValidateAndAppend(State.InsideArgumentTag);
+                    state = this.AppendAndMove(nextState, tokenType != TokenType.Argument);
                     break;
             }
 
@@ -347,69 +247,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = State.InvalidString;
-                    this.errorMessage = string.Format(Errors.IllegalCharacter, (char)SpecialCharacter.TokenEndIndicator, this.cursor.Position - 1);
-                    break;
-            }
-
-            return state;
-        }
-
-        /// <summary>
-        /// Processes the <see cref="State.OnFilterSeparator"/> state.
-        /// </summary>
-        /// <returns>The new state.</returns>
-        private State ProcessOnFilterSeparator()
-        {
-            State state;
-            switch (this.cursor.Value)
-            {
-                case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EndOfString;
-                    break;
-
-                case SpecialCharacter.TokenEndIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EmptyFilter;
-                    break;
-
-                default:
-                    state = this.ValidateAndAppend(State.InsideFilter);
-                    break;
-            }
-
-            return state;
-        }
-
-        /// <summary>
-        /// Processes the <see cref="State.OnOpenBracket"/> state.
-        /// </summary>
-        /// <returns>The new state.</returns>
-        private State ProcessOnOpenBracket()
-        {
-            State state;
-            switch (this.cursor.Value)
-            {
-                case SpecialCharacter.EndOfStringIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, (char)SpecialCharacter.TokenStartIndicator);
-                    break;
-
-                case SpecialCharacter.FilterSeparator:
-                case SpecialCharacter.TokenEndIndicator:
-                    state = State.InvalidString;
-                    this.errorMessage = Errors.EmptyTag;
-                    break;
-
-                case SpecialCharacter.TokenStartIndicator:
-                    // Escaped TokenStart
-                    this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenStartIndicator);
-                    state = State.OutsideToken;
-                    break;
-
-                default:
-                    state = this.ValidateAndAppend(State.InsideTag);
+                    state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)SpecialCharacter.TokenEndIndicator, this.cursor.Position - 1));
                     break;
             }
 
@@ -422,7 +260,7 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private State ProcessOutsideToken()
         {
-            var state = State.OutsideToken;
+            State state;
 
             switch (this.cursor.Value)
             {
@@ -440,6 +278,7 @@ namespace Strinken.Engine
 
                 default:
                     this.tokenStack.PushVerbatim((char)this.cursor.Value);
+                    state = State.OutsideToken;
                     break;
             }
 
@@ -447,22 +286,69 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Validates the current <see cref="Cursor"/> and append its value to the current token if valid.
+        /// Append the current cursor value to the current token and returns the specified state, or an invalid state if the cursor is not valid.
         /// </summary>
-        /// <param name="stateIfValid">The <see cref="State"/> to return if the cursor is valid..</param>
+        /// <param name="nextStateIfValid">The <see cref="State"/> to return if the cursor is valid..</param>
+        /// <param name="validate">A value indicating whether the cursor must be validated before appending.</param>
         /// <returns>The new state.</returns>
-        private State ValidateAndAppend(State stateIfValid)
+        private State AppendAndMove(State nextStateIfValid, bool validate = false)
         {
             var value = (char)this.cursor.Value;
-            if (value.IsInvalidTokenNameCharacter())
+            if (validate && value.IsInvalidTokenNameCharacter())
             {
-                this.errorMessage = string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position);
-                return State.InvalidString;
+                return this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
             }
-            else
+
+            this.token.Append((char)this.cursor.Value);
+            return nextStateIfValid;
+        }
+
+        /// <summary>
+        /// Sets the current error message and returns an invalid state.
+        /// </summary>
+        /// <param name="error">The error message.</param>
+        /// <returns><see cref="State.InvalidString"/></returns>
+        private State RaiseError(string error)
+        {
+            this.errorMessage = error;
+            return State.InvalidString;
+        }
+
+        /// <summary>
+        /// Pushes the current token to the stack, resets it and move to a new state.
+        /// </summary>
+        /// <param name="nextState">The new state.</param>
+        /// <param name="tokenType">The type of token to push.</param>
+        /// <returns>The new state.</returns>
+        private State PushAndMove(State nextState, TokenType tokenType)
+        {
+            this.tokenStack.Push(this.token.ToString(), tokenType);
+            this.token.Length = 0;
+
+            return nextState;
+        }
+
+        /// <summary>
+        /// Handle the <see cref="RaiseError"/> method for the specified <see cref="TokenType"/>.
+        /// </summary>
+        /// <param name="tokenType">The type of the token.</param>
+        /// <returns><see cref="State.InvalidString"/></returns>
+        private State EmptyTokenError(TokenType tokenType)
+        {
+            switch (tokenType)
             {
-                this.token.Append((char)this.cursor.Value);
-                return stateIfValid;
+                case TokenType.Argument:
+                case TokenType.ArgumentTag:
+                    return this.RaiseError(Errors.EmptyArgument);
+
+                case TokenType.Filter:
+                    return this.RaiseError(Errors.EmptyFilter);
+
+                case TokenType.Tag:
+                    return this.RaiseError(Errors.EmptyTag);
+
+                default:
+                    throw new InvalidOperationException();
             }
         }
     }

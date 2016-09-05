@@ -43,14 +43,9 @@ namespace Strinken.Machine
         EndOfString,
 
         /// <summary>
-        /// The machine is on the argument initializer.
+        /// The machine is on an argument initializer or an argument separator.
         /// </summary>
-        OnArgumentInitializer,
-
-        /// <summary>
-        /// The machine is on an argument separator.
-        /// </summary>
-        OnArgumentSeparator,
+        OnArgumentInitializerOrSeparator,
 
         /// <summary>
         /// The machine is on a argument tag indicator.
