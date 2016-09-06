@@ -62,9 +62,9 @@ namespace Strinken.Engine
                     .StopOn(State.EndOfString)
                     .BeforeEachStep(this.cursor.Next)
                     .On(State.OutsideToken).Do(this.ProcessOutsideToken)
-                    .On(State.OnOpenBracket).Do(() => this.ProcessOnSpecialCharacter(TokenType.Tag, State.InsideTag))
+                    .On(State.OnTokenStartIndicator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Tag, State.InsideTag))
                     .On(State.InsideTag).Do(() => this.ProcessInsideToken(TokenType.Tag, State.InsideTag))
-                    .On(State.OnCloseBracket).Do(this.ProcessOnCloseBracket)
+                    .On(State.OnTokenEndIndicator).Do(this.ProcessOnTokenEndIndicator)
                     .On(State.OnFilterSeparator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Filter, State.InsideFilter))
                     .On(State.InsideFilter).Do(() => this.ProcessInsideToken(TokenType.Filter, State.InsideFilter))
                     .On(State.OnArgumentInitializerOrSeparator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Argument, State.InsideArgument))
@@ -159,7 +159,7 @@ namespace Strinken.Engine
                 case SpecialCharacter.EndOfStringIndicator:
                     if (tokenType == TokenType.Tag)
                     {
-                        // tokenType.Tag means OnOpenBracket so it is an OpenBracket at the end of the string.
+                        // tokenType.Tag means OnTokenStartIndicator so it is an TokenStartIndicator at the end of the string.
                         state = this.RaiseError(string.Format(Errors.IllegalCharacterAtStringEnd, (char)SpecialCharacter.TokenStartIndicator));
                     }
                     else
@@ -232,10 +232,10 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Processes the <see cref="State.OnCloseBracket"/> state.
+        /// Processes the <see cref="State.OnTokenEndIndicator"/> state.
         /// </summary>
         /// <returns>The new state.</returns>
-        private State ProcessOnCloseBracket()
+        private State ProcessOnTokenEndIndicator()
         {
             State state;
             switch (this.cursor.Value)
@@ -269,11 +269,11 @@ namespace Strinken.Engine
                     break;
 
                 case SpecialCharacter.TokenStartIndicator:
-                    state = State.OnOpenBracket;
+                    state = State.OnTokenStartIndicator;
                     break;
 
                 case SpecialCharacter.TokenEndIndicator:
-                    state = State.OnCloseBracket;
+                    state = State.OnTokenEndIndicator;
                     break;
 
                 default:

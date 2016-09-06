@@ -13,9 +13,9 @@ namespace Strinken.Machine
         OutsideToken,
 
         /// <summary>
-        /// The machine is on an open bracket.
+        /// The machine is on a token start indicator.
         /// </summary>
-        OnOpenBracket,
+        OnTokenStartIndicator,
 
         /// <summary>
         /// The machine is inside a tag.
@@ -33,9 +33,9 @@ namespace Strinken.Machine
         OnFilterSeparator,
 
         /// <summary>
-        /// The machine is on a close bracket.
+        /// The machine is on a token end indicator.
         /// </summary>
-        OnCloseBracket,
+        OnTokenEndIndicator,
 
         /// <summary>
         /// The machine is a the end of the string.
