@@ -1,6 +1,5 @@
 // stylecop.header
 using System;
-using System.Text;
 using Strinken.Common;
 using Strinken.Machine;
 
@@ -22,11 +21,6 @@ namespace Strinken.Engine
         private string errorMessage;
 
         /// <summary>
-        /// The <see cref="StringBuilder"/> used store the current token.
-        /// </summary>
-        private StringBuilder token;
-
-        /// <summary>
         /// The stack of tokens.
         /// </summary>
         private TokenStack tokenStack;
@@ -41,7 +35,7 @@ namespace Strinken.Engine
             if (string.IsNullOrWhiteSpace(input))
             {
                 var stack = new TokenStack();
-                stack.Push(input, TokenType.VerbatimString);
+                stack.PushVerbatim(input);
                 return new EngineResult
                 {
                     Success = true,
@@ -50,7 +44,6 @@ namespace Strinken.Engine
                 };
             }
 
-            this.token = new StringBuilder();
             this.tokenStack = new TokenStack();
             this.errorMessage = null;
 
@@ -116,9 +109,7 @@ namespace Strinken.Engine
                     break;
 
                 case SpecialCharacter.FilterSeparator:
-                    state = State.OnFilterSeparator;
-                    this.tokenStack.Push(this.token.ToString(), tokenType);
-                    this.token.Length = 0;
+                    state = this.PushAndMove(State.OnFilterSeparator, tokenType);
                     break;
 
                 case SpecialCharacter.ArgumentSeparator:
@@ -299,7 +290,7 @@ namespace Strinken.Engine
                 return this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
             }
 
-            this.token.Append((char)this.cursor.Value);
+            this.tokenStack.Append((char)this.cursor.Value);
             return nextStateIfValid;
         }
 
@@ -322,9 +313,7 @@ namespace Strinken.Engine
         /// <returns>The new state.</returns>
         private State PushAndMove(State nextState, TokenType tokenType)
         {
-            this.tokenStack.Push(this.token.ToString(), tokenType);
-            this.token.Length = 0;
-
+            this.tokenStack.Push(tokenType);
             return nextState;
         }
 

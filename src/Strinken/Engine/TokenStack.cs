@@ -11,6 +11,11 @@ namespace Strinken.Engine
     internal class TokenStack
     {
         /// <summary>
+        /// The <see cref="StringBuilder"/> used store the current token.
+        /// </summary>
+        private readonly StringBuilder token;
+
+        /// <summary>
         /// Internal stack.
         /// </summary>
         private readonly Stack<Token> tokenStack;
@@ -21,33 +26,45 @@ namespace Strinken.Engine
         public TokenStack()
         {
             this.tokenStack = new Stack<Token>();
+            this.token = new StringBuilder();
         }
 
         /// <summary>
-        /// Add a new token to the stack.
+        /// Appends a value to the next token that will be pushed in the stack.
         /// </summary>
-        /// <param name="data">The data of the token.</param>
-        /// <param name="type">The type of the token.</param>
-        public void Push(string data, TokenType type)
+        /// <param name="value"></param>
+        public void Append(char value)
         {
-            if (this.tokenStack.Count > 0 && type == TokenType.VerbatimString && this.tokenStack.Peek().Type == TokenType.VerbatimString)
-            {
-                var lastToken = this.tokenStack.Pop();
-                this.tokenStack.Push(new Token(lastToken.Data + data, TokenType.VerbatimString));
-            }
-            else
-            {
-                this.tokenStack.Push(new Token(data, type));
-            }
+            this.token.Append(value);
         }
 
         /// <summary>
-        /// Add a new verbatim token to the stack.
+        /// Adds the current token to the stack.
+        /// </summary>
+        /// <param name="type">The type of the token.</param>
+        public void Push(TokenType type)
+        {
+            var data = this.token.ToString();
+            this.token.Length = 0;
+            this.InternalPush(data, type);
+        }
+
+        /// <summary>
+        /// Adds a new verbatim token to the stack.
         /// </summary>
         /// <param name="data">The data of the token.</param>
         public void PushVerbatim(char data)
         {
-            this.Push(data.ToString(), TokenType.VerbatimString);
+            this.InternalPush(data.ToString(), TokenType.VerbatimString);
+        }
+
+        /// <summary>
+        /// Adds a new verbatim token to the stack.
+        /// </summary>
+        /// <param name="data">The data of the token.</param>
+        public void PushVerbatim(string data)
+        {
+            this.InternalPush(data, TokenType.VerbatimString);
         }
 
         /// <summary>
@@ -84,6 +101,25 @@ namespace Strinken.Engine
             }
 
             return result.ToString();
+        }
+
+        /// <summary>
+        /// Pushes the provided data to the stack.
+        /// </summary>
+        /// <param name="data">The data of the token.</param>
+        /// <param name="type">The type of the token.</param>
+        private void InternalPush(string data, TokenType type)
+        {
+            // If the top token is a verbatim token and the new token is also a verbatim token, their data are cumulated.
+            if (this.tokenStack.Count > 0 && type == TokenType.VerbatimString && this.tokenStack.Peek().Type == TokenType.VerbatimString)
+            {
+                var lastToken = this.tokenStack.Pop();
+                this.tokenStack.Push(new Token(lastToken.Data + data, TokenType.VerbatimString));
+            }
+            else
+            {
+                this.tokenStack.Push(new Token(data, type));
+            }
         }
 
         /// <summary>
