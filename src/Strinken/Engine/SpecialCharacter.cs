@@ -5,7 +5,7 @@ namespace Strinken.Engine
     /// <summary>
     /// Class that contains the different possible separators and indicators.
     /// </summary>
-    public static class SpecialCharacter
+    internal static class SpecialCharacter
     {
         /// <summary>
         /// Separator that indicates the start of an argument list.

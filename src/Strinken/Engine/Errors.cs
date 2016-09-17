@@ -5,7 +5,7 @@ namespace Strinken.Engine
     /// <summary>
     /// Class that contains error messages.
     /// </summary>
-    public static class Errors
+    internal static class Errors
     {
         /// <summary>
         /// Error: End of string reached while inside a token
