@@ -60,9 +60,13 @@ namespace Strinken.Parser
             var runResult = new StrinkenEngine().Run(input);
             if (runResult.Success)
             {
-                return runResult.Stack.Resolve(
-                    tagName => this.tags[tagName].Resolve(value),
-                    (filterName, valueToPass, arguments) => this.filters[filterName].Resolve(valueToPass, arguments));
+                var actions = new ActionDictionary
+                {
+                    [TokenType.Tag] = a => this.tags[a[0]].Resolve(value),
+                    [TokenType.Filter] = a => this.filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+                };
+
+                return runResult.Stack.Resolve(actions);
             }
 
             throw new FormatException(runResult.ErrorMessage);
@@ -85,17 +89,21 @@ namespace Strinken.Parser
                 return new ValidationResult { Message = runResult.ErrorMessage, IsValid = false };
             }
 
-            runResult.Stack.Resolve(
-                 tagName =>
-                 {
-                     tagList.Add(tagName);
-                     return string.Empty;
-                 },
-                (filterName, valueToPass, arguments) =>
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag] = a =>
                 {
-                    filterList.Add(Tuple.Create(filterName, arguments));
+                    tagList.Add(a[0]);
                     return string.Empty;
-                });
+                },
+                [TokenType.Filter] = a =>
+                {
+                    filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
+                    return string.Empty;
+                }
+            };
+
+            runResult.Stack.Resolve(actions);
 
             // Find the first tag that was not registered in the parser.
             var invalidParameter = tagList.FirstOrDefault(tagName => !this.tags.ContainsKey(tagName));

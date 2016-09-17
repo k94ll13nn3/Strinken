@@ -308,7 +308,7 @@ namespace Strinken.Engine
         /// <summary>
         /// Pushes the current token to the stack, resets it and move to a new state.
         /// </summary>
-        /// <param name="nextState">The new state.</param>
+        /// <param name="nextState">The next state.</param>
         /// <param name="tokenType">The type of token to push.</param>
         /// <returns>The new state.</returns>
         private State PushAndMove(State nextState, TokenType tokenType)

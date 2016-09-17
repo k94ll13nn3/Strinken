@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Strinken.Engine;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Strinken.Tests
 {
@@ -13,17 +13,20 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var tagSeen = new List<string>();
-            Func<string, string> actionOnTag = t =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                tagSeen.Add(t);
-                return t;
+                [TokenType.Tag] = a =>
+                {
+                    numberOfCall++;
+                    tagSeen.Add(a[0]);
+                    return a[0];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum}tute";
             var result = engine.Run(input);
-            result.Stack.Resolve(actionOnTag, null);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(1));
             Assert.That(tagSeen.Count, Is.EqualTo(1));
@@ -35,17 +38,20 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var tagSeen = new List<string>();
-            Func<string, string> actionOnTag = t =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                tagSeen.Add(t);
-                return t;
+                [TokenType.Tag] = a =>
+                {
+                    numberOfCall++;
+                    tagSeen.Add(a[0]);
+                    return a[0];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum}tute{belli}";
             var result = engine.Run(input);
-            result.Stack.Resolve(actionOnTag, null);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(2));
             Assert.That(tagSeen.Count, Is.EqualTo(2));
@@ -60,7 +66,7 @@ namespace Strinken.Tests
             const string input = "loremtute";
             var result = engine.Run(input);
 
-            Assert.That(result.Stack.Resolve(null, null), Is.EqualTo("loremtute"));
+            Assert.That(result.Stack.Resolve(new ActionDictionary()), Is.EqualTo("loremtute"));
         }
 
         [Test]
@@ -70,7 +76,7 @@ namespace Strinken.Tests
             const string input = "lorem{ipsum}tu{ti}te";
             var result = engine.Run(input);
 
-            Assert.That(result.Stack.Resolve(null, null), Is.EqualTo("loremtute"));
+            Assert.That(result.Stack.Resolve(new ActionDictionary()), Is.EqualTo("loremtute"));
         }
 
         [Test]
@@ -80,7 +86,7 @@ namespace Strinken.Tests
             const string input = "lorem{{te";
             var result = engine.Run(input);
 
-            Assert.That(result.Stack.Resolve(null, null), Is.EqualTo("lorem{te"));
+            Assert.That(result.Stack.Resolve(new ActionDictionary()), Is.EqualTo("lorem{te"));
         }
 
         [Test]
@@ -90,7 +96,7 @@ namespace Strinken.Tests
             const string input = "lorem}}te";
             var result = engine.Run(input);
 
-            Assert.That(result.Stack.Resolve(null, null), Is.EqualTo("lorem}te"));
+            Assert.That(result.Stack.Resolve(new ActionDictionary()), Is.EqualTo("lorem}te"));
         }
 
         [Test]
@@ -98,17 +104,20 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new List<string>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f);
-                return f;
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0]);
+                    return a[0];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli}";
             var result = engine.Run(input);
-            result.Stack.Resolve(null, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(1));
             Assert.That(filterSeen.Count, Is.EqualTo(1));
@@ -120,17 +129,21 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new Dictionary<string, string>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f, t);
-                return f;
+                [TokenType.Tag] = a => a[0],
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a[1]);
+                    return a[0];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli}";
             var result = engine.Run(input);
-            result.Stack.Resolve(t => t, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(1));
             Assert.That(filterSeen.Count, Is.EqualTo(1));
@@ -143,17 +156,20 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new List<string>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f);
-                return f;
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0]);
+                    return a[0];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli:tutti}";
             var result = engine.Run(input);
-            result.Stack.Resolve(null, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(2));
             Assert.That(filterSeen.Count, Is.EqualTo(2));
@@ -166,17 +182,20 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new List<string>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f);
-                return f;
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0]);
+                    return a[0];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+arg:tutti}";
             var result = engine.Run(input);
-            result.Stack.Resolve(null, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(2));
             Assert.That(filterSeen.Count, Is.EqualTo(2));
@@ -189,17 +208,21 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new Dictionary<string, string>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f, t);
-                return f + t;
+                [TokenType.Tag] = a => a[0],
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a[1]);
+                    return a[0] + a[1];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli:patse}";
             var result = engine.Run(input);
-            result.Stack.Resolve(t => t, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(2));
             Assert.That(filterSeen.Count, Is.EqualTo(2));
@@ -214,17 +237,20 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f, a);
-                return f;
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a.Skip(2).ToArray());
+                    return a[0];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+toto}";
             var result = engine.Run(input);
-            result.Stack.Resolve(null, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(1));
             Assert.That(filterSeen, Has.Count.EqualTo(1));
@@ -238,17 +264,20 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f, a);
-                return f;
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a.Skip(2).ToArray());
+                    return a[0];
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+toto,titi}";
             var result = engine.Run(input);
-            result.Stack.Resolve(null, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(1));
             Assert.That(filterSeen, Has.Count.EqualTo(1));
@@ -263,19 +292,21 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f, a);
-                return f;
+                [TokenType.Tag] = a => a[0].ToUpperInvariant(),
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a.Skip(2).ToArray());
+                    return a[0];
+                }
             };
-
-            Func<string, string> actionOnTag = t => t.ToUpperInvariant();
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+=toto}";
             var result = engine.Run(input);
-            result.Stack.Resolve(actionOnTag, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(1));
             Assert.That(filterSeen, Has.Count.EqualTo(1));
@@ -289,19 +320,21 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f, a);
-                return f;
+                [TokenType.Tag] = a => a[0].ToUpperInvariant(),
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a.Skip(2).ToArray());
+                    return a[0];
+                }
             };
-
-            Func<string, string> actionOnTag = t => t.ToUpperInvariant();
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+=toto,tata}";
             var result = engine.Run(input);
-            result.Stack.Resolve(actionOnTag, actionOnFilter);
+            result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(1));
             Assert.That(filterSeen, Has.Count.EqualTo(1));
@@ -316,17 +349,21 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new Dictionary<string, string>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f, t);
-                return f + t + string.Join("|", a);
+                [TokenType.Tag] = a => a[0].ToUpperInvariant(),
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a[1]);
+                    return a[0] + a[1] + string.Join("|", a.Skip(2));
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ipsum:belli+tute:patse+paku,=malo:kuki}";
             var result = engine.Run(input);
-            var parsedString = result.Stack.Resolve(t => t.ToUpperInvariant(), actionOnFilter);
+            var parsedString = result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(3));
             Assert.That(filterSeen, Has.Count.EqualTo(3));
@@ -344,23 +381,33 @@ namespace Strinken.Tests
         {
             var numberOfCall = 0;
             var filterSeen = new Dictionary<string, string>();
-            Func<string, string, string[], string> actionOnFilter = (f, t, a) =>
+            var actions = new ActionDictionary
             {
-                numberOfCall++;
-                filterSeen.Add(f, t);
-                return f + t + string.Join("|", a);
+                [TokenType.Filter] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a[1]);
+                    return a[0] + a[1] + string.Join("|", a.Skip(2));
+                }
             };
 
             var engine = new StrinkenEngine();
             const string input = "lorem{ipsum:patse+paku,=malo}";
             var result = engine.Run(input);
-            var parsedString = result.Stack.Resolve(null, actionOnFilter);
+            var parsedString = result.Stack.Resolve(actions);
 
             Assert.That(numberOfCall, Is.EqualTo(1));
             Assert.That(filterSeen, Has.Count.EqualTo(1));
             Assert.That(filterSeen, Contains.Key("patse"));
             Assert.That(filterSeen["patse"], Is.Null);
             Assert.That(parsedString, Is.EqualTo("lorempatsepaku|"));
+        }
+
+        [Test]
+        public void Run_NoActions_ReturnsOutsideString()
+        {
+            const string input = "lorem{ipsum:patse+paku,=malo}";
+            Assert.That(new StrinkenEngine().Run(input).Stack.Resolve(null), Is.EqualTo("lorem"));
         }
     }
 }

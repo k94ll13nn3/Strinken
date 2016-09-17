@@ -32,7 +32,7 @@ namespace Strinken.Engine
         /// <summary>
         /// Appends a value to the next token that will be pushed in the stack.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">The value to append.</param>
         public void Append(char value)
         {
             this.token.Append(value);
@@ -70,13 +70,9 @@ namespace Strinken.Engine
         /// <summary>
         /// Resolve the stack.
         /// </summary>
-        /// <param name="actionOnTags">Action to perform on tags. The argument is the tag name.</param>
-        /// <param name="actionOnFilters">
-        ///     Action to perform on filters.
-        ///     The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
-        /// </param>
+        /// <param name="actions">The list of different actions.</param>
         /// <returns>The result of the resolution of the stack.</returns>
-        public string Resolve(Func<string, string> actionOnTags, Func<string, string, string[], string> actionOnFilters)
+        public string Resolve(ActionDictionary actions)
         {
             if (this.tokenStack.Count == 1 && this.tokenStack.Peek().Type == TokenType.VerbatimString)
             {
@@ -95,7 +91,7 @@ namespace Strinken.Engine
                         break;
 
                     default:
-                        result.Insert(0, this.ResolveTagOrFilter(actionOnTags, actionOnFilters));
+                        result.Insert(0, this.ResolveTagOrFilter(actions));
                         break;
                 }
             }
@@ -125,13 +121,9 @@ namespace Strinken.Engine
         /// <summary>
         /// Resolve a tag or a filter.
         /// </summary>
-        /// <param name="actionOnTags">Action to perform on tags. The argument is the tag name.</param>
-        /// <param name="actionOnFilters">
-        ///     Action to perform on filters.
-        ///     The arguments are the filter name, the name of the tag on which the filter is applied and the arguments to pass to the filter.
-        /// </param>
+        /// <param name="actions">The list of different actions.</param>
         /// <returns>The result of the resolution of the tag or the filter.</returns>
-        private string ResolveTagOrFilter(Func<string, string> actionOnTags, Func<string, string, string[], string> actionOnFilters)
+        private string ResolveTagOrFilter(ActionDictionary actions)
         {
             var arguments = new List<string>();
 
@@ -141,7 +133,7 @@ namespace Strinken.Engine
                 switch (currentToken.Type)
                 {
                     case TokenType.ArgumentTag:
-                        arguments.Insert(0, actionOnTags?.Invoke(currentToken.Data));
+                        arguments.Insert(0, actions?[TokenType.Tag]?.Invoke(new[] { currentToken.Data }));
                         break;
 
                     case TokenType.Argument:
@@ -149,11 +141,17 @@ namespace Strinken.Engine
                         break;
 
                     case TokenType.Filter:
-                        var temporaryResult = this.ResolveTagOrFilter(actionOnTags, actionOnFilters);
-                        return actionOnFilters?.Invoke(currentToken.Data, temporaryResult, arguments.ToArray());
+                        var temporaryResult = this.ResolveTagOrFilter(actions);
+
+                        // An array is created containing all arguments.
+                        var concatenatedArguments = new string[arguments.Count + 2];
+                        concatenatedArguments[0] = currentToken.Data;
+                        concatenatedArguments[1] = temporaryResult;
+                        arguments.CopyTo(concatenatedArguments, 2);
+                        return actions?[TokenType.Filter]?.Invoke(concatenatedArguments);
 
                     case TokenType.Tag:
-                        return actionOnTags?.Invoke(currentToken.Data);
+                        return actions?[TokenType.Tag]?.Invoke(new[] { currentToken.Data });
                 }
             }
 

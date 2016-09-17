@@ -20,7 +20,7 @@ namespace Strinken.Tests
             var result = this.engine.Run(null);
             Assert.That(result.Success, Is.True);
             Assert.That(result.ErrorMessage, Is.Null);
-            Assert.That(result.Stack.Resolve(null, null), Is.Null);
+            Assert.That(result.Stack.Resolve(null), Is.Null);
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace Strinken.Tests
             var result = this.engine.Run(string.Empty);
             Assert.That(result.Success, Is.True);
             Assert.That(result.ErrorMessage, Is.Null);
-            Assert.That(result.Stack.Resolve(null, null), Is.Empty);
+            Assert.That(result.Stack.Resolve(null), Is.Empty);
         }
 
         [Test]
