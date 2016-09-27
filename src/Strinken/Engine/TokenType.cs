@@ -30,6 +30,11 @@ namespace Strinken.Engine
         /// <summary>
         /// The token is a string that will be rendered without modifications.
         /// </summary>
-        VerbatimString
+        VerbatimString,
+
+        /// <summary>
+        /// The token is a parameter tag.
+        /// </summary>
+        ParameterTag
     }
 }

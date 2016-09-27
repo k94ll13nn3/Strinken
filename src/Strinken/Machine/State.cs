@@ -48,7 +48,7 @@ namespace Strinken.Machine
         OnArgumentInitializerOrSeparator,
 
         /// <summary>
-        /// The machine is on a argument tag indicator.
+        /// The machine is on an argument tag indicator.
         /// </summary>
         OnArgumentTagIndicator,
 
