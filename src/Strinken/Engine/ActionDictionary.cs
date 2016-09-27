@@ -8,8 +8,7 @@ namespace Strinken.Engine
     /// <summary>
     /// Action dictionary used by the token stack to resolve the string.
     /// </summary>
-    /// <remarks>Collection initializers can be used <see href="http://stackoverflow.com/a/2495801/3836163"/>.</remarks>
-    internal class ActionDictionary : IEnumerable<KeyValuePair<TokenType, Func<string[], string>>>
+    internal class ActionDictionary
     {
         /// <summary>
         /// Internal dictionary containing the list of actions and the related <see cref="TokenType"/>.
@@ -34,21 +33,5 @@ namespace Strinken.Engine
             get { return this.items.ContainsKey(key) ? this.items[key] : null; }
             set { this.items[key] = value; }
         }
-
-        /// <summary>
-        /// Adds an element with the provided key and value to the <see cref="ActionDictionary"/>.
-        /// </summary>
-        /// <param name="key">The object to use as the key of the element to add.</param>
-        /// <param name="value">The object to use as the value of the element to add.</param>
-        public void Add(TokenType key, Func<string[], string> value)
-        {
-            this.items[key] = value;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerator<KeyValuePair<TokenType, Func<string[], string>>> GetEnumerator() => this.items.GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => this.items.GetEnumerator();
     }
 }
