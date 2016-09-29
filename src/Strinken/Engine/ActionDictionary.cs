@@ -25,7 +25,7 @@ namespace Strinken.Engine
                 this.items[type] = new Dictionary<TokenSubtype, Func<string[], string>>();
             }
 
-            // For an base argument, the base action is to return the first element of the arguments list.
+            // For a base argument, the base action is to return the first element of the arguments list.
             this.items[TokenType.Argument][TokenSubtype.Base] = a => a[0];
         }
 

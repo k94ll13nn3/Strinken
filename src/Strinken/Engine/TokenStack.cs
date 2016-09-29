@@ -42,7 +42,7 @@ namespace Strinken.Engine
         /// Adds the current token to the stack.
         /// </summary>
         /// <param name="type">The type of the token.</param>
-        /// <param name="subtype">The type of the token.</param>
+        /// <param name="subtype">The subtype of the token.</param>
         public void Push(TokenType type, TokenSubtype subtype)
         {
             var data = this.token.ToString();
@@ -105,7 +105,7 @@ namespace Strinken.Engine
         /// </summary>
         /// <param name="data">The data of the token.</param>
         /// <param name="type">The type of the token.</param>
-        /// <param name="subtype">The type of the token.</param>
+        /// <param name="subtype">The subtype of the token.</param>
         private void InternalPush(string data, TokenType type, TokenSubtype subtype)
         {
             // If the top token is a verbatim token and the new token is also a verbatim token, their data are cumulated.
