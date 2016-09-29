@@ -98,13 +98,13 @@ namespace Strinken.Engine
                     {
                         state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, tokenType, tokenSubtype);
                     }
-                    else if (tokenType != TokenType.Argument || (tokenType == TokenType.Argument && tokenSubtype != TokenSubtype.Base))
+                    else if (tokenType == TokenType.Argument && tokenSubtype == TokenSubtype.Base)
                     {
-                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                        state = this.AppendAndMove(currentState);
                     }
                     else
                     {
-                        state = this.AppendAndMove(currentState);
+                        state = this.RaiseIllegalCharacterError();
                     }
 
                     break;
@@ -114,13 +114,13 @@ namespace Strinken.Engine
                     break;
 
                 case SpecialCharacter.ArgumentSeparator:
-                    if (tokenType == TokenType.Tag || tokenType == TokenType.Filter)
+                    if (tokenType == TokenType.Argument)
                     {
-                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                        state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, TokenType.Argument, tokenSubtype);
                     }
                     else
                     {
-                        state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, tokenType, tokenSubtype);
+                        state = this.RaiseIllegalCharacterError();
                     }
 
                     break;
@@ -130,7 +130,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = this.AppendAndMove(currentState, tokenType != TokenType.Argument || (tokenType == TokenType.Argument && tokenSubtype != TokenSubtype.Base));
+                    state = this.AppendAndMove(currentState, !(tokenType == TokenType.Argument && tokenSubtype == TokenSubtype.Base));
                     break;
             }
 
@@ -173,7 +173,7 @@ namespace Strinken.Engine
                     }
                     else
                     {
-                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                        state = this.RaiseIllegalCharacterError();
                     }
 
                     break;
@@ -185,7 +185,7 @@ namespace Strinken.Engine
                     }
                     else
                     {
-                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                        state = this.RaiseIllegalCharacterError();
                     }
 
                     break;
@@ -197,7 +197,7 @@ namespace Strinken.Engine
                     }
                     else
                     {
-                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                        state = this.RaiseIllegalCharacterError();
                     }
 
                     break;
@@ -211,13 +211,13 @@ namespace Strinken.Engine
                     }
                     else
                     {
-                        state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                        state = this.RaiseIllegalCharacterError();
                     }
 
                     break;
 
                 default:
-                    state = this.AppendAndMove(nextState, tokenType != TokenType.Argument || (tokenType == TokenType.Argument && tokenSubtype != TokenSubtype.Base));
+                    state = this.AppendAndMove(nextState, !(tokenType == TokenType.Argument && tokenSubtype == TokenSubtype.Base));
                     break;
             }
 
@@ -289,7 +289,7 @@ namespace Strinken.Engine
             var value = (char)this.cursor.Value;
             if (validate && value.IsInvalidTokenNameCharacter())
             {
-                return this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
+                return this.RaiseIllegalCharacterError();
             }
 
             this.tokenStack.Append((char)this.cursor.Value);
@@ -342,5 +342,11 @@ namespace Strinken.Engine
                     throw new InvalidOperationException();
             }
         }
+
+        /// <summary>
+        /// Handle the <see cref="RaiseError"/> method for an illegal character.
+        /// </summary>
+        /// <returns><see cref="State.InvalidString"/></returns>
+        private State RaiseIllegalCharacterError() => this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
     }
 }
