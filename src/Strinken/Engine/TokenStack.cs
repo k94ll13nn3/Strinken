@@ -42,11 +42,12 @@ namespace Strinken.Engine
         /// Adds the current token to the stack.
         /// </summary>
         /// <param name="type">The type of the token.</param>
-        public void Push(TokenType type)
+        /// <param name="subtype">The type of the token.</param>
+        public void Push(TokenType type, TokenSubtype subtype)
         {
             var data = this.token.ToString();
             this.token.Length = 0;
-            this.InternalPush(data, type);
+            this.InternalPush(data, type, subtype);
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Strinken.Engine
         /// <param name="data">The data of the token.</param>
         public void PushVerbatim(char data)
         {
-            this.InternalPush(data.ToString(), TokenType.VerbatimString);
+            this.InternalPush(data.ToString(), TokenType.None, TokenSubtype.Base);
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace Strinken.Engine
         /// <param name="data">The data of the token.</param>
         public void PushVerbatim(string data)
         {
-            this.InternalPush(data, TokenType.VerbatimString);
+            this.InternalPush(data, TokenType.None, TokenSubtype.Base);
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace Strinken.Engine
         /// <returns>The result of the resolution of the stack.</returns>
         public string Resolve(ActionDictionary actions)
         {
-            if (this.tokenStack.Count == 1 && this.tokenStack.Peek().Type == TokenType.VerbatimString)
+            if (this.tokenStack.Count == 1 && this.tokenStack.Peek().Type == TokenType.None)
             {
                 return this.tokenStack.Peek().Data;
             }
@@ -85,7 +86,7 @@ namespace Strinken.Engine
                 var nextToken = this.tokenStack.Peek();
                 switch (nextToken.Type)
                 {
-                    case TokenType.VerbatimString:
+                    case TokenType.None:
                         var currentToken = this.tokenStack.Pop();
                         result.Insert(0, currentToken.Data);
                         break;
@@ -104,17 +105,18 @@ namespace Strinken.Engine
         /// </summary>
         /// <param name="data">The data of the token.</param>
         /// <param name="type">The type of the token.</param>
-        private void InternalPush(string data, TokenType type)
+        /// <param name="subtype">The type of the token.</param>
+        private void InternalPush(string data, TokenType type, TokenSubtype subtype)
         {
             // If the top token is a verbatim token and the new token is also a verbatim token, their data are cumulated.
-            if (this.tokenStack.Count > 0 && type == TokenType.VerbatimString && this.tokenStack.Peek().Type == TokenType.VerbatimString)
+            if (this.tokenStack.Count > 0 && type == TokenType.None && this.tokenStack.Peek().Type == TokenType.None)
             {
                 var lastToken = this.tokenStack.Pop();
-                this.tokenStack.Push(new Token(lastToken.Data + data, TokenType.VerbatimString));
+                this.tokenStack.Push(new Token(lastToken.Data + data, TokenType.None, TokenSubtype.Base));
             }
             else
             {
-                this.tokenStack.Push(new Token(data, type));
+                this.tokenStack.Push(new Token(data, type, subtype));
             }
         }
 
@@ -132,12 +134,8 @@ namespace Strinken.Engine
                 var currentToken = this.tokenStack.Pop();
                 switch (currentToken.Type)
                 {
-                    case TokenType.ArgumentTag:
-                        arguments.Insert(0, actions?[TokenType.Tag]?.Invoke(new[] { currentToken.Data }));
-                        break;
-
                     case TokenType.Argument:
-                        arguments.Insert(0, currentToken.Data);
+                        arguments.Insert(0, actions?[TokenType.Argument, currentToken.Subtype]?.Invoke(new[] { currentToken.Data }));
                         break;
 
                     case TokenType.Filter:
@@ -148,10 +146,10 @@ namespace Strinken.Engine
                         concatenatedArguments[0] = currentToken.Data;
                         concatenatedArguments[1] = temporaryResult;
                         arguments.CopyTo(concatenatedArguments, 2);
-                        return actions?[TokenType.Filter]?.Invoke(concatenatedArguments);
+                        return actions?[TokenType.Filter, currentToken.Subtype]?.Invoke(concatenatedArguments);
 
                     case TokenType.Tag:
-                        return actions?[TokenType.Tag]?.Invoke(new[] { currentToken.Data });
+                        return actions?[TokenType.Tag, currentToken.Subtype]?.Invoke(new[] { currentToken.Data });
                 }
             }
 
@@ -168,10 +166,12 @@ namespace Strinken.Engine
             /// </summary>
             /// <param name="data">The data related to the token.</param>
             /// <param name="type">The type of the token.</param>
-            public Token(string data, TokenType type)
+            /// <param name="subtype">The subtype of the token.</param>
+            public Token(string data, TokenType type, TokenSubtype subtype)
             {
                 this.Data = data;
                 this.Type = type;
+                this.Subtype = subtype;
             }
 
             /// <summary>
@@ -183,6 +183,11 @@ namespace Strinken.Engine
             /// Gets the type of the token.
             /// </summary>
             public TokenType Type { get; }
+
+            /// <summary>
+            /// Gets the subtype of the token.
+            /// </summary>
+            public TokenSubtype Subtype { get; }
         }
     }
 }

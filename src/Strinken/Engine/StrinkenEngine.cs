@@ -55,15 +55,15 @@ namespace Strinken.Engine
                     .StopOn(State.EndOfString)
                     .BeforeEachStep(this.cursor.Next)
                     .On(State.OutsideToken).Do(this.ProcessOutsideToken)
-                    .On(State.OnTokenStartIndicator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Tag, State.InsideTag))
-                    .On(State.InsideTag).Do(() => this.ProcessInsideToken(TokenType.Tag, State.InsideTag))
+                    .On(State.OnTokenStartIndicator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Tag, TokenSubtype.Base, State.InsideTag))
+                    .On(State.InsideTag).Do(() => this.ProcessInsideToken(TokenType.Tag, TokenSubtype.Base, State.InsideTag))
                     .On(State.OnTokenEndIndicator).Do(this.ProcessOnTokenEndIndicator)
-                    .On(State.OnFilterSeparator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Filter, State.InsideFilter))
-                    .On(State.InsideFilter).Do(() => this.ProcessInsideToken(TokenType.Filter, State.InsideFilter))
-                    .On(State.OnArgumentInitializerOrSeparator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Argument, State.InsideArgument))
-                    .On(State.InsideArgument).Do(() => this.ProcessInsideToken(TokenType.Argument, State.InsideArgument))
-                    .On(State.OnArgumentTagIndicator).Do(() => this.ProcessOnSpecialCharacter(TokenType.ArgumentTag, State.InsideArgumentTag))
-                    .On(State.InsideArgumentTag).Do(() => this.ProcessInsideToken(TokenType.ArgumentTag, State.InsideArgumentTag))
+                    .On(State.OnFilterSeparator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Filter, TokenSubtype.Base, State.InsideFilter))
+                    .On(State.InsideFilter).Do(() => this.ProcessInsideToken(TokenType.Filter, TokenSubtype.Base, State.InsideFilter))
+                    .On(State.OnArgumentInitializerOrSeparator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Argument, TokenSubtype.Base, State.InsideArgument))
+                    .On(State.InsideArgument).Do(() => this.ProcessInsideToken(TokenType.Argument, TokenSubtype.Base, State.InsideArgument))
+                    .On(State.OnArgumentTagIndicator).Do(() => this.ProcessOnSpecialCharacter(TokenType.Argument, TokenSubtype.Tag, State.InsideArgumentTag))
+                    .On(State.InsideArgumentTag).Do(() => this.ProcessInsideToken(TokenType.Argument, TokenSubtype.Tag, State.InsideArgumentTag))
                     .On(State.InvalidString).Sink()
                     .Build();
 
@@ -81,9 +81,10 @@ namespace Strinken.Engine
         /// Processes an inside token state.
         /// </summary>
         /// <param name="tokenType">The type of token associated to the state.</param>
+        /// <param name="tokenSubtype">The subtype of token associated to the state.</param>
         /// <param name="currentState">The current state.</param>
         /// <returns>The new state.</returns>
-        private State ProcessInsideToken(TokenType tokenType, State currentState)
+        private State ProcessInsideToken(TokenType tokenType, TokenSubtype tokenSubtype, State currentState)
         {
             State state;
             switch (this.cursor.Value)
@@ -95,9 +96,9 @@ namespace Strinken.Engine
                 case SpecialCharacter.ArgumentIndicator:
                     if (tokenType == TokenType.Filter)
                     {
-                        state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, tokenType);
+                        state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, tokenType, tokenSubtype);
                     }
-                    else if (tokenType != TokenType.Argument)
+                    else if (tokenType != TokenType.Argument || (tokenType == TokenType.Argument && tokenSubtype != TokenSubtype.Base))
                     {
                         state = this.RaiseError(string.Format(Errors.IllegalCharacter, (char)this.cursor.Value, this.cursor.Position));
                     }
@@ -109,7 +110,7 @@ namespace Strinken.Engine
                     break;
 
                 case SpecialCharacter.FilterSeparator:
-                    state = this.PushAndMove(State.OnFilterSeparator, tokenType);
+                    state = this.PushAndMove(State.OnFilterSeparator, tokenType, tokenSubtype);
                     break;
 
                 case SpecialCharacter.ArgumentSeparator:
@@ -119,17 +120,17 @@ namespace Strinken.Engine
                     }
                     else
                     {
-                        state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, tokenType);
+                        state = this.PushAndMove(State.OnArgumentInitializerOrSeparator, tokenType, tokenSubtype);
                     }
 
                     break;
 
                 case SpecialCharacter.TokenEndIndicator:
-                    state = this.PushAndMove(State.OutsideToken, tokenType);
+                    state = this.PushAndMove(State.OutsideToken, tokenType, tokenSubtype);
                     break;
 
                 default:
-                    state = this.AppendAndMove(currentState, tokenType != TokenType.Argument);
+                    state = this.AppendAndMove(currentState, tokenType != TokenType.Argument || (tokenType == TokenType.Argument && tokenSubtype != TokenSubtype.Base));
                     break;
             }
 
@@ -140,9 +141,10 @@ namespace Strinken.Engine
         /// Processes an on special character state.
         /// </summary>
         /// <param name="tokenType">The type of token associated to the state.</param>
+        /// <param name="tokenSubtype">The subtype of token associated to the state.</param>
         /// <param name="nextState">The next state.</param>
         /// <returns>The new state.</returns>
-        private State ProcessOnSpecialCharacter(TokenType tokenType, State nextState)
+        private State ProcessOnSpecialCharacter(TokenType tokenType, TokenSubtype tokenSubtype, State nextState)
         {
             State state;
             switch (this.cursor.Value)
@@ -165,7 +167,7 @@ namespace Strinken.Engine
                     break;
 
                 case SpecialCharacter.ArgumentSeparator:
-                    if (tokenType == TokenType.Argument)
+                    if (tokenType == TokenType.Argument && tokenSubtype == TokenSubtype.Base)
                     {
                         state = this.RaiseError(Errors.EmptyArgument);
                     }
@@ -177,7 +179,7 @@ namespace Strinken.Engine
                     break;
 
                 case SpecialCharacter.ArgumentTagIndicator:
-                    if (tokenType == TokenType.Argument)
+                    if (tokenType == TokenType.Argument && tokenSubtype == TokenSubtype.Base)
                     {
                         state = State.OnArgumentTagIndicator;
                     }
@@ -215,7 +217,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    state = this.AppendAndMove(nextState, tokenType != TokenType.Argument);
+                    state = this.AppendAndMove(nextState, tokenType != TokenType.Argument || (tokenType == TokenType.Argument && tokenSubtype != TokenSubtype.Base));
                     break;
             }
 
@@ -310,10 +312,11 @@ namespace Strinken.Engine
         /// </summary>
         /// <param name="nextState">The next state.</param>
         /// <param name="tokenType">The type of token to push.</param>
+        /// <param name="tokenSubtype">The subtype of token to push.</param>
         /// <returns>The new state.</returns>
-        private State PushAndMove(State nextState, TokenType tokenType)
+        private State PushAndMove(State nextState, TokenType tokenType, TokenSubtype tokenSubtype)
         {
-            this.tokenStack.Push(tokenType);
+            this.tokenStack.Push(tokenType, tokenSubtype);
             return nextState;
         }
 
@@ -327,7 +330,6 @@ namespace Strinken.Engine
             switch (tokenType)
             {
                 case TokenType.Argument:
-                case TokenType.ArgumentTag:
                     return this.RaiseError(Errors.EmptyArgument);
 
                 case TokenType.Filter:

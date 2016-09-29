@@ -13,9 +13,9 @@ namespace Strinken.Engine
         Argument,
 
         /// <summary>
-        /// The token is an argument tag.
+        /// The token is a tag.
         /// </summary>
-        ArgumentTag,
+        Tag,
 
         /// <summary>
         /// The token is a filter.
@@ -23,13 +23,8 @@ namespace Strinken.Engine
         Filter,
 
         /// <summary>
-        /// The token is a tag.
-        /// </summary>
-        Tag,
-
-        /// <summary>
         /// The token is a string that will be rendered without modifications.
         /// </summary>
-        VerbatimString
+        None
     }
 }

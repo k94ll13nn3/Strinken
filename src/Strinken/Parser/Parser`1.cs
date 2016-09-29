@@ -62,8 +62,9 @@ namespace Strinken.Parser
             {
                 var actions = new ActionDictionary
                 {
-                    [TokenType.Tag] = a => this.tags[a[0]].Resolve(value),
-                    [TokenType.Filter] = a => this.filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+                    [TokenType.Tag, TokenSubtype.Base] = a => this.tags[a[0]].Resolve(value),
+                    [TokenType.Argument, TokenSubtype.Tag] = a => this.tags[a[0]].Resolve(value),
+                    [TokenType.Filter, TokenSubtype.Base] = a => this.filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
                 };
 
                 return runResult.Stack.Resolve(actions);
@@ -91,12 +92,17 @@ namespace Strinken.Parser
 
             var actions = new ActionDictionary
             {
-                [TokenType.Tag] = a =>
+                [TokenType.Tag, TokenSubtype.Base] = a =>
                 {
                     tagList.Add(a[0]);
                     return string.Empty;
                 },
-                [TokenType.Filter] = a =>
+                [TokenType.Argument, TokenSubtype.Tag] = a =>
+                {
+                    tagList.Add(a[0]);
+                    return string.Empty;
+                },
+                [TokenType.Filter, TokenSubtype.Base] = a =>
                 {
                     filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
                     return string.Empty;
