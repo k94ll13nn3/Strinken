@@ -55,7 +55,7 @@ namespace Strinken.Tests.Core.Parsing
         [Test]
         public void ParseNameWithEnd_EndFound_ReturnsSuccessAndStringAndEnd()
         {
-            var input = "name+";
+            const string input = "name+";
             ParserResult<string, int> result;
             using (var cursor = new Cursor(input))
             {
@@ -71,7 +71,7 @@ namespace Strinken.Tests.Core.Parsing
         [Test]
         public void ParseNameWithEnd_EndNotFound_ReturnsFailure()
         {
-            var input = "name|";
+            const string input = "name|";
             ParserResult<string, int> result;
             using (var cursor = new Cursor(input))
             {
@@ -86,7 +86,7 @@ namespace Strinken.Tests.Core.Parsing
         public void ParseTag_BaseTag_ReturnsSuccessAndTag()
         {
             const string input = "tag:";
-            ParserResult<Token> result;
+            ParserResult<Token, int> result;
             using (var cursor = new Cursor(input))
             {
                 cursor.Next();
@@ -103,7 +103,7 @@ namespace Strinken.Tests.Core.Parsing
         public void ParseTag_InvalidTag_ReturnsFailure()
         {
             const string input = "tag'";
-            ParserResult<Token> result;
+            ParserResult<Token, int> result;
             using (var cursor = new Cursor(input))
             {
                 cursor.Next();
@@ -140,6 +140,74 @@ namespace Strinken.Tests.Core.Parsing
             {
                 cursor.Next();
                 result = StringParser.ParseFilter(cursor);
+            }
+
+            Assert.That(result.Result, Is.False);
+        }
+
+        [Test]
+        public void ParseArgument_LastArgument_ReturnsSuccessAndFilterDelimiter()
+        {
+            const string input = "lorem:";
+            ParserResult<Token, int> result;
+            using (var cursor = new Cursor(input))
+            {
+                cursor.Next();
+                result = StringParser.ParseArgument(cursor);
+            }
+
+            Assert.That(result.Result, Is.True);
+            Assert.That(result.OptionalData, Is.EqualTo(':'));
+            Assert.That(result.Value.Data, Is.EqualTo("lorem"));
+            Assert.That(result.Value.Type, Is.EqualTo(TokenType.Argument));
+            Assert.That(result.Value.Subtype, Is.EqualTo(TokenSubtype.Base));
+        }
+
+        [Test]
+        public void ParseArgument_Argument_ReturnsSuccessAndArgumentDelimiter()
+        {
+            const string input = "lorem,";
+            ParserResult<Token, int> result;
+            using (var cursor = new Cursor(input))
+            {
+                cursor.Next();
+                result = StringParser.ParseArgument(cursor);
+            }
+
+            Assert.That(result.Result, Is.True);
+            Assert.That(result.OptionalData, Is.EqualTo(','));
+            Assert.That(result.Value.Data, Is.EqualTo("lorem"));
+            Assert.That(result.Value.Type, Is.EqualTo(TokenType.Argument));
+            Assert.That(result.Value.Subtype, Is.EqualTo(TokenSubtype.Base));
+        }
+
+        [Test]
+        public void ParseArgument_ArgumentTag_ReturnsSuccessAndArgumentDelimiter()
+        {
+            const string input = "=lorem,";
+            ParserResult<Token, int> result;
+            using (var cursor = new Cursor(input))
+            {
+                cursor.Next();
+                result = StringParser.ParseArgument(cursor);
+            }
+
+            Assert.That(result.Result, Is.True);
+            Assert.That(result.OptionalData, Is.EqualTo(','));
+            Assert.That(result.Value.Data, Is.EqualTo("lorem"));
+            Assert.That(result.Value.Type, Is.EqualTo(TokenType.Argument));
+            Assert.That(result.Value.Subtype, Is.EqualTo(TokenSubtype.Tag));
+        }
+
+        [Test]
+        public void ParseArgument_InvalidArgument_ReturnsFailure()
+        {
+            const string input = "+arg:";
+            ParserResult<Token, int> result;
+            using (var cursor = new Cursor(input))
+            {
+                cursor.Next();
+                result = StringParser.ParseArgument(cursor);
             }
 
             Assert.That(result.Result, Is.False);
