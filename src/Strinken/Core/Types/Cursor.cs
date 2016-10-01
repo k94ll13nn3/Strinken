@@ -1,8 +1,8 @@
-// stylecop.header
+﻿// stylecop.header
 using System;
 using System.IO;
 
-namespace Strinken.Engine
+namespace Strinken.Core.Types
 {
     /// <summary>
     /// Cursor used to read a string.

@@ -1,6 +1,7 @@
 // stylecop.header
 using System;
 using Strinken.Common;
+using Strinken.Core.Types;
 using Strinken.Machine;
 
 namespace Strinken.Engine
