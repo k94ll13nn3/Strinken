@@ -122,6 +122,15 @@ namespace Strinken.Engine
         }
 
         /// <summary>
+        /// Pushes a token to the stack.
+        /// </summary>
+        /// <param name="token">The token to push.</param>
+        public void Push(Token token)
+        {
+            this.tokenStack.Push(token);
+        }
+
+        /// <summary>
         /// Resolve a tag or a filter.
         /// </summary>
         /// <param name="actions">The list of different actions.</param>

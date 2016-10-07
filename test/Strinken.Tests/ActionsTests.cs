@@ -409,8 +409,8 @@ namespace Strinken.Tests
         [Test]
         public void Run_NoActions_ReturnsOutsideString()
         {
-            const string input = "lorem{ipsum:patse+paku,=malo}";
-            Assert.That(new StrinkenEngine().Run(input).Stack.Resolve(null), Is.EqualTo("lorem"));
+            const string input = "lorem{ipsum:patse+paku,=malo}aku";
+            Assert.That(new StrinkenEngine().Run(input).Stack.Resolve(null), Is.EqualTo("loremaku"));
         }
     }
 }

@@ -48,6 +48,12 @@ namespace Strinken.Core.Types
         }
 
         /// <summary>
+        /// Indicates if the cursor as reached the end.
+        /// </summary>
+        /// <returns>A value indicating whether the cursor as reached the end.</returns>
+        public bool HasEnded() => this.Position != -1 && this.Value == -1;
+
+        /// <summary>
         /// Moves the cursor.
         /// </summary>
         public void Next()
