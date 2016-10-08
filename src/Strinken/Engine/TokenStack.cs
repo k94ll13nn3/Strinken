@@ -11,11 +11,6 @@ namespace Strinken.Engine
     internal class TokenStack
     {
         /// <summary>
-        /// The <see cref="StringBuilder"/> used store the current token.
-        /// </summary>
-        private readonly StringBuilder token;
-
-        /// <summary>
         /// Internal stack.
         /// </summary>
         private readonly Stack<Token> tokenStack;
@@ -26,28 +21,6 @@ namespace Strinken.Engine
         public TokenStack()
         {
             this.tokenStack = new Stack<Token>();
-            this.token = new StringBuilder();
-        }
-
-        /// <summary>
-        /// Appends a value to the next token that will be pushed in the stack.
-        /// </summary>
-        /// <param name="value">The value to append.</param>
-        public void Append(char value)
-        {
-            this.token.Append(value);
-        }
-
-        /// <summary>
-        /// Adds the current token to the stack.
-        /// </summary>
-        /// <param name="type">The type of the token.</param>
-        /// <param name="subtype">The subtype of the token.</param>
-        public void Push(TokenType type, TokenSubtype subtype)
-        {
-            var data = this.token.ToString();
-            this.token.Length = 0;
-            this.InternalPush(data, type, subtype);
         }
 
         /// <summary>
@@ -98,6 +71,15 @@ namespace Strinken.Engine
             }
 
             return result.ToString();
+        }
+
+        /// <summary>
+        /// Pushes a token to the stack.
+        /// </summary>
+        /// <param name="token">The token to push.</param>
+        public void Push(Token token)
+        {
+            this.tokenStack.Push(token);
         }
 
         /// <summary>
@@ -154,40 +136,6 @@ namespace Strinken.Engine
             }
 
             throw new InvalidOperationException("Internal engine error.");
-        }
-
-        /// <summary>
-        /// An element in the stack.
-        /// </summary>
-        private class Token
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Token"/> class.
-            /// </summary>
-            /// <param name="data">The data related to the token.</param>
-            /// <param name="type">The type of the token.</param>
-            /// <param name="subtype">The subtype of the token.</param>
-            public Token(string data, TokenType type, TokenSubtype subtype)
-            {
-                this.Data = data;
-                this.Type = type;
-                this.Subtype = subtype;
-            }
-
-            /// <summary>
-            /// Gets the data related to the token (value or name).
-            /// </summary>
-            public string Data { get; }
-
-            /// <summary>
-            /// Gets the type of the token.
-            /// </summary>
-            public TokenType Type { get; }
-
-            /// <summary>
-            /// Gets the subtype of the token.
-            /// </summary>
-            public TokenSubtype Subtype { get; }
         }
     }
 }

@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace Strinken.Core.Types
+namespace Strinken.Engine
 {
     /// <summary>
     /// Cursor used to read a string.
@@ -40,12 +40,23 @@ namespace Strinken.Core.Types
         /// </summary>
         public int Value { get; private set; }
 
+        /// <summary>
+        /// Gets the current value of the cursor as a <see cref="char"/>.
+        /// </summary>
+        public char CharValue => (char)this.Value;
+
         /// <inheritdoc/>
         public void Dispose()
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        /// <summary>
+        /// Indicates if the cursor as reached the end.
+        /// </summary>
+        /// <returns>A value indicating whether the cursor as reached the end.</returns>
+        public bool HasEnded() => this.Position != -1 && this.Value == -1;
 
         /// <summary>
         /// Moves the cursor.
