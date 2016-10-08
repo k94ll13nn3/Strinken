@@ -1,25 +1,25 @@
 ﻿// stylecop.header
 
-namespace Strinken.Core.Parsing
+namespace Strinken.Engine
 {
     /// <summary>
     /// Base class for all parsing result.
     /// </summary>
     /// <typeparam name="T">The type of the parsed data.</typeparam>
-    internal class ParserResult<T>
+    internal class ParseResult<T>
     {
         /// <summary>
         /// A failure result.
         /// </summary>
-        public static readonly ParserResult<T> Failure = new ParserResult<T>(false, default(T), null);
+        public static readonly ParseResult<T> Failure = new ParseResult<T>(false, default(T), null);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParserResult{T}"/> class.
+        /// Initializes a new instance of the <see cref="ParseResult{T}"/> class.
         /// </summary>
         /// <param name="result">A value indicating whether the parsing was successful.</param>
         /// <param name="value">The parsed value.</param>
         /// <param name="message">The message associated to the parsing.</param>
-        private ParserResult(bool result, T value, string message)
+        private ParseResult(bool result, T value, string message)
         {
             this.Result = result;
             this.Value = value;
@@ -46,13 +46,13 @@ namespace Strinken.Core.Parsing
         /// </summary>
         /// <param name="value">The parsed value.</param>
         /// <returns>The result.</returns>
-        public static ParserResult<T> Success(T value) => new ParserResult<T>(true, value, null);
+        public static ParseResult<T> Success(T value) => new ParseResult<T>(true, value, null);
 
         /// <summary>
         /// Creates a new failure result.
         /// </summary>
         /// <param name="message">The message associated to the parsing.</param>
         /// <returns>The result.</returns>
-        public static ParserResult<T> FailureWithMessage(string message) => new ParserResult<T>(false, default(T), message);
+        public static ParseResult<T> FailureWithMessage(string message) => new ParseResult<T>(false, default(T), message);
     }
 }

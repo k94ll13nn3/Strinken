@@ -28,10 +28,10 @@ namespace Strinken.Tests
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
-                .On(State.OutsideToken).Do(() => State.InsideArgument)
+                .On(State.OutsideToken).Do(() => State.OnTokenEndIndicator)
                 .Build();
 
-            Assert.That(() => machine.Run(), Throws.InvalidOperationException.With.Message.EqualTo("The state InsideArgument does not have a corresponding action."));
+            Assert.That(() => machine.Run(), Throws.InvalidOperationException.With.Message.EqualTo("The state OnTokenEndIndicator does not have a corresponding action."));
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace Strinken.Tests
                 .Initialize()
                 .StartOn(State.OutsideToken)
                 .StopOn(State.OutsideToken)
-                .On(State.OutsideToken).Do(() => State.InsideArgument)
-                .On(State.InsideArgument).Sink()
+                .On(State.OutsideToken).Do(() => State.OnTokenEndIndicator)
+                .On(State.OnTokenEndIndicator).Sink()
                 .Build();
 
             Assert.That(() => machine.Run(), Is.False);

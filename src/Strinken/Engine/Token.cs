@@ -1,7 +1,6 @@
 ﻿// stylecop.header
-using Strinken.Engine;
 
-namespace Strinken.Core.Types
+namespace Strinken.Engine
 {
     /// <summary>
     /// An element in the stack.

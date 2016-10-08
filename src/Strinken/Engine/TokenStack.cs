@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Strinken.Core.Types;
 
 namespace Strinken.Engine
 {
@@ -11,11 +10,6 @@ namespace Strinken.Engine
     /// </summary>
     internal class TokenStack
     {
-        /// <summary>
-        /// The <see cref="StringBuilder"/> used store the current token.
-        /// </summary>
-        private readonly StringBuilder token;
-
         /// <summary>
         /// Internal stack.
         /// </summary>
@@ -27,28 +21,6 @@ namespace Strinken.Engine
         public TokenStack()
         {
             this.tokenStack = new Stack<Token>();
-            this.token = new StringBuilder();
-        }
-
-        /// <summary>
-        /// Appends a value to the next token that will be pushed in the stack.
-        /// </summary>
-        /// <param name="value">The value to append.</param>
-        public void Append(char value)
-        {
-            this.token.Append(value);
-        }
-
-        /// <summary>
-        /// Adds the current token to the stack.
-        /// </summary>
-        /// <param name="type">The type of the token.</param>
-        /// <param name="subtype">The subtype of the token.</param>
-        public void Push(TokenType type, TokenSubtype subtype)
-        {
-            var data = this.token.ToString();
-            this.token.Length = 0;
-            this.InternalPush(data, type, subtype);
         }
 
         /// <summary>
@@ -102,6 +74,15 @@ namespace Strinken.Engine
         }
 
         /// <summary>
+        /// Pushes a token to the stack.
+        /// </summary>
+        /// <param name="token">The token to push.</param>
+        public void Push(Token token)
+        {
+            this.tokenStack.Push(token);
+        }
+
+        /// <summary>
         /// Pushes the provided data to the stack.
         /// </summary>
         /// <param name="data">The data of the token.</param>
@@ -119,15 +100,6 @@ namespace Strinken.Engine
             {
                 this.tokenStack.Push(new Token(data, type, subtype));
             }
-        }
-
-        /// <summary>
-        /// Pushes a token to the stack.
-        /// </summary>
-        /// <param name="token">The token to push.</param>
-        public void Push(Token token)
-        {
-            this.tokenStack.Push(token);
         }
 
         /// <summary>

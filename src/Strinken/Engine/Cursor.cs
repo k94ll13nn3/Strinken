@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace Strinken.Core.Types
+namespace Strinken.Engine
 {
     /// <summary>
     /// Cursor used to read a string.
