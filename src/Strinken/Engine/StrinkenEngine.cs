@@ -73,39 +73,220 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Processes the inside of a token.
+        /// Parses an argument.
         /// </summary>
-        /// <returns>The new state.</returns>
-        private State ProcessToken()
+        /// <param name="cursor">The cursor to parse.</param>
+        /// <returns>The result of the parsing.</returns>
+        private static ParseResult<Token> ParseArgument(Cursor cursor)
         {
-            if (this.cursor.Value == SpecialCharacter.TokenStartIndicator)
-            {
-                // Escaped TokenEnd
-                this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenStartIndicator);
-                return State.OutsideToken;
-            }
+            var subtype = TokenSubtype.Base;
 
-            if (this.cursor.HasEnded())
+            if (cursor.Value == SpecialCharacter.ArgumentIndicator || cursor.Value == SpecialCharacter.ArgumentSeparator)
             {
-                this.errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, '{');
-                return State.InvalidString;
-            }
-
-            var parsingResult = ParseString(this.cursor);
-            if (parsingResult.Result)
-            {
-                foreach (var token in parsingResult.Value)
+                cursor.Next();
+                if (cursor.Value == SpecialCharacter.ArgumentTagIndicator)
                 {
-                    this.tokenStack.Push(token);
+                    // Consume ArgumentTagIndicator
+                    cursor.Next();
+                    var result = ParseTag(cursor, true);
+
+                    if (result.Result)
+                    {
+                        if (result.Value.Subtype == TokenSubtype.Base)
+                        {
+                            subtype = TokenSubtype.Tag;
+                        }
+
+                        return ParseResult<Token>.Success(new Token(result.Value.Data, TokenType.Argument, subtype));
+                    }
+                    else
+                    {
+                        return ParseResult<Token>.FailureWithMessage(result.Message);
+                    }
+                }
+                else
+                {
+                    var result = ParseName(cursor, new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, c => true);
+                    if (result.Result)
+                    {
+                        return ParseResult<Token>.Success(new Token(result.Value, TokenType.Argument, subtype));
+                    }
+                    else
+                    {
+                        return ParseResult<Token>.FailureWithMessage(result.Message);
+                    }
+                }
+            }
+
+            return ParseResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
+        }
+
+        /// <summary>
+        /// Parses a filter.
+        /// </summary>
+        /// <param name="cursor">The cursor to parse.</param>
+        /// <returns>The result of the parsing.</returns>
+        private static ParseResult<Token> ParseFilter(Cursor cursor)
+        {
+            var subtype = TokenSubtype.Base;
+            if (cursor.Value == SpecialCharacter.FilterSeparator)
+            {
+                cursor.Next();
+
+                /*
+                 Special character before the token can be parsed here.
+                 */
+
+                var ends = new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator };
+                var result = ParseName(cursor, ends, c => !((char)c).IsInvalidTokenNameCharacter());
+                if (result.Result)
+                {
+                    return ParseResult<Token>.Success(new Token(result.Value, TokenType.Filter, subtype));
+                }
+                else
+                {
+                    return ParseResult<Token>.FailureWithMessage(result.Message);
+                }
+            }
+
+            return ParseResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
+        }
+
+        /// <summary>
+        /// Parses a filter and its possible arguments.
+        /// </summary>
+        /// <param name="cursor">The cursor to parse.</param>
+        /// <returns>The result of the parsing.</returns>
+        private static ParseResult<IList<Token>> ParseFilterAndArgument(Cursor cursor)
+        {
+            var tokenList = new List<Token>();
+            var filterParseResult = ParseFilter(cursor);
+            if (!filterParseResult.Result)
+            {
+                return ParseResult<IList<Token>>.FailureWithMessage(filterParseResult.Message != Errors.EmptyName ? filterParseResult.Message : Errors.EmptyFilter);
+            }
+
+            tokenList.Add(filterParseResult.Value);
+            if (cursor.Value != SpecialCharacter.FilterSeparator && cursor.Value != SpecialCharacter.TokenEndIndicator && !cursor.HasEnded())
+            {
+                while (cursor.Value != SpecialCharacter.FilterSeparator && cursor.Value != SpecialCharacter.TokenEndIndicator && !cursor.HasEnded())
+                {
+                    var argumentParseResult = ParseArgument(cursor);
+                    if (!argumentParseResult.Result)
+                    {
+                        return ParseResult<IList<Token>>.FailureWithMessage(argumentParseResult.Message != Errors.EmptyName ? argumentParseResult.Message : Errors.EmptyArgument);
+                    }
+
+                    tokenList.Add(argumentParseResult.Value);
+                }
+            }
+
+            return ParseResult<IList<Token>>.Success(tokenList);
+        }
+
+        /// <summary>
+        /// Parses a string and returns the first name in it.
+        /// </summary>
+        /// <param name="cursor">The cursor to parse.</param>
+        /// <param name="ends">A list of valid ends.</param>
+        /// <param name="isValidChar">A function indicating whether a character is valid.</param>
+        /// <returns>The result of the parsing.</returns>
+        private static ParseResult<string> ParseName(Cursor cursor, ICollection<int> ends, Func<int, bool> isValidChar)
+        {
+            var builder = new StringBuilder();
+            var updatedEnd = new List<int> { SpecialCharacter.TokenEndIndicator };
+            foreach (var end in ends)
+            {
+                updatedEnd.Add(end);
+            }
+
+            while (true)
+            {
+                if (updatedEnd.Contains(cursor.Value))
+                {
+                    break;
                 }
 
-                return State.OutsideToken;
+                if (cursor.HasEnded())
+                {
+                    return ParseResult<string>.FailureWithMessage(Errors.EndOfString);
+                }
+
+                if (!(isValidChar?.Invoke(cursor.Value) ?? false))
+                {
+                    return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
+                }
+
+                builder.Append(cursor.CharValue);
+                cursor.Next();
             }
-            else
+
+            var parsedName = builder.ToString();
+            return !string.IsNullOrEmpty(parsedName) ? ParseResult<string>.Success(parsedName) : ParseResult<string>.FailureWithMessage(Errors.EmptyName);
+        }
+
+        /// <summary>
+        /// Parses a string.
+        /// </summary>
+        /// <param name="cursor">The cursor to parse.</param>
+        /// <returns>The result of the parsing.</returns>
+        private static ParseResult<IList<Token>> ParseString(Cursor cursor)
+        {
+            var tokenList = new List<Token>();
+            var tagParseResult = ParseTag(cursor);
+            if (!tagParseResult.Result)
             {
-                this.errorMessage = parsingResult.Message;
-                return State.InvalidString;
+                return ParseResult<IList<Token>>.FailureWithMessage(tagParseResult.Message != Errors.EmptyName ? tagParseResult.Message : Errors.EmptyTag);
             }
+
+            tokenList.Add(tagParseResult.Value);
+            while (!cursor.HasEnded() && cursor.Value != SpecialCharacter.TokenEndIndicator)
+            {
+                var filterAndArgumentParseResult = ParseFilterAndArgument(cursor);
+
+                if (filterAndArgumentParseResult.Result)
+                {
+                    foreach (var token in filterAndArgumentParseResult.Value)
+                    {
+                        tokenList.Add(token);
+                    }
+                }
+                else
+                {
+                    return ParseResult<IList<Token>>.FailureWithMessage(filterAndArgumentParseResult.Message);
+                }
+            }
+
+            return ParseResult<IList<Token>>.Success(tokenList);
+        }
+
+        /// <summary>
+        /// Parses a tag.
+        /// </summary>
+        /// <param name="cursor">The cursor to parse.</param>
+        /// <param name="isArgument">A value indicating whether the tag is used as an argument.</param>
+        /// <returns>The result of the parsing.</returns>
+        private static ParseResult<Token> ParseTag(Cursor cursor, bool isArgument = false)
+        {
+            var subtype = TokenSubtype.Base;
+
+            /*
+             Special character before the token can be parsed here.
+             */
+
+            var ends = new List<int> { SpecialCharacter.FilterSeparator };
+            if (isArgument)
+            {
+                ends.Add(SpecialCharacter.ArgumentSeparator);
+            }
+
+            var result = ParseName(cursor, ends, c => !((char)c).IsInvalidTokenNameCharacter());
+            if (result.Result)
+            {
+                return ParseResult<Token>.Success(new Token(result.Value, TokenType.Tag, subtype));
+            }
+
+            return ParseResult<Token>.FailureWithMessage(result.Message);
         }
 
         /// <summary>
@@ -163,6 +344,42 @@ namespace Strinken.Engine
         }
 
         /// <summary>
+        /// Processes the inside of a token.
+        /// </summary>
+        /// <returns>The new state.</returns>
+        private State ProcessToken()
+        {
+            if (this.cursor.Value == SpecialCharacter.TokenStartIndicator)
+            {
+                // Escaped TokenEnd
+                this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenStartIndicator);
+                return State.OutsideToken;
+            }
+
+            if (this.cursor.HasEnded())
+            {
+                this.errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, '{');
+                return State.InvalidString;
+            }
+
+            var parsingResult = ParseString(this.cursor);
+            if (parsingResult.Result)
+            {
+                foreach (var token in parsingResult.Value)
+                {
+                    this.tokenStack.Push(token);
+                }
+
+                return State.OutsideToken;
+            }
+            else
+            {
+                this.errorMessage = parsingResult.Message;
+                return State.InvalidString;
+            }
+        }
+
+        /// <summary>
         /// Sets the current error message and returns an invalid state.
         /// </summary>
         /// <param name="error">The error message.</param>
@@ -171,218 +388,6 @@ namespace Strinken.Engine
         {
             this.errorMessage = error;
             return State.InvalidString;
-        }
-
-        /// <summary>
-        /// Parses a string and returns the first name in it.
-        /// </summary>
-        /// <param name="cursor">The cursor to parse.</param>
-        /// <param name="ends">A list of valid ends.</param>
-        /// <param name="isValidChar">A function indicating whether a character is valid.</param>
-        /// <returns>The result of the parsing.</returns>
-        private static ParseResult<string> ParseName(Cursor cursor, ICollection<int> ends, Func<int, bool> isValidChar)
-        {
-            var builder = new StringBuilder();
-            var updatedEnd = new List<int> { SpecialCharacter.TokenEndIndicator };
-            foreach (var end in ends)
-            {
-                updatedEnd.Add(end);
-            }
-
-            while (true)
-            {
-                if (updatedEnd.Contains(cursor.Value))
-                {
-                    break;
-                }
-
-                if (cursor.HasEnded())
-                {
-                    return ParseResult<string>.FailureWithMessage(Errors.EndOfString);
-                }
-
-                if (!(isValidChar?.Invoke(cursor.Value) ?? false))
-                {
-                    return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
-                }
-
-                builder.Append(cursor.CharValue);
-                cursor.Next();
-            }
-
-            var parsedName = builder.ToString();
-            return !string.IsNullOrEmpty(parsedName) ? ParseResult<string>.Success(parsedName) : ParseResult<string>.FailureWithMessage(Errors.EmptyName);
-        }
-
-        /// <summary>
-        /// Parses a tag.
-        /// </summary>
-        /// <param name="cursor">The cursor to parse.</param>
-        /// <param name="isArgument">A value indicating whether the tag is used as an argument.</param>
-        /// <returns>The result of the parsing.</returns>
-        private static ParseResult<Token> ParseTag(Cursor cursor, bool isArgument = false)
-        {
-            var subtype = TokenSubtype.Base;
-
-            /*
-             Special character before the token can be parsed here.
-             */
-
-            var ends = new List<int> { SpecialCharacter.FilterSeparator };
-            if (isArgument)
-            {
-                ends.Add(SpecialCharacter.ArgumentSeparator);
-            }
-
-            var result = ParseName(cursor, ends, c => !((char)c).IsInvalidTokenNameCharacter());
-            if (result.Result)
-            {
-                return ParseResult<Token>.Success(new Token(result.Value, TokenType.Tag, subtype));
-            }
-
-            return ParseResult<Token>.FailureWithMessage(result.Message);
-        }
-
-        /// <summary>
-        /// Parses a filter.
-        /// </summary>
-        /// <param name="cursor">The cursor to parse.</param>
-        /// <returns>The result of the parsing.</returns>
-        private static ParseResult<Token> ParseFilter(Cursor cursor)
-        {
-            var subtype = TokenSubtype.Base;
-            if (cursor.Value == SpecialCharacter.FilterSeparator)
-            {
-                cursor.Next();
-
-                /*
-                 Special character before the token can be parsed here.
-                 */
-
-                var ends = new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator };
-                var result = ParseName(cursor, ends, c => !((char)c).IsInvalidTokenNameCharacter());
-                if (result.Result)
-                {
-                    return ParseResult<Token>.Success(new Token(result.Value, TokenType.Filter, subtype));
-                }
-                else
-                {
-                    return ParseResult<Token>.FailureWithMessage(result.Message);
-                }
-            }
-
-            return ParseResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
-        }
-
-        /// <summary>
-        /// Parses an argument.
-        /// </summary>
-        /// <param name="cursor">The cursor to parse.</param>
-        /// <returns>The result of the parsing.</returns>
-        private static ParseResult<Token> ParseArgument(Cursor cursor)
-        {
-            var subtype = TokenSubtype.Base;
-
-            if (cursor.Value == SpecialCharacter.ArgumentIndicator || cursor.Value == SpecialCharacter.ArgumentSeparator)
-            {
-                cursor.Next();
-                if (cursor.Value == SpecialCharacter.ArgumentTagIndicator)
-                {
-                    // Consume ArgumentTagIndicator
-                    cursor.Next();
-                    var result = ParseTag(cursor, true);
-
-                    if (result.Result)
-                    {
-                        if (result.Value.Subtype == TokenSubtype.Base)
-                        {
-                            subtype = TokenSubtype.Tag;
-                        }
-
-                        return ParseResult<Token>.Success(new Token(result.Value.Data, TokenType.Argument, subtype));
-                    }
-                    else
-                    {
-                        return ParseResult<Token>.FailureWithMessage(result.Message);
-                    }
-                }
-                else
-                {
-                    var result = ParseName(cursor, new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, c => true);
-                    if (result.Result)
-                    {
-                        return ParseResult<Token>.Success(new Token(result.Value, TokenType.Argument, subtype));
-                    }
-                    else
-                    {
-                        return ParseResult<Token>.FailureWithMessage(result.Message);
-                    }
-                }
-            }
-
-            return ParseResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
-        }
-
-        private static ParseResult<IList<Token>> ParseFilterAndArgument(Cursor cursor)
-        {
-            var tokenList = new List<Token>();
-            var filterParseResult = ParseFilter(cursor);
-            if (!filterParseResult.Result)
-            {
-                return ParseResult<IList<Token>>.FailureWithMessage(filterParseResult.Message != Errors.EmptyName ? filterParseResult.Message : Errors.EmptyFilter);
-            }
-
-            tokenList.Add(filterParseResult.Value);
-            if (cursor.Value != SpecialCharacter.FilterSeparator && cursor.Value != SpecialCharacter.TokenEndIndicator && !cursor.HasEnded())
-            {
-                while (cursor.Value != SpecialCharacter.FilterSeparator && cursor.Value != SpecialCharacter.TokenEndIndicator && !cursor.HasEnded())
-                {
-                    var argumentParseResult = ParseArgument(cursor);
-                    if (!argumentParseResult.Result)
-                    {
-                        return ParseResult<IList<Token>>.FailureWithMessage(argumentParseResult.Message != Errors.EmptyName ? argumentParseResult.Message : Errors.EmptyArgument);
-                    }
-
-                    tokenList.Add(argumentParseResult.Value);
-                }
-            }
-
-            return ParseResult<IList<Token>>.Success(tokenList);
-        }
-
-        /// <summary>
-        /// Parses a string.
-        /// </summary>
-        /// <param name="cursor">The cursor to parse.</param>
-        /// <returns>The result of the parsing.</returns>
-        private static ParseResult<IList<Token>> ParseString(Cursor cursor)
-        {
-            var tokenList = new List<Token>();
-            var tagParseResult = ParseTag(cursor);
-            if (!tagParseResult.Result)
-            {
-                return ParseResult<IList<Token>>.FailureWithMessage(tagParseResult.Message != Errors.EmptyName ? tagParseResult.Message : Errors.EmptyTag);
-            }
-
-            tokenList.Add(tagParseResult.Value);
-            while (!cursor.HasEnded() && cursor.Value != SpecialCharacter.TokenEndIndicator)
-            {
-                var filterAndArgumentParseResult = ParseFilterAndArgument(cursor);
-
-                if (filterAndArgumentParseResult.Result)
-                {
-                    foreach (var token in filterAndArgumentParseResult.Value)
-                    {
-                        tokenList.Add(token);
-                    }
-                }
-                else
-                {
-                    return ParseResult<IList<Token>>.FailureWithMessage(filterAndArgumentParseResult.Message);
-                }
-            }
-
-            return ParseResult<IList<Token>>.Success(tokenList);
         }
     }
 }
