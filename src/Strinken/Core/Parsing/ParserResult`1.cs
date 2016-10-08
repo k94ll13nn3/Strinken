@@ -11,17 +11,19 @@ namespace Strinken.Core.Parsing
         /// <summary>
         /// A failure result.
         /// </summary>
-        public static readonly ParserResult<T> Failure = new ParserResult<T>(false, default(T));
+        public static readonly ParserResult<T> Failure = new ParserResult<T>(false, default(T), null);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParserResult{T}"/> class.
         /// </summary>
         /// <param name="result">A value indicating whether the parsing was successful.</param>
         /// <param name="value">The parsed value.</param>
-        private ParserResult(bool result, T value)
+        /// <param name="message">The message associated to the parsing.</param>
+        private ParserResult(bool result, T value, string message)
         {
             this.Result = result;
             this.Value = value;
+            this.Message = message;
         }
 
         /// <summary>
@@ -35,10 +37,22 @@ namespace Strinken.Core.Parsing
         public T Value { get; }
 
         /// <summary>
+        /// Gets the message associated to the parsing.
+        /// </summary>
+        public string Message { get; }
+
+        /// <summary>
         /// Creates a new successful result.
         /// </summary>
         /// <param name="value">The parsed value.</param>
         /// <returns>The result.</returns>
-        public static ParserResult<T> Success(T value) => new ParserResult<T>(true, value);
+        public static ParserResult<T> Success(T value) => new ParserResult<T>(true, value, null);
+
+        /// <summary>
+        /// Creates a new failure result.
+        /// </summary>
+        /// <param name="message">The message associated to the parsing.</param>
+        /// <returns>The result.</returns>
+        public static ParserResult<T> FailureWithMessage(string message) => new ParserResult<T>(true, default(T), message);
     }
 }
