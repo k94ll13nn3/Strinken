@@ -43,7 +43,7 @@ namespace Strinken.Core.Types
         /// <summary>
         /// Gets the current value of the cursor as a <see cref="char"/>.
         /// </summary>
-        public char CharValue => (char)Value;
+        public char CharValue => (char)this.Value;
 
         /// <inheritdoc/>
         public void Dispose()

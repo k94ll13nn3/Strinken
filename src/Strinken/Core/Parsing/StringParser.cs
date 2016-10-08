@@ -36,9 +36,14 @@ namespace Strinken.Core.Parsing
                     break;
                 }
 
-                if (cursor.HasEnded() || !(isValidChar?.Invoke(cursor.Value) ?? false))
+                if (cursor.HasEnded())
                 {
-                    return ParserResult<string>.Failure;
+                    return ParserResult<string>.FailureWithMessage(Errors.EndOfString);
+                }
+
+                if (!(isValidChar?.Invoke(cursor.Value) ?? false))
+                {
+                    return ParserResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
                 }
 
                 builder.Append(cursor.CharValue);
@@ -46,7 +51,7 @@ namespace Strinken.Core.Parsing
             }
 
             var parsedName = builder.ToString();
-            return !string.IsNullOrEmpty(parsedName) ? ParserResult<string>.Success(parsedName) : ParserResult<string>.Failure;
+            return !string.IsNullOrEmpty(parsedName) ? ParserResult<string>.Success(parsedName) : ParserResult<string>.FailureWithMessage(Errors.EmptyName);
         }
 
         /// <summary>
@@ -74,7 +79,7 @@ namespace Strinken.Core.Parsing
                 return ParserResult<Token>.Success(new Token(result.Value, TokenType.Tag, subtype));
             }
 
-            return ParserResult<Token>.Failure;
+            return ParserResult<Token>.FailureWithMessage(result.Message);
         }
 
         /// <summary>
@@ -98,9 +103,13 @@ namespace Strinken.Core.Parsing
                 {
                     return ParserResult<Token>.Success(new Token(result.Value, TokenType.Filter, subtype));
                 }
+                else
+                {
+                    return ParserResult<Token>.FailureWithMessage(result.Message);
+                }
             }
 
-            return ParserResult<Token>.Failure;
+            return ParserResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
         }
 
         /// <summary>
@@ -130,6 +139,10 @@ namespace Strinken.Core.Parsing
 
                         return ParserResult<Token>.Success(new Token(result.Value.Data, TokenType.Argument, subtype));
                     }
+                    else
+                    {
+                        return ParserResult<Token>.FailureWithMessage(result.Message);
+                    }
                 }
                 else
                 {
@@ -138,19 +151,28 @@ namespace Strinken.Core.Parsing
                     {
                         return ParserResult<Token>.Success(new Token(result.Value, TokenType.Argument, subtype));
                     }
+                    else
+                    {
+                        return ParserResult<Token>.FailureWithMessage(result.Message);
+                    }
                 }
             }
 
-            return ParserResult<Token>.Failure;
+            return ParserResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacter, cursor.CharValue, cursor.Position));
         }
 
+        /// <summary>
+        /// Parses a string.
+        /// </summary>
+        /// <param name="cursor">The cursor to parse.</param>
+        /// <returns>The result of the parsing.</returns>
         public static ParserResult<IList<Token>> ParseString(Cursor cursor)
         {
             var tokenStack = new List<Token>();
             var tag = ParseTag(cursor);
             if (!tag.Result)
             {
-                return ParserResult<IList<Token>>.Failure;
+                return ParserResult<IList<Token>>.FailureWithMessage(tag.Message != Errors.EmptyName ? tag.Message : Errors.EmptyTag);
             }
 
             tokenStack.Add(tag.Value);
@@ -160,7 +182,7 @@ namespace Strinken.Core.Parsing
                 var filter = ParseFilter(cursor);
                 if (!filter.Result)
                 {
-                    return ParserResult<IList<Token>>.Failure;
+                    return ParserResult<IList<Token>>.FailureWithMessage(filter.Message != Errors.EmptyName ? filter.Message : Errors.EmptyFilter);
                 }
 
                 lastEnd = cursor.Value;
@@ -172,8 +194,9 @@ namespace Strinken.Core.Parsing
                         var arg = ParseArgument(cursor);
                         if (!arg.Result)
                         {
-                            return ParserResult<IList<Token>>.Failure;
+                            return ParserResult<IList<Token>>.FailureWithMessage(arg.Message != Errors.EmptyName ? arg.Message : Errors.EmptyArgument);
                         }
+
                         tokenStack.Add(arg.Value);
                         lastEnd = cursor.Value;
                     }

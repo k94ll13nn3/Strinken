@@ -85,10 +85,16 @@ namespace Strinken.Engine
                 return State.OutsideToken;
             }
 
-            var parseResult = StringParser.ParseString(this.cursor);
-            if (parseResult.Result)
+            if (this.cursor.HasEnded())
             {
-                foreach (var token in parseResult.Value)
+                this.errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, '{');
+                return State.InvalidString;
+            }
+
+            var parsingResult = StringParser.ParseString(this.cursor);
+            if (parsingResult.Result)
+            {
+                foreach (var token in parsingResult.Value)
                 {
                     this.tokenStack.Push(token);
                 }
@@ -97,6 +103,7 @@ namespace Strinken.Engine
             }
             else
             {
+                this.errorMessage = parsingResult.Message;
                 return State.InvalidString;
             }
         }

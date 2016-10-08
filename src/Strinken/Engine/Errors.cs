@@ -28,6 +28,11 @@ namespace Strinken.Engine
         public static readonly string EmptyTag = "Empty tag";
 
         /// <summary>
+        /// Error: Empty name
+        /// </summary>
+        public static readonly string EmptyName = "Empty name";
+
+        /// <summary>
         /// Error: Illegal '{0}' at position {1}
         /// </summary>
         public static readonly string IllegalCharacter = "Illegal '{0}' at position {1}";

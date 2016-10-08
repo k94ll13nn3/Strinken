@@ -53,6 +53,6 @@ namespace Strinken.Core.Parsing
         /// </summary>
         /// <param name="message">The message associated to the parsing.</param>
         /// <returns>The result.</returns>
-        public static ParserResult<T> FailureWithMessage(string message) => new ParserResult<T>(true, default(T), message);
+        public static ParserResult<T> FailureWithMessage(string message) => new ParserResult<T>(false, default(T), message);
     }
 }
