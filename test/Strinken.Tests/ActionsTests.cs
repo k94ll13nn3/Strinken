@@ -412,5 +412,60 @@ namespace Strinken.Tests
             const string input = "lorem{ipsum:patse+paku,=malo}aku";
             Assert.That(new StrinkenEngine().Run(input).Stack.Resolve(null), Is.EqualTo("loremaku"));
         }
+
+        [Test]
+        public void Run_OneParameterTag_ActionOnParameterTagCalledOnce()
+        {
+            var numberOfCall = 0;
+            var tagSeen = new List<string>();
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag, TokenSubtype.ParameterTag] = a =>
+                {
+                    numberOfCall++;
+                    tagSeen.Add(a[0]);
+                    return a[0];
+                }
+            };
+
+            var engine = new StrinkenEngine();
+            const string input = "lorem{!ispum}tute";
+            var result = engine.Run(input);
+            result.Stack.Resolve(actions);
+
+            Assert.That(numberOfCall, Is.EqualTo(1));
+            Assert.That(tagSeen.Count, Is.EqualTo(1));
+            Assert.That(tagSeen[0], Is.EqualTo("ispum"));
+        }
+
+        [Test]
+        public void Run_TagWithFilterAndOneArgumentParameterTag_ActionOnFilterCalledOnce()
+        {
+            var numberOfCall = 0;
+            var filterSeen = new Dictionary<string, string[]>();
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag, TokenSubtype.Base] = a => a[0],
+                [TokenType.Tag, TokenSubtype.ParameterTag] = a => "KAPOUE",
+                [TokenType.Filter, TokenSubtype.Base] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0], a.Skip(2).ToArray());
+                    return a[0];
+                }
+            };
+
+            var engine = new StrinkenEngine();
+            const string input = "lorem{ispum:belli+=!toto}";
+            var result = engine.Run(input);
+            result.Stack.Resolve(actions);
+
+            Assert.That(numberOfCall, Is.EqualTo(1));
+            Assert.That(filterSeen, Has.Count.EqualTo(1));
+            Assert.That(filterSeen, Contains.Key("belli"));
+            Assert.That(filterSeen["belli"], Has.Length.EqualTo(1));
+            Assert.That(filterSeen["belli"][0], Is.EqualTo("KAPOUE"));
+            Assert.That(filterSeen["belli"][0], Is.Not.EqualTo("toto"));
+        }
     }
 }
