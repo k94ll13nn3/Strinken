@@ -96,6 +96,10 @@ namespace Strinken.Engine
                         {
                             subtype = TokenSubtype.Tag;
                         }
+                        else if (result.Value.Subtype == TokenSubtype.ParameterTag)
+                        {
+                            subtype = TokenSubtype.ParameterTag;
+                        }
 
                         return ParseResult<Token>.Success(new Token(result.Value.Data, TokenType.Argument, subtype));
                     }
@@ -269,10 +273,11 @@ namespace Strinken.Engine
         private static ParseResult<Token> ParseTag(Cursor cursor, bool isArgument = false)
         {
             var subtype = TokenSubtype.Base;
-
-            /*
-             Special character before the token can be parsed here.
-             */
+            if (cursor.Value == SpecialCharacter.ParameterTagIndicator)
+            {
+                subtype = TokenSubtype.ParameterTag;
+                cursor.Next();
+            }
 
             var ends = new List<int> { SpecialCharacter.FilterSeparator };
             if (isArgument)

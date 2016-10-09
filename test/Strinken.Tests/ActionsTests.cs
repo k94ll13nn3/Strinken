@@ -446,7 +446,7 @@ namespace Strinken.Tests
             var actions = new ActionDictionary
             {
                 [TokenType.Tag, TokenSubtype.Base] = a => a[0],
-                [TokenType.Tag, TokenSubtype.ParameterTag] = a => "KAPOUE",
+                [TokenType.Argument, TokenSubtype.ParameterTag] = a => "KAPOUE",
                 [TokenType.Filter, TokenSubtype.Base] = a =>
                 {
                     numberOfCall++;

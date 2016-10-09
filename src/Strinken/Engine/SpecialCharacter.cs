@@ -41,5 +41,10 @@ namespace Strinken.Engine
         /// Separator that indicates the start of a token.
         /// </summary>
         public const int TokenStartIndicator = '{';
+
+        /// <summary>
+        /// Separator that indicates the start of a parameter tag.
+        /// </summary>
+        public const int ParameterTagIndicator = '!';
     }
 }
