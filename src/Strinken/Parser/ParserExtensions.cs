@@ -89,5 +89,37 @@ namespace Strinken.Parser
 
             return copiedParser;
         }
+
+        /// <summary>
+        /// Add a parameter tag to the parser.
+        /// </summary>
+        /// <param name="parser">The parser on which the method is called.</param>
+        /// <param name="parameterTag">The parameter tag to add.</param>
+        /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
+        /// <typeparam name="T">The type related to the parser.</typeparam>
+        public static Parser<T> WithParameterTag<T>(this Parser<T> parser, IParameterTag parameterTag)
+        {
+            var copiedParser = parser.DeepCopy();
+            copiedParser.AddParameterTag(parameterTag);
+            return copiedParser;
+        }
+
+        /// <summary>
+        /// Add parameter tags to the parser.
+        /// </summary>
+        /// <param name="parser">The parser on which the method is called.</param>
+        /// <param name="parameterTags">The parameter tags to add.</param>
+        /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
+        /// <typeparam name="T">The type related to the parser.</typeparam>
+        public static Parser<T> WithParameterTags<T>(this Parser<T> parser, IEnumerable<IParameterTag> parameterTags)
+        {
+            var copiedParser = parser.DeepCopy();
+            foreach (var parameterTag in parameterTags)
+            {
+                copiedParser.AddParameterTag(parameterTag);
+            }
+
+            return copiedParser;
+        }
     }
 }

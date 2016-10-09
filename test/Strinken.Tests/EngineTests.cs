@@ -255,6 +255,7 @@ namespace Strinken.Tests
         [TestCase("lorem{ispSIK_}")]
         [TestCase("lorem{JuF-_}")]
         [TestCase("lorem{JuF-m}09à9")]
+        [TestCase("lorem{!JuF-m}09à9")]
         public void Run_ValidCharacterInString_DoesNotThrow(string input)
         {
             var result = this.engine.Run(input);

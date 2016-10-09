@@ -15,6 +15,11 @@ namespace Strinken.Engine
         /// <summary>
         /// The token is also a tag token.
         /// </summary>
-        Tag
+        Tag,
+
+        /// <summary>
+        /// The token is also a parameter tag token.
+        /// </summary>
+        ParameterTag
     }
 }
