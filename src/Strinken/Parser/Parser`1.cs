@@ -26,11 +26,17 @@ namespace Strinken.Parser
         private readonly IDictionary<string, ITag<T>> tags;
 
         /// <summary>
+        /// Parameter tags used by the parser.
+        /// </summary>
+        private readonly IDictionary<string, IParameterTag> parameterTags;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Parser{T}"/> class.
         /// </summary>
         public Parser()
         {
             this.tags = new Dictionary<string, ITag<T>>();
+            this.parameterTags = new Dictionary<string, IParameterTag>();
             this.filters = new Dictionary<string, IFilter>();
 
             foreach (var filter in FilterHelpers.BaseFilters)
@@ -50,6 +56,11 @@ namespace Strinken.Parser
         public IReadOnlyCollection<ITag<T>> Tags => new ReadOnlyCollection<ITag<T>>(this.tags.Values.ToList());
 
         /// <summary>
+        /// Gets the tags used by the parser.
+        /// </summary>
+        public IReadOnlyCollection<IParameterTag> ParameterTags => new ReadOnlyCollection<IParameterTag>(this.parameterTags.Values.ToList());
+
+        /// <summary>
         /// Resolves the input.
         /// </summary>
         /// <param name="input">The input to resolve.</param>
@@ -63,7 +74,9 @@ namespace Strinken.Parser
                 var actions = new ActionDictionary
                 {
                     [TokenType.Tag, TokenSubtype.Base] = a => this.tags[a[0]].Resolve(value),
+                    [TokenType.Tag, TokenSubtype.ParameterTag] = a => this.parameterTags[a[0]].Resolve(),
                     [TokenType.Argument, TokenSubtype.Tag] = a => this.tags[a[0]].Resolve(value),
+                    [TokenType.Argument, TokenSubtype.ParameterTag] = a => this.parameterTags[a[0]].Resolve(),
                     [TokenType.Filter, TokenSubtype.Base] = a => this.filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
                 };
 
@@ -81,6 +94,7 @@ namespace Strinken.Parser
         public ValidationResult Validate(string input)
         {
             var tagList = new List<string>();
+            var parameterTagList = new List<string>();
             var filterList = new List<Tuple<string, string[]>>();
             var validator = new StrinkenEngine();
 
@@ -97,9 +111,19 @@ namespace Strinken.Parser
                     tagList.Add(a[0]);
                     return string.Empty;
                 },
+                [TokenType.Tag, TokenSubtype.ParameterTag] = a =>
+                {
+                    parameterTagList.Add(a[0]);
+                    return string.Empty;
+                },
                 [TokenType.Argument, TokenSubtype.Tag] = a =>
                 {
                     tagList.Add(a[0]);
+                    return string.Empty;
+                },
+                [TokenType.Argument, TokenSubtype.ParameterTag] = a =>
+                {
+                    parameterTagList.Add(a[0]);
                     return string.Empty;
                 },
                 [TokenType.Filter, TokenSubtype.Base] = a =>
@@ -116,6 +140,13 @@ namespace Strinken.Parser
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
+            }
+
+            // Find the first parameter tag that was not registered in the parser.
+            invalidParameter = parameterTagList.FirstOrDefault(parameterTagName => !this.parameterTags.ContainsKey(parameterTagName));
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} is not a valid parameter tag.", IsValid = false };
             }
 
             // Find the first filter that was not registered in the parser.
@@ -166,6 +197,21 @@ namespace Strinken.Parser
         }
 
         /// <summary>
+        /// Add a parameter tag to the list of parameter tags.
+        /// </summary>
+        /// <param name="parameterTag">The parameter tag to add.</param>
+        public void AddParameterTag(IParameterTag parameterTag)
+        {
+            if (this.parameterTags.ContainsKey(parameterTag.Name))
+            {
+                throw new ArgumentException($"{parameterTag.Name} was already registered in the parameter tag list.");
+            }
+
+            ThrowIfInvalidName(parameterTag.Name);
+            this.parameterTags.Add(parameterTag.Name, parameterTag);
+        }
+
+        /// <summary>
         /// Creates a deep copy of the current parser.
         /// </summary>
         /// <returns>A deep copy of the parser.</returns>
@@ -175,6 +221,11 @@ namespace Strinken.Parser
             foreach (var tag in this.tags.Values)
             {
                 newParser.AddTag(tag);
+            }
+
+            foreach (var parameterTag in this.parameterTags.Values)
+            {
+                newParser.AddParameterTag(parameterTag);
             }
 
             var parserOwnFilters = this.filters.Where(f => !FilterHelpers.BaseFilters.Select(bf => bf.Name).Contains(f.Value.Name));

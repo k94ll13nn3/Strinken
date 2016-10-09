@@ -24,6 +24,14 @@ namespace Strinken.Tests.Parser
         }
 
         [Test]
+        public void Constructor_TwoParameterTagsWithSameName_ThrowsArgumentException()
+        {
+            Assert.That(
+                () => new Parser<Data>().WithParameterTags(new IParameterTag[] { new DateTimeParameterTag(), new DateTimeParameterTag() }),
+                Throws.ArgumentException.With.Message.EqualTo("DateTime was already registered in the parameter tag list."));
+        }
+
+        [Test]
         public void Constructor_TagWithEmptyName_ThrowsArgumentException()
         {
             Assert.That(
@@ -39,6 +47,14 @@ namespace Strinken.Tests.Parser
         {
             Assert.That(
                 () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new EmptyNameFilter()),
+                Throws.ArgumentException.With.Message.EqualTo("A name cannot be empty."));
+        }
+
+        [Test]
+        public void Constructor_ParameterTagWithEmptyName_ThrowsArgumentException()
+        {
+            Assert.That(
+                () => new Parser<string>().WithParameterTag(new EmptyNameParameterTag()),
                 Throws.ArgumentException.With.Message.EqualTo("A name cannot be empty."));
         }
 
@@ -59,6 +75,14 @@ namespace Strinken.Tests.Parser
             Assert.That(
                 () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new InvalidNameFilter()),
                 Throws.ArgumentException.With.Message.EqualTo("! is an invalid character for a name."));
+        }
+
+        [Test]
+        public void Constructor_ParameterTagWithInvalidName_ThrowsArgumentException()
+        {
+            Assert.That(
+                () => new Parser<string>().WithParameterTag(new InvalidNameParameterTag()),
+                Throws.ArgumentException.With.Message.EqualTo("$ is an invalid character for a name."));
         }
     }
 }

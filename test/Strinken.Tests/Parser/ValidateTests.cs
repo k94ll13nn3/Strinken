@@ -12,7 +12,7 @@ namespace Strinken.Tests.Parser
         [OneTimeSetUp]
         public void SetUp()
         {
-            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter());
+            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new MachineNameParameterTag());
         }
 
         [Test]
@@ -35,6 +35,14 @@ namespace Strinken.Tests.Parser
         public void Validate_AllTagsKnown_ReturnsTrue()
         {
             var validationResult = stringSolver.Validate("The {DataName} is in the kitchen.");
+            Assert.That(validationResult.IsValid, Is.True);
+            Assert.That(validationResult.Message, Is.Null);
+        }
+
+        [Test]
+        public void Validate_AllParameterTagsKnown_ReturnsTrue()
+        {
+            var validationResult = stringSolver.Validate("The {!MachineName} is in the kitchen.");
             Assert.That(validationResult.IsValid, Is.True);
             Assert.That(validationResult.Message, Is.Null);
         }
@@ -69,6 +77,14 @@ namespace Strinken.Tests.Parser
             var validationResult = stringSolver.Validate("The {DataName} is in the kitchen (size {SomeTag}).");
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Message, Is.EqualTo("SomeTag is not a valid tag."));
+        }
+
+        [Test]
+        public void Validate_UnknownParameterTag_ReturnsFalse()
+        {
+            var validationResult = stringSolver.Validate("The {DataName} is in the kitchen (size {!SomeTag}).");
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Message, Is.EqualTo("SomeTag is not a valid parameter tag."));
         }
     }
 }

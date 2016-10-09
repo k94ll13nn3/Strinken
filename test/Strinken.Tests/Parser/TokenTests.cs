@@ -15,7 +15,7 @@ namespace Strinken.Tests.Parser
         [OneTimeSetUp]
         public void SetUp()
         {
-            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter());
+            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new DateTimeParameterTag());
         }
 
         [Test]
@@ -43,6 +43,20 @@ namespace Strinken.Tests.Parser
         public void Filters_Get_ReturnsSevenFilters()
         {
             Assert.That(this.stringSolver.Filters, Has.Count.EqualTo(7));
+        }
+
+        [Test]
+        public void ParameterTags_Get_ReturnsReadOnlyCollection()
+        {
+            Assert.That(this.stringSolver.ParameterTags as List<IParameterTag>, Is.Null);
+            Assert.That(this.stringSolver.ParameterTags as ReadOnlyCollection<IParameterTag>, Is.Not.Null);
+        }
+
+        [Test]
+        public void ParameterTags_Get_ReturnsOneParameterTag()
+        {
+            Assert.That(this.stringSolver.ParameterTags, Has.Count.EqualTo(1));
+            Assert.That(this.stringSolver.ParameterTags.First().Name, Is.EqualTo("DateTime"));
         }
     }
 }

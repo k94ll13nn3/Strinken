@@ -57,5 +57,25 @@ namespace Strinken.Tests.Parser
             Assert.That(solver.Validate("The {Tag:Append+One:Custom} is in the kitchen.").IsValid, Is.False);
             Assert.That(solver2.Validate("The {Tag:Append+One:Custom} is in the kitchen.").IsValid, Is.True);
         }
+
+        [Test]
+        public void WithParameterTag_Called_DoesNotModifyCallingInstance()
+        {
+            var solver = new Parser<Data>().WithParameterTag(new DateTimeParameterTag());
+            var solver2 = solver.WithParameterTag(new MachineNameParameterTag());
+
+            Assert.That(solver.Validate("The {!DateTime} {!MachineName} is in the kitchen.").IsValid, Is.False);
+            Assert.That(solver2.Validate("The {!DateTime} {!MachineName} is in the kitchen.").IsValid, Is.True);
+        }
+
+        [Test]
+        public void WithParameterTags_Called_DoesNotModifyCallingInstance()
+        {
+            var solver = new Parser<Data>().WithParameterTag(new DateTimeParameterTag());
+            var solver2 = solver.WithParameterTags(new[] { new MachineNameParameterTag() });
+
+            Assert.That(solver.Validate("The {!DateTime} {!MachineName} is in the kitchen.").IsValid, Is.False);
+            Assert.That(solver2.Validate("The {!DateTime} {!MachineName} is in the kitchen.").IsValid, Is.True);
+        }
     }
 }
