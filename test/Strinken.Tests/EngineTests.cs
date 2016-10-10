@@ -33,7 +33,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_OpenBracketAtStringEnd_ThrowsFormatException()
+        public void Run_OpenBracketAtStringEnd_ReturnsFalse()
         {
             const string input = "lorem ipsum{";
             var result = this.engine.Run(input);
@@ -42,7 +42,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EmptyTag_ThrowsFormatException()
+        public void Run_EmptyTag_ReturnsFalse()
         {
             const string input = "lorem{}";
             var result = this.engine.Run(input);
@@ -51,7 +51,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_TagNotClosed_ThrowsFormatException()
+        public void Run_TagNotClosed_ReturnsFalse()
         {
             const string input = "lorem{a";
             var result = this.engine.Run(input);
@@ -60,7 +60,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_OpenBracketInTag_ThrowsFormatException()
+        public void Run_OpenBracketInTag_ReturnsFalse()
         {
             const string input = "lorem{test{tm";
             var result = this.engine.Run(input);
@@ -69,7 +69,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EmptyFilter_ThrowsFormatException()
+        public void Run_EmptyFilter_ReturnsFalse()
         {
             const string input = "lorem{test:}";
             var result = this.engine.Run(input);
@@ -78,7 +78,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EmptyFirstArgument_ThrowsFormatException()
+        public void Run_EmptyFirstArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+}";
             var result = this.engine.Run(input);
@@ -87,7 +87,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EmptySecondArgument_ThrowsFormatException()
+        public void Run_EmptySecondArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+arg,}";
             var result = this.engine.Run(input);
@@ -96,7 +96,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EmptySecondArgumentAndThreeArgument_ThrowsFormatException()
+        public void Run_EmptySecondArgumentAndThreeArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+someThing,,}";
             var result = this.engine.Run(input);
@@ -105,7 +105,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EmptyFirstAndSecond_ThrowsFormatException()
+        public void Run_EmptyFirstAndSecond_ReturnsFalse()
         {
             const string input = "lorem{tag:filter+,}";
             var result = this.engine.Run(input);
@@ -114,7 +114,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EmptyArgumentTag_ThrowsFormatException()
+        public void Run_EmptyArgumentTag_ReturnsFalse()
         {
             const string input = "lorem{test:filter+arg,=}";
             var result = this.engine.Run(input);
@@ -123,7 +123,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_OpenBracketInsideFilter_ThrowsFormatException()
+        public void Run_OpenBracketInsideFilter_ReturnsFalse()
         {
             const string input = "lorem{test:a{r}";
             var result = this.engine.Run(input);
@@ -132,7 +132,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_FilterSeparatorInsideFilter_ThrowsFormatException()
+        public void Run_FilterSeparatorInsideFilter_ReturnsFalse()
         {
             const string input = "lorem{test:a:}";
             var result = this.engine.Run(input);
@@ -141,7 +141,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_TwoArgumentTagSeparator_ThrowsFormatException()
+        public void Run_TwoArgumentTagSeparator_ReturnsFalse()
         {
             const string input = "lorem{test:a+==}";
             var result = this.engine.Run(input);
@@ -150,7 +150,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_CloseBracketOutisdeToken_ThrowsFormatException()
+        public void Run_CloseBracketOutisdeToken_ReturnsFalse()
         {
             const string input = "lorem}";
             var result = this.engine.Run(input);
@@ -159,7 +159,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EndOfStringOnFilterSeparator_ThrowsFormatException()
+        public void Run_EndOfStringOnFilterSeparator_ReturnsFalse()
         {
             const string input = "lorem{ispum:";
             var result = this.engine.Run(input);
@@ -168,7 +168,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_FilterNotClosed_ThrowsFormatException()
+        public void Run_FilterNotClosed_ReturnsFalse()
         {
             const string input = "lorem{ispum:abc";
             var result = this.engine.Run(input);
@@ -178,7 +178,7 @@ namespace Strinken.Tests
 
         [TestCase("lorem{ispum:abc+p")]
         [TestCase("lorem{ispum:abc+p,t")]
-        public void Run_ArgumentNotClosed_ThrowsFormatException(string input)
+        public void Run_ArgumentNotClosed_ReturnsFalse(string input)
         {
             var result = this.engine.Run(input);
             Assert.That(result.Success, Is.False);
@@ -186,7 +186,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EndOfStringOnArgumentSeparator_ThrowsFormatException()
+        public void Run_EndOfStringOnArgumentSeparator_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,";
             var result = this.engine.Run(input);
@@ -195,7 +195,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EndOfStringOnArgumentTagIndicator_ThrowsFormatException()
+        public void Run_EndOfStringOnArgumentTagIndicator_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,=";
             var result = this.engine.Run(input);
@@ -204,7 +204,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EndOfStringInsideArgumentTag_ThrowsFormatException()
+        public void Run_EndOfStringInsideArgumentTag_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,=a";
             var result = this.engine.Run(input);
@@ -213,7 +213,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_EndOfStringOnArgumentInitializer_ThrowsFormatException()
+        public void Run_EndOfStringOnArgumentInitializer_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+";
             var result = this.engine.Run(input);
@@ -222,7 +222,7 @@ namespace Strinken.Tests
         }
 
         [Test]
-        public void Run_ArgumentAfterTag_ThrowsFormatException()
+        public void Run_ArgumentAfterTag_ReturnsFalse()
         {
             const string input = "lorem{ispum+arg}";
             var result = this.engine.Run(input);
@@ -243,7 +243,7 @@ namespace Strinken.Tests
         [TestCase("lorem{isp°um:abc}", '°')]
         [TestCase("lorem{isp um:abc}", ' ')]
         [TestCase("lorem{is:!fil}", '!')]
-        public void Run_InvalidCharacterInString_ThrowsFormatException(string input, char illegalChar)
+        public void Run_InvalidCharacterInString_ReturnsFalse(string input, char illegalChar)
         {
             var result = this.engine.Run(input);
             Assert.That(result.Success, Is.False);
