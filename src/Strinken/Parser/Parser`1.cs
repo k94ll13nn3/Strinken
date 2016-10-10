@@ -75,8 +75,6 @@ namespace Strinken.Parser
                 {
                     [TokenType.Tag, TokenSubtype.Base] = a => this.tags[a[0]].Resolve(value),
                     [TokenType.Tag, TokenSubtype.ParameterTag] = a => this.parameterTags[a[0]].Resolve(),
-                    [TokenType.Argument, TokenSubtype.Tag] = a => this.tags[a[0]].Resolve(value),
-                    [TokenType.Argument, TokenSubtype.ParameterTag] = a => this.parameterTags[a[0]].Resolve(),
                     [TokenType.Filter, TokenSubtype.Base] = a => this.filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
                 };
 
@@ -112,16 +110,6 @@ namespace Strinken.Parser
                     return string.Empty;
                 },
                 [TokenType.Tag, TokenSubtype.ParameterTag] = a =>
-                {
-                    parameterTagList.Add(a[0]);
-                    return string.Empty;
-                },
-                [TokenType.Argument, TokenSubtype.Tag] = a =>
-                {
-                    tagList.Add(a[0]);
-                    return string.Empty;
-                },
-                [TokenType.Argument, TokenSubtype.ParameterTag] = a =>
                 {
                     parameterTagList.Add(a[0]);
                     return string.Empty;

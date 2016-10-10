@@ -295,7 +295,6 @@ namespace Strinken.Tests
             var actions = new ActionDictionary
             {
                 [TokenType.Tag, TokenSubtype.Base] = a => a[0].ToUpperInvariant(),
-                [TokenType.Argument, TokenSubtype.Tag] = a => a[0].ToUpperInvariant(),
                 [TokenType.Filter, TokenSubtype.Base] = a =>
                 {
                     numberOfCall++;
@@ -324,7 +323,6 @@ namespace Strinken.Tests
             var actions = new ActionDictionary
             {
                 [TokenType.Tag, TokenSubtype.Base] = a => a[0].ToUpperInvariant(),
-                [TokenType.Argument, TokenSubtype.Tag] = a => a[0].ToUpperInvariant(),
                 [TokenType.Filter, TokenSubtype.Base] = a =>
                 {
                     numberOfCall++;
@@ -354,7 +352,6 @@ namespace Strinken.Tests
             var actions = new ActionDictionary
             {
                 [TokenType.Tag, TokenSubtype.Base] = a => a[0].ToUpperInvariant(),
-                [TokenType.Argument, TokenSubtype.Tag] = a => a[0].ToUpperInvariant(),
                 [TokenType.Filter, TokenSubtype.Base] = a =>
                 {
                     numberOfCall++;
@@ -446,7 +443,7 @@ namespace Strinken.Tests
             var actions = new ActionDictionary
             {
                 [TokenType.Tag, TokenSubtype.Base] = a => a[0],
-                [TokenType.Argument, TokenSubtype.ParameterTag] = a => "KAPOUE",
+                [TokenType.Tag, TokenSubtype.ParameterTag] = a => "KAPOUE",
                 [TokenType.Filter, TokenSubtype.Base] = a =>
                 {
                     numberOfCall++;

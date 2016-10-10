@@ -37,8 +37,32 @@ namespace Strinken.Engine
         /// <returns>The element with the specified key, or null if the key is not present.</returns>
         public Func<string[], string> this[TokenType type, TokenSubtype subtype]
         {
-            get { return this.items[type].ContainsKey(subtype) ? this.items[type][subtype] : null; }
+            get { return this.Get(type, subtype); }
             set { this.items[type][subtype] = value; }
+        }
+
+        /// <summary>
+        /// Gets a value in the <see cref="ActionDictionary"/>.
+        /// </summary>
+        /// <param name="type">The type part of the key of the element to get or set.</param>
+        /// <param name="subtype">The subtype part of the key  of the element to get or set.</param>
+        /// <returns>The element with the specified key, or null if the key is not present.</returns>
+        private Func<string[], string> Get(TokenType type, TokenSubtype subtype)
+        {
+            if (type == TokenType.Argument)
+            {
+                if (subtype == TokenSubtype.Tag)
+                {
+                    return this.Get(TokenType.Tag, TokenSubtype.Base);
+                }
+
+                if (subtype == TokenSubtype.ParameterTag)
+                {
+                    return this.Get(TokenType.Tag, TokenSubtype.ParameterTag);
+                }
+            }
+
+            return this.items[type].ContainsKey(subtype) ? this.items[type][subtype] : null;
         }
     }
 }
