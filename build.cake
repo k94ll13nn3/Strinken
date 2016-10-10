@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.4.1
-#tool nuget:?package=GitVersion.CommandLine&version=3.6.2
+#tool nuget:?package=GitVersion.CommandLine&version=3.6.4
 
 using System.Reflection
 using System.Diagnostics
@@ -101,27 +101,9 @@ Task("Upload-Tests")
     AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.NUnit3);   
 });
 
-Task("Display-Build-Info")
-.IsDependentOn("Upload-Tests")
-.Does(() => {
-    Information("Public members:");
-    Assembly a = Assembly.LoadFrom("./src/" + solution + "/bin/" + configuration + "/" + framework + "/Strinken.dll");
-    Type[] types = a.GetTypes();
-    foreach (Type type in types)
-    {
-        if (!type.IsPublic) continue;
-        MemberInfo[] members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod);
-        foreach (MemberInfo member in members) Console.WriteLine("\t" + type.Name + "." + member.Name);
-    }
-    Information("Version:");
-    Information("\tAssembly Version: {0}", a.GetName().Version.ToString());
-    Information("\tFile Version: {0}", FileVersionInfo.GetVersionInfo(a.Location).FileVersion);
-    Information("\tInformational Version: {0}", FileVersionInfo.GetVersionInfo(a.Location).ProductVersion);
-});
-
 Task("Nuget-Pack")
     .WithCriteria(() => isOnMaster)
-    .IsDependentOn("Display-Build-Info")
+    .IsDependentOn("Upload-Tests")
     .Does(() =>
 {
     EnsureDirectoryExists(publishDir);
