@@ -9,11 +9,6 @@ namespace Strinken.Engine
     internal class ParseResult<T>
     {
         /// <summary>
-        /// A failure result.
-        /// </summary>
-        public static readonly ParseResult<T> Failure = new ParseResult<T>(false, default(T), null);
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ParseResult{T}"/> class.
         /// </summary>
         /// <param name="result">A value indicating whether the parsing was successful.</param>
