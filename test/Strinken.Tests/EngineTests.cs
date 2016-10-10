@@ -242,6 +242,7 @@ namespace Strinken.Tests
         [TestCase("lorem{isp+um:abc}", '+')]
         [TestCase("lorem{isp°um:abc}", '°')]
         [TestCase("lorem{isp um:abc}", ' ')]
+        [TestCase("lorem{is:!fil}", '!')]
         public void Run_InvalidCharacterInString_ThrowsFormatException(string input, char illegalChar)
         {
             var result = this.engine.Run(input);
