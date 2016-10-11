@@ -40,9 +40,9 @@ namespace Strinken.Tests.Parser
         }
 
         [Test]
-        public void Filters_Get_ReturnsSevenFilters()
+        public void Filters_Get_ReturnsEightFilters()
         {
-            Assert.That(this.stringSolver.Filters, Has.Count.EqualTo(7));
+            Assert.That(this.stringSolver.Filters, Has.Count.EqualTo(8));
         }
 
         [Test]

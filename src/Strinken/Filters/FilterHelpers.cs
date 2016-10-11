@@ -21,7 +21,8 @@ namespace Strinken.Filters
                 new LowerFilter(),
                 new LeadingZerosFilter(),
                 new NullFilter(),
-                new IfEqualFilter()
+                new IfEqualFilter(),
+                new ReplaceFilter()
             };
         }
 
