@@ -10,7 +10,17 @@
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TOOLS_DIR=$SCRIPT_DIR/tools
 NUGET_EXE=$TOOLS_DIR/nuget.exe
-CAKE_EXE=$TOOLS_DIR/Cake/Cake.exe
+CAKE_DLL=$TOOLS_DIR/Cake.CoreCLR/Cake.dll
+PACKAGES_CONFIG=$TOOLS_DIR/packages.config
+PACKAGES_CONFIG_MD5=$TOOLS_DIR/packages.config.md5sum
+
+# Define md5sum or md5 depending on Linux/OSX
+MD5_EXE=
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    MD5_EXE="md5 -r"
+else
+    MD5_EXE="md5sum"
+fi
 
 # Define default arguments.
 SCRIPT="build.cake"
@@ -63,22 +73,29 @@ fi
 
 # Restore tools from NuGet.
 pushd "$TOOLS_DIR" >/dev/null
+if [ ! -f $PACKAGES_CONFIG_MD5 ] || [ "$( cat $PACKAGES_CONFIG_MD5 | sed 's/\r$//' )" != "$( $MD5_EXE $PACKAGES_CONFIG | awk '{ print $1 }' )" ]; then
+    find . -type d ! -name . | xargs rm -rf
+fi
+
 mono "$NUGET_EXE" install -ExcludeVersion
 if [ $? -ne 0 ]; then
     echo "Could not restore NuGet packages."
     exit 1
 fi
+
+$MD5_EXE $PACKAGES_CONFIG | awk '{ print $1 }' >| $PACKAGES_CONFIG_MD5
+
 popd >/dev/null
 
 # Make sure that Cake has been installed.
-if [ ! -f "$CAKE_EXE" ]; then
-    echo "Could not find Cake.exe at '$CAKE_EXE'."
+if [ ! -f "$CAKE_DLL" ]; then
+    echo "Could not find Cake.dll at '$CAKE_DLL'."
     exit 1
 fi
 
 # Start Cake
 if $SHOW_VERSION; then
-    exec mono "$CAKE_EXE" -version
+    dotnet "$CAKE_DLL" -version
 else
-    exec mono "$CAKE_EXE" $SCRIPT -verbosity=$VERBOSITY -configuration=$CONFIGURATION -target=$TARGET $DRYRUN "${SCRIPT_ARGUMENTS[@]}"
+    dotnet "$CAKE_DLL" $SCRIPT -verbosity=$VERBOSITY -configuration=$CONFIGURATION -target=$TARGET $DRYRUN "${SCRIPT_ARGUMENTS[@]}"
 fi
