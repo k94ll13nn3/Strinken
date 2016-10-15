@@ -6,7 +6,7 @@ namespace Strinken.Filters
     /// <summary>
     /// This filter takes some couples of arguments, and replace each occurrence of each first argument by the second.
     /// </summary>
-    public class ReplaceFilter : IFilter
+    internal class ReplaceFilter : IFilter
     {
         /// <inheritdoc/>
         public string Description => "This filter takes some couples of arguments, and replace each occurrence of each first argument by the second.";
