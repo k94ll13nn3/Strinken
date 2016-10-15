@@ -79,6 +79,11 @@ Task("Build")
     };
             
     DotNetCoreBuild("./src/" + solution, settings);
+
+    if (isOnAppVeyor)
+    {
+        AppVeyor.AddWarningMessage("test message", null);
+    }
 });
 
 Task("Run-Unit-Tests")
