@@ -82,7 +82,7 @@ Task("Build")
 
     if (isOnAppVeyor)
     {
-        AppVeyor.AddWarningMessage("test message", null);
+        AppVeyor.AddWarningMessage("test message");
     }
 });
 
