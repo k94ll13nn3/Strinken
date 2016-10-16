@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
 using Strinken.Parser;
-using Strinken.Tests.TestsClasses;
+using Strinken.Public.Tests.TestsClasses;
 using System;
 
-namespace Strinken.Tests.Parser
+namespace Strinken.Public.Tests.Parser
 {
     [TestFixture]
     public class ResolveTests
@@ -13,7 +13,7 @@ namespace Strinken.Tests.Parser
         [OneTimeSetUp]
         public void SetUp()
         {
-            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new MachineNameParameterTag());
+            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace Strinken.Tests.Parser
         [Test]
         public void Resolve_OneParameterTag_ReturnsResolvedString()
         {
-            Assert.That(stringSolver.Resolve("The {!MachineName} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo($"The {Environment.MachineName} is in the kitchen."));
+            Assert.That(stringSolver.Resolve("The {!Blue} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The Blue is in the kitchen."));
         }
 
         [Test]
@@ -57,9 +57,9 @@ namespace Strinken.Tests.Parser
         public void Resolve_OneTagAndOneFilterWithParameterTagAsArgument_ReturnsResolvedString()
         {
             Assert.That(
-                stringSolver.Resolve("The {DataName:Append+=!MachineName} is in the kitchen.", new Data { Name = "Lorem" }),
-                Is.EqualTo($"The Lorem{Environment.MachineName} is in the kitchen."));
-            Assert.That(stringSolver.Resolve("The {DataName:Append+MachineName} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The LoremMachineName is in the kitchen."));
+                stringSolver.Resolve("The {DataName:Append+=!Blue} is in the kitchen.", new Data { Name = "Lorem" }),
+                Is.EqualTo("The LoremBlue is in the kitchen."));
+            Assert.That(stringSolver.Resolve("The {DataName:Append+Blue} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The LoremBlue is in the kitchen."));
         }
 
         [Test]

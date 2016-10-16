@@ -1,11 +1,11 @@
 using NUnit.Framework;
 using Strinken.Parser;
-using Strinken.Tests.TestsClasses;
+using Strinken.Public.Tests.TestsClasses;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Strinken.Tests.Parser
+namespace Strinken.Public.Tests.Parser
 {
     [TestFixture]
     public class TokenTests
@@ -15,7 +15,7 @@ namespace Strinken.Tests.Parser
         [OneTimeSetUp]
         public void SetUp()
         {
-            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new DateTimeParameterTag());
+            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Strinken.Tests.Parser
         public void ParameterTags_Get_ReturnsOneParameterTag()
         {
             Assert.That(this.stringSolver.ParameterTags, Has.Count.EqualTo(1));
-            Assert.That(this.stringSolver.ParameterTags.First().Name, Is.EqualTo("DateTime"));
+            Assert.That(this.stringSolver.ParameterTags.First().Name, Is.EqualTo("Blue"));
         }
     }
 }

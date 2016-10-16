@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
 using Strinken.Parser;
-using Strinken.Tests.TestsClasses;
+using Strinken.Public.Tests.TestsClasses;
 
-namespace Strinken.Tests.Parser
+namespace Strinken.Public.Tests.Parser
 {
     [TestFixture]
     public class ConstructorTests
@@ -27,8 +27,8 @@ namespace Strinken.Tests.Parser
         public void Constructor_TwoParameterTagsWithSameName_ThrowsArgumentException()
         {
             Assert.That(
-                () => new Parser<Data>().WithParameterTags(new IParameterTag[] { new DateTimeParameterTag(), new DateTimeParameterTag() }),
-                Throws.ArgumentException.With.Message.EqualTo("DateTime was already registered in the parameter tag list."));
+                () => new Parser<Data>().WithParameterTags(new IParameterTag[] { new BlueParameterTag(), new BlueParameterTag() }),
+                Throws.ArgumentException.With.Message.EqualTo("Blue was already registered in the parameter tag list."));
         }
 
         [Test]

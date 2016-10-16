@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
 using Strinken.Parser;
-using Strinken.Tests.TestsClasses;
+using Strinken.Public.Tests.TestsClasses;
 
-namespace Strinken.Tests.Parser
+namespace Strinken.Public.Tests.Parser
 {
     [TestFixture]
     public class ValidateTests
@@ -12,7 +12,7 @@ namespace Strinken.Tests.Parser
         [OneTimeSetUp]
         public void SetUp()
         {
-            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new MachineNameParameterTag());
+            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace Strinken.Tests.Parser
         [Test]
         public void Validate_AllParameterTagsKnown_ReturnsTrue()
         {
-            var validationResult = stringSolver.Validate("The {!MachineName} is in the kitchen.");
+            var validationResult = stringSolver.Validate("The {!Blue} is in the kitchen.");
             Assert.That(validationResult.IsValid, Is.True);
             Assert.That(validationResult.Message, Is.Null);
         }
