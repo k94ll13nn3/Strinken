@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
 using Strinken.Parser;
-using Strinken.Tests.TestsClasses;
 using System.Linq;
+using Strinken.Public.Tests.TestsClasses;
 
-namespace Strinken.Tests.Parser
+namespace Strinken.Public.Tests.Parser
 {
     [TestFixture]
     public class ExtensionsTests
@@ -41,41 +41,41 @@ namespace Strinken.Tests.Parser
         [Test]
         public void WithFilter_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new CustomFilter());
+            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
             var solver2 = solver.WithFilter(new AppendFilter());
 
-            Assert.That(solver.Validate("The {Tag:Append+One:Custom} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {Tag:Append+One:Custom} is in the kitchen.").IsValid, Is.True);
+            Assert.That(solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid, Is.False);
+            Assert.That(solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid, Is.True);
         }
 
         [Test]
         public void WithFilters_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new CustomFilter());
+            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
             var solver2 = solver.WithFilters(new[] { new AppendFilter() });
 
-            Assert.That(solver.Validate("The {Tag:Append+One:Custom} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {Tag:Append+One:Custom} is in the kitchen.").IsValid, Is.True);
+            Assert.That(solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid, Is.False);
+            Assert.That(solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid, Is.True);
         }
 
         [Test]
         public void WithParameterTag_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithParameterTag(new DateTimeParameterTag());
-            var solver2 = solver.WithParameterTag(new MachineNameParameterTag());
+            var solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
+            var solver2 = solver.WithParameterTag(new BlueParameterTag());
 
-            Assert.That(solver.Validate("The {!DateTime} {!MachineName} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {!DateTime} {!MachineName} is in the kitchen.").IsValid, Is.True);
+            Assert.That(solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid, Is.False);
+            Assert.That(solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid, Is.True);
         }
 
         [Test]
         public void WithParameterTags_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithParameterTag(new DateTimeParameterTag());
-            var solver2 = solver.WithParameterTags(new[] { new MachineNameParameterTag() });
+            var solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
+            var solver2 = solver.WithParameterTags(new[] { new BlueParameterTag() });
 
-            Assert.That(solver.Validate("The {!DateTime} {!MachineName} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {!DateTime} {!MachineName} is in the kitchen.").IsValid, Is.True);
+            Assert.That(solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid, Is.False);
+            Assert.That(solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid, Is.True);
         }
     }
 }
