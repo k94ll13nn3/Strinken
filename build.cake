@@ -91,6 +91,8 @@ Task("Run-Unit-Tests")
     };
 
     DotNetCoreTest("./test/Strinken.Tests/", settings);
+    MoveFile("TestResult.xml", "TestResult.first.xml");
+    DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
 });
 
 Task("Upload-Tests")
@@ -98,6 +100,7 @@ Task("Upload-Tests")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
+    AppVeyor.UploadTestResults("TestResult.first.xml", AppVeyorTestResultsType.NUnit3);   
     AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.NUnit3);   
 });
 
