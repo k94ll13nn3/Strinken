@@ -255,3 +255,4 @@ _site/
 test/Strinken.Tests/Coverage/
 test/Strinken.Tests/opencover.4.6.589/
 *Coverage*
+TestResult.first.xml
