@@ -51,6 +51,7 @@ Task("Update-Assembly-Info")
 {
     Information("Current branch:      " + (isOnAppVeyor ? EnvironmentVariable("APPVEYOR_REPO_BRANCH") : "----"));
     Information("Master branch:       " + isOnMaster.ToString());
+    Information("Pull Request:        " + isPullRequest.ToString());
     Information("Running on AppVeyor: " + isOnAppVeyor.ToString());
     Information("Running on Windows:  " + IsRunningOnWindows().ToString());
     // does not currently run on mono 4.3.2, see https://github.com/GitTools/GitVersion/pull/890
