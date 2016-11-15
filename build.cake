@@ -27,6 +27,7 @@ var versionSuffix = "";
 var nugetVersion = "";
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 var isOnMaster = isOnAppVeyor ? EnvironmentVariable("APPVEYOR_REPO_BRANCH") == "master" : false;
+var isPullRequest = isOnAppVeyor ? !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")) : false;
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -122,7 +123,7 @@ Task("Display-Build-Info")
 });
 
 Task("Nuget-Pack")
-    .WithCriteria(() => isOnMaster)
+    .WithCriteria(() => isOnMaster && !isPullRequest)
     .IsDependentOn("Display-Build-Info")
     .Does(() =>
 {
@@ -142,7 +143,7 @@ Task("Nuget-Pack")
 });
 
 Task("Upload-Artifact")
-    .WithCriteria(() => isOnAppVeyor && isOnMaster)
+    .WithCriteria(() => isOnAppVeyor && isOnMaster && !isPullRequest)
     .IsDependentOn("Nuget-Pack")
     .Does(() =>
 {
