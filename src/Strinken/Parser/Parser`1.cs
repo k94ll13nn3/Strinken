@@ -31,6 +31,11 @@ namespace Strinken.Parser
         private readonly IDictionary<string, IParameterTag> parameterTags;
 
         /// <summary>
+        /// Stack used when a string is compiled.
+        /// </summary>
+        private TokenStack compiledStack;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Parser{T}"/> class.
         /// </summary>
         public Parser()
@@ -152,6 +157,44 @@ namespace Strinken.Parser
             }
 
             return new ValidationResult { Message = null, IsValid = true };
+        }
+
+        /// <summary>
+        /// Compiles a string for a faster resolution time but without any modification allowed after.
+        /// </summary>
+        /// <param name="input">The input to compile.</param>
+        public void Compile(string input)
+        {
+            var runResult = new StrinkenEngine().Run(input);
+            if (runResult.Success)
+            {
+                this.compiledStack = runResult.Stack;
+                return;
+            }
+
+            throw new FormatException(runResult.ErrorMessage);
+        }
+
+        /// <summary>
+        /// Resolves the input.
+        /// </summary>
+        /// <param name="value">The value to pass to the tags.</param>
+        /// <returns>The resolved input.</returns>
+        public string ResolveCompiledString(T value)
+        {
+            if (this.compiledStack == null)
+            {
+                throw new InvalidOperationException("No string were compiled.");
+            }
+
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag, TokenSubtype.Base] = a => this.tags[a[0]].Resolve(value),
+                [TokenType.Tag, TokenSubtype.ParameterTag] = a => this.parameterTags[a[0]].Resolve(),
+                [TokenType.Filter, TokenSubtype.Base] = a => this.filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+            };
+
+            return this.compiledStack.Resolve(actions);
         }
 
         /// <summary>
