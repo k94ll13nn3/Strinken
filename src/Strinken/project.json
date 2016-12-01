@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "StyleCop.Analyzers": {
-      "version": "1.0.0",
+      "version": "1.1.0-beta001",
       "type": "build"
     },
     "Microsoft.CodeAnalysis.FxCopAnalyzers": {
@@ -39,7 +39,7 @@
   "buildOptions": {
     "xmlDoc": true,
     // https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/ca8acf2c849fd6ffffb04f29a4d22b0bd7c06b16/documentation/DotNetCli.md
-    "additionalArguments": [ "/additionalfile:../../stylecop.json" ],
+    "additionalArguments": [ "/ruleset:../../strinken.ruleset", "/additionalfile:../../stylecop.json" ],
     "debugType": "portable"
   },
   "configurations": {
