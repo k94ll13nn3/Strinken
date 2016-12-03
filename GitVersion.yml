@@ -1,4 +1,4 @@
 assembly-versioning-scheme: MajorMinor
 assembly-informational-format: '{NuGetVersion}'
 mode: ContinuousDeployment
-next-version: 3.0.0
+next-version: 3.0.1
