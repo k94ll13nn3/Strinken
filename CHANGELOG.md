@@ -18,7 +18,7 @@ Thanks to [Keep a CHANGELOG](http://keepachangelog.com/) for the formating.
 - Rework internal parsing engine
 
 ### Fixed 
-- Invalid tag and filter names are now causing throwing an exception
+- Invalid tag and filter names are now throwing an exception
 - Exclude comma from possible argument character
 
 ## PR/Issues
