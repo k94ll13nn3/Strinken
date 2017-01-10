@@ -7,15 +7,13 @@
       "type": "platform",
       "version": "1.0.0"
     },
-    "NUnit": "3.5.0",
+    "NUnit": "3.6.0",
     "Strinken": {
       "target": "project"
     }
   },
   "testRunner": "nunit",
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [ "dnxcore50", "portable-net45+win8" ]
-    }
+    "netcoreapp1.0": { }
   }
 }
