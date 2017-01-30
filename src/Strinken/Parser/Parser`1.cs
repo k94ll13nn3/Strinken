@@ -71,6 +71,7 @@ namespace Strinken.Parser
         /// <param name="input">The input to resolve.</param>
         /// <param name="value">The value to pass to the tags.</param>
         /// <returns>The resolved input.</returns>
+        /// <exception cref="FormatException">The input has a wrong format.</exception>
         public string Resolve(string input, T value)
         {
             var runResult = new StrinkenEngine().Run(input);
@@ -129,28 +130,28 @@ namespace Strinken.Parser
             runResult.Stack.Resolve(actions);
 
             // Find the first tag that was not registered in the parser.
-            var invalidParameter = tagList.FirstOrDefault(tagName => !this.tags.ContainsKey(tagName));
+            var invalidParameter = tagList.Find(tagName => !this.tags.ContainsKey(tagName));
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
             }
 
             // Find the first parameter tag that was not registered in the parser.
-            invalidParameter = parameterTagList.FirstOrDefault(parameterTagName => !this.parameterTags.ContainsKey(parameterTagName));
+            invalidParameter = parameterTagList.Find(parameterTagName => !this.parameterTags.ContainsKey(parameterTagName));
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} is not a valid parameter tag.", IsValid = false };
             }
 
             // Find the first filter that was not registered in the parser.
-            invalidParameter = filterList.FirstOrDefault(filter => !this.filters.ContainsKey(filter.Item1))?.Item1;
+            invalidParameter = filterList.Find(filter => !this.filters.ContainsKey(filter.Item1))?.Item1;
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
             }
 
             // Find the first filter that has invalid arguments.
-            invalidParameter = filterList.FirstOrDefault(filter => !this.filters[filter.Item1].Validate(filter.Item2))?.Item1;
+            invalidParameter = filterList.Find(filter => !this.filters[filter.Item1].Validate(filter.Item2))?.Item1;
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
@@ -163,6 +164,7 @@ namespace Strinken.Parser
         /// Compiles a string for a faster resolution time but without any modification allowed after.
         /// </summary>
         /// <param name="input">The input to compile.</param>
+        /// <exception cref="FormatException">The input has a wrong format.</exception>
         public void Compile(string input)
         {
             var runResult = new StrinkenEngine().Run(input);
@@ -180,6 +182,7 @@ namespace Strinken.Parser
         /// </summary>
         /// <param name="value">The value to pass to the tags.</param>
         /// <returns>The resolved input.</returns>
+        /// <exception cref="InvalidOperationException">No string were previously compiled.</exception>
         public string ResolveCompiledString(T value)
         {
             if (this.compiledStack == null)
@@ -201,6 +204,7 @@ namespace Strinken.Parser
         /// Add a filter to the list of filter.
         /// </summary>
         /// <param name="filter">The filter to add.</param>
+        /// <exception cref="ArgumentException">The filter name is already present in the filter list.</exception>
         public void AddFilter(IFilter filter)
         {
             if (this.filters.ContainsKey(filter.Name))
@@ -216,6 +220,7 @@ namespace Strinken.Parser
         /// Add a tag to the list of tags.
         /// </summary>
         /// <param name="tag">The tag to add.</param>
+        /// <exception cref="ArgumentException">The tag name is already present in the tag list.</exception>
         public void AddTag(ITag<T> tag)
         {
             if (this.tags.ContainsKey(tag.Name))
@@ -231,6 +236,7 @@ namespace Strinken.Parser
         /// Add a parameter tag to the list of parameter tags.
         /// </summary>
         /// <param name="parameterTag">The parameter tag to add.</param>
+        /// <exception cref="ArgumentException">The parameter tag name is already present in the parameter tag list.</exception>
         public void AddParameterTag(IParameterTag parameterTag)
         {
             if (this.parameterTags.ContainsKey(parameterTag.Name))

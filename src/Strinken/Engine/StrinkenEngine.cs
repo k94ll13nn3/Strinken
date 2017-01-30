@@ -356,7 +356,7 @@ namespace Strinken.Engine
         {
             if (this.cursor.Value == SpecialCharacter.TokenStartIndicator)
             {
-                // Escaped TokenEnd
+                // Escaped TokenStart
                 this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenStartIndicator);
                 return State.OutsideToken;
             }
