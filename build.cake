@@ -114,7 +114,7 @@ Task("Display-Build-Info")
     foreach (Type type in types)
     {
         if (!type.IsPublic) continue;
-        MemberInfo[] members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod);
+        MemberInfo[] members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.Static);
         foreach (MemberInfo member in members) Console.WriteLine("\t" + type.Name + "." + member.Name);
     }
     Information("Version:");
