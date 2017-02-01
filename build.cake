@@ -67,7 +67,7 @@ Task("Update-Assembly-Info")
     if (isOnAppVeyor)
     {
         Information("Build version:       " + nugetVersion + "(" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")");
-        AppVeyor.UpdateBuildVersion(nugetVersion + "(" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")"));
+        AppVeyor.UpdateBuildVersion(nugetVersion + "(" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")");
     }
 });
 
