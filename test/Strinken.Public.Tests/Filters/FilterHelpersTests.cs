@@ -1,7 +1,7 @@
-﻿using Strinken.Filters;
+﻿using FluentAssertions;
+using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Public.Tests.TestsClasses;
-using FluentAssertions;
 
 namespace Strinken.Public.Tests.Filters
 {
