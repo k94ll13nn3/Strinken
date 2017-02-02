@@ -1,5 +1,6 @@
 ﻿// stylecop.header
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Strinken.Parser;
 
@@ -42,13 +43,13 @@ namespace Strinken.Filters
         /// <summary>
         /// Gets base filters shared by all parsers.
         /// </summary>
-        internal static IEnumerable<IFilter> BaseFilters
+        internal static IReadOnlyCollection<IFilter> BaseFilters
         {
             get
             {
                 lock (Lock)
                 {
-                    return RegisteredFilters.Values;
+                    return new ReadOnlyCollection<IFilter>(RegisteredFilters.Values.ToList());
                 }
             }
         }
