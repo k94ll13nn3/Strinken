@@ -1,90 +1,99 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
 using Strinken.Parser;
 using Strinken.Public.Tests.TestsClasses;
 
 namespace Strinken.Public.Tests.Parser
 {
-    [TestFixture]
     public class ValidateTests
     {
-        private Parser<Data> stringSolver;
-
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
-        }
-
-        [Test]
+        [StrinkenTest]
         public void Validate_AllFiltersKnown_ReturnsTrue()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {DataName:Upper} is in the kitchen.");
-            Assert.That(validationResult.IsValid, Is.True);
-            Assert.That(validationResult.Message, Is.Null);
+
+            validationResult.IsValid.Should().BeTrue();
+            validationResult.Message.Should().BeNull();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_AllFiltersWithGoodArguments_ReturnsTrue()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {DataName:Length} is in the kitchen.");
-            Assert.That(validationResult.IsValid, Is.True);
-            Assert.That(validationResult.Message, Is.Null);
+
+            validationResult.IsValid.Should().BeTrue();
+            validationResult.Message.Should().BeNull();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_AllTagsKnown_ReturnsTrue()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {DataName} is in the kitchen.");
-            Assert.That(validationResult.IsValid, Is.True);
-            Assert.That(validationResult.Message, Is.Null);
+
+            validationResult.IsValid.Should().BeTrue();
+            validationResult.Message.Should().BeNull();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_AllParameterTagsKnown_ReturnsTrue()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {!Blue} is in the kitchen.");
-            Assert.That(validationResult.IsValid, Is.True);
-            Assert.That(validationResult.Message, Is.Null);
+
+            validationResult.IsValid.Should().BeTrue();
+            validationResult.Message.Should().BeNull();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_FilterWithWrongArguments_ReturnsFalse()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {DataName:Length+Arg} is in the kitchen.");
-            Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Message, Is.EqualTo("Length does not have valid arguments."));
+
+            validationResult.IsValid.Should().BeFalse();
+            validationResult.Message.Should().Be("Length does not have valid arguments.");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_InvalidInput_ReturnsFalse()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {DataName:} is in the kitchen.");
-            Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Message, Is.EqualTo("Empty filter"));
+
+            validationResult.IsValid.Should().BeFalse();
+            validationResult.Message.Should().Be("Empty filter");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_UnknownFilter_ReturnsFalse()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {DataName:Bryan} is in the kitchen.");
-            Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Message, Is.EqualTo("Bryan is not a valid filter."));
+
+            validationResult.IsValid.Should().BeFalse();
+            validationResult.Message.Should().Be("Bryan is not a valid filter.");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_UnknownTag_ReturnsFalse()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {DataName} is in the kitchen (size {SomeTag}).");
-            Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Message, Is.EqualTo("SomeTag is not a valid tag."));
+
+            validationResult.IsValid.Should().BeFalse();
+            validationResult.Message.Should().Be("SomeTag is not a valid tag.");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_UnknownParameterTag_ReturnsFalse()
         {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             var validationResult = stringSolver.Validate("The {DataName} is in the kitchen (size {!SomeTag}).");
-            Assert.That(validationResult.IsValid, Is.False);
-            Assert.That(validationResult.Message, Is.EqualTo("SomeTag is not a valid parameter tag."));
+
+            validationResult.IsValid.Should().BeFalse();
+            validationResult.Message.Should().Be("SomeTag is not a valid parameter tag.");
         }
     }
 }
