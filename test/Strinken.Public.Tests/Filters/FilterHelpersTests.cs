@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Public.Tests.TestsClasses;
@@ -37,6 +38,22 @@ namespace Strinken.Public.Tests.Filters
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             var validationResult = stringSolver.Validate("The {DataName:RThree} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
+        }
+
+        [StrinkenTest]
+        public void Register_FilterWithEmptyName_ThrowsArgumentException()
+        {
+            Action act = () => FilterHelpers.Register(new EmptyNameFilter());
+
+            act.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
+        }
+
+        [StrinkenTest]
+        public void Register_FilterWithInvalidName_ThrowsArgumentException()
+        {
+            Action act = () => FilterHelpers.Register(new InvalidNameFilter());
+
+            act.ShouldThrow<ArgumentException>().WithMessage("! is an invalid character for a name.");
         }
 
         private class RegisterFilter : IFilter

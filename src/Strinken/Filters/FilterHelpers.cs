@@ -1,7 +1,9 @@
 ﻿// stylecop.header
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Strinken.Common;
 using Strinken.Parser;
 
 namespace Strinken.Filters
@@ -66,6 +68,19 @@ namespace Strinken.Filters
             {
                 if (!RegisteredFilters.ContainsKey(filter.Name))
                 {
+                    if (string.IsNullOrWhiteSpace(filter.Name))
+                    {
+                        throw new ArgumentException("A name cannot be empty.");
+                    }
+
+                    for (int i = 0; i < filter.Name.Length; i++)
+                    {
+                        if (filter.Name[i].IsInvalidTokenNameCharacter())
+                        {
+                            throw new ArgumentException($"{filter.Name[i]} is an invalid character for a name.");
+                        }
+                    }
+
                     RegisteredFilters.Add(filter.Name, filter);
                 }
             }
