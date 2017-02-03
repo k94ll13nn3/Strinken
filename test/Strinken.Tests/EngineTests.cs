@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Strinken.Engine;
+using Xunit;
 
 namespace Strinken.Tests
 {
@@ -167,9 +168,9 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTests]
-        [StrinkenCase("lorem{ispum:abc+p")]
-        [StrinkenCase("lorem{ispum:abc+p,t")]
+        [Theory]
+        [InlineData("lorem{ispum:abc+p")]
+        [InlineData("lorem{ispum:abc+p,t")]
         public void Run_ArgumentNotClosed_ReturnsFalse(string input)
         {
             var result = new StrinkenEngine().Run(input);
@@ -231,11 +232,11 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().BeNull();
         }
 
-        [StrinkenTests]
-        [StrinkenCase("lorem{isp+um:abc}", '+')]
-        [StrinkenCase("lorem{isp°um:abc}", '°')]
-        [StrinkenCase("lorem{isp um:abc}", ' ')]
-        [StrinkenCase("lorem{is:!fil}", '!')]
+        [Theory]
+        [InlineData("lorem{isp+um:abc}", '+')]
+        [InlineData("lorem{isp°um:abc}", '°')]
+        [InlineData("lorem{isp um:abc}", ' ')]
+        [InlineData("lorem{is:!fil}", '!')]
         public void Run_InvalidCharacterInString_ReturnsFalse(string input, char illegalChar)
         {
             var result = new StrinkenEngine().Run(input);
@@ -243,14 +244,14 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be($"Illegal '{illegalChar}' at position 9");
         }
 
-        [StrinkenTests]
-        [StrinkenCase("lorem{ispum:abc}")]
-        [StrinkenCase("lorem{ispAum:abc+9}")]
-        [StrinkenCase("lorem{ispAum:abc+arg, 9}")]
-        [StrinkenCase("lorem{ispSIK_}")]
-        [StrinkenCase("lorem{JuF-_}")]
-        [StrinkenCase("lorem{JuF-m}09à9")]
-        [StrinkenCase("lorem{!JuF-m}09à9")]
+        [Theory]
+        [InlineData("lorem{ispum:abc}")]
+        [InlineData("lorem{ispAum:abc+9}")]
+        [InlineData("lorem{ispAum:abc+arg, 9}")]
+        [InlineData("lorem{ispSIK_}")]
+        [InlineData("lorem{JuF-_}")]
+        [InlineData("lorem{JuF-m}09à9")]
+        [InlineData("lorem{!JuF-m}09à9")]
         public void Run_ValidCharacterInString_DoesNotThrow(string input)
         {
             var result = new StrinkenEngine().Run(input);
@@ -258,10 +259,10 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().BeNull();
         }
 
-        [StrinkenTests]
-        [StrinkenCase("{lorem:ispum+abc}")]
-        [StrinkenCase("{lorem:ispum+abc9}")]
-        [StrinkenCase("{lorem:ispum+abc-+}")]
+        [Theory]
+        [InlineData("{lorem:ispum+abc}")]
+        [InlineData("{lorem:ispum+abc9}")]
+        [InlineData("{lorem:ispum+abc-+}")]
         public void Run_ArgumentValue_ChecksCharacters(string input)
         {
             var result = new StrinkenEngine().Run(input);
@@ -269,10 +270,10 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().BeNull();
         }
 
-        [StrinkenTests]
-        [StrinkenCase("{lorem:ispum+=abc9}", '9', 17)]
-        [StrinkenCase("{lorem:ispum+=abc-+}", '+', 18)]
-        [StrinkenCase("{lorem:ispum+=abc*}", '*', 17)]
+        [Theory]
+        [InlineData("{lorem:ispum+=abc9}", '9', 17)]
+        [InlineData("{lorem:ispum+=abc-+}", '+', 18)]
+        [InlineData("{lorem:ispum+=abc*}", '*', 17)]
         public void Run_ArgumentTagValue_ChecksCharacters(string input, char illegalChar, int position)
         {
             var result = new StrinkenEngine().Run(input);
