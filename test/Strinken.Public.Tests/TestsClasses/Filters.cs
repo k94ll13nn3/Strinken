@@ -49,17 +49,4 @@ namespace Strinken.Public.Tests.TestsClasses
 
         public bool Validate(string[] arguments) => true;
     }
-
-    public class RegisterFilter : IFilter
-    {
-        public string Description => "Register";
-
-        public string Name => "Register";
-
-        public string Usage => "";
-
-        public string Resolve(string value, string[] arguments) => value;
-
-        public bool Validate(string[] arguments) => true;
-    }
 }
