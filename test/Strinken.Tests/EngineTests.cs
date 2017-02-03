@@ -1,287 +1,283 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
 using Strinken.Engine;
 
 namespace Strinken.Tests
 {
-    [TestFixture]
     public class EngineTests
     {
-        private StrinkenEngine engine;
-
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            this.engine = new StrinkenEngine();
-        }
-
-        [Test]
+        [StrinkenTest]
         public void Run_NullInput_ReturnsNull()
         {
-            var result = this.engine.Run(null);
-            Assert.That(result.Success, Is.True);
-            Assert.That(result.ErrorMessage, Is.Null);
-            Assert.That(result.Stack.Resolve(null), Is.Null);
+            var result = new StrinkenEngine().Run(null);
+            result.Success.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
+            result.Stack.Resolve(null).Should().BeNull();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EmptyInput_ReturnsEmptyString()
         {
-            var result = this.engine.Run(string.Empty);
-            Assert.That(result.Success, Is.True);
-            Assert.That(result.ErrorMessage, Is.Null);
-            Assert.That(result.Stack.Resolve(null), Is.Empty);
+            var result = new StrinkenEngine().Run(string.Empty);
+            result.Success.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
+            result.Stack.Resolve(null).Should().BeEmpty();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_OpenBracketAtStringEnd_ReturnsFalse()
         {
             const string input = "lorem ipsum{";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '{' at the end of the string"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal '{' at the end of the string");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EmptyTag_ReturnsFalse()
         {
             const string input = "lorem{}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Empty tag"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Empty tag");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagNotClosed_ReturnsFalse()
         {
             const string input = "lorem{a";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_OpenBracketInTag_ReturnsFalse()
         {
             const string input = "lorem{test{tm";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '{' at position 10"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal '{' at position 10");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EmptyFilter_ReturnsFalse()
         {
             const string input = "lorem{test:}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Empty filter"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Empty filter");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EmptyFirstArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EmptySecondArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+arg,}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EmptySecondArgumentAndThreeArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+someThing,,}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EmptyFirstAndSecond_ReturnsFalse()
         {
             const string input = "lorem{tag:filter+,}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EmptyArgumentTag_ReturnsFalse()
         {
             const string input = "lorem{test:filter+arg,=}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Empty argument"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_OpenBracketInsideFilter_ReturnsFalse()
         {
             const string input = "lorem{test:a{r}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '{' at position 12"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal '{' at position 12");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_FilterSeparatorInsideFilter_ReturnsFalse()
         {
             const string input = "lorem{test:a:}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Empty filter"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Empty filter");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TwoArgumentTagSeparator_ReturnsFalse()
         {
             const string input = "lorem{test:a+==}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '=' at position 14"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal '=' at position 14");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_CloseBracketOutisdeToken_ReturnsFalse()
         {
             const string input = "lorem}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '}' at position 5"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal '}' at position 5");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EndOfStringOnFilterSeparator_ReturnsFalse()
         {
             const string input = "lorem{ispum:";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_FilterNotClosed_ReturnsFalse()
         {
             const string input = "lorem{ispum:abc";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [TestCase("lorem{ispum:abc+p")]
-        [TestCase("lorem{ispum:abc+p,t")]
+        [StrinkenTests]
+        [StrinkenCase("lorem{ispum:abc+p")]
+        [StrinkenCase("lorem{ispum:abc+p,t")]
         public void Run_ArgumentNotClosed_ReturnsFalse(string input)
         {
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EndOfStringOnArgumentSeparator_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EndOfStringOnArgumentTagIndicator_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,=";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EndOfStringInsideArgumentTag_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,=a";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_EndOfStringOnArgumentInitializer_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("End of string reached while inside a token"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_ArgumentAfterTag_ReturnsFalse()
         {
             const string input = "lorem{ispum+arg}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo("Illegal '+' at position 11"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal '+' at position 11");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_ValidString_DoesNotThrow()
         {
             const string input = "lorem{ispum:abc}";
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.True);
-            Assert.That(result.ErrorMessage, Is.Null);
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
         }
 
-        [TestCase("lorem{isp+um:abc}", '+')]
-        [TestCase("lorem{isp°um:abc}", '°')]
-        [TestCase("lorem{isp um:abc}", ' ')]
-        [TestCase("lorem{is:!fil}", '!')]
+        [StrinkenTests]
+        [StrinkenCase("lorem{isp+um:abc}", '+')]
+        [StrinkenCase("lorem{isp°um:abc}", '°')]
+        [StrinkenCase("lorem{isp um:abc}", ' ')]
+        [StrinkenCase("lorem{is:!fil}", '!')]
         public void Run_InvalidCharacterInString_ReturnsFalse(string input, char illegalChar)
         {
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo($"Illegal '{illegalChar}' at position 9"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be($"Illegal '{illegalChar}' at position 9");
         }
 
-        [TestCase("lorem{ispum:abc}")]
-        [TestCase("lorem{ispAum:abc+9}")]
-        [TestCase("lorem{ispAum:abc+arg, 9}")]
-        [TestCase("lorem{ispSIK_}")]
-        [TestCase("lorem{JuF-_}")]
-        [TestCase("lorem{JuF-m}09à9")]
-        [TestCase("lorem{!JuF-m}09à9")]
+        [StrinkenTests]
+        [StrinkenCase("lorem{ispum:abc}")]
+        [StrinkenCase("lorem{ispAum:abc+9}")]
+        [StrinkenCase("lorem{ispAum:abc+arg, 9}")]
+        [StrinkenCase("lorem{ispSIK_}")]
+        [StrinkenCase("lorem{JuF-_}")]
+        [StrinkenCase("lorem{JuF-m}09à9")]
+        [StrinkenCase("lorem{!JuF-m}09à9")]
         public void Run_ValidCharacterInString_DoesNotThrow(string input)
         {
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.True);
-            Assert.That(result.ErrorMessage, Is.Null);
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
         }
 
-        [TestCase("{lorem:ispum+abc}")]
-        [TestCase("{lorem:ispum+abc9}")]
-        [TestCase("{lorem:ispum+abc-+}")]
+        [StrinkenTests]
+        [StrinkenCase("{lorem:ispum+abc}")]
+        [StrinkenCase("{lorem:ispum+abc9}")]
+        [StrinkenCase("{lorem:ispum+abc-+}")]
         public void Run_ArgumentValue_ChecksCharacters(string input)
         {
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.True);
-            Assert.That(result.ErrorMessage, Is.Null);
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
         }
 
-        [TestCase("{lorem:ispum+=abc9}", '9', 17)]
-        [TestCase("{lorem:ispum+=abc-+}", '+', 18)]
-        [TestCase("{lorem:ispum+=abc*}", '*', 17)]
+        [StrinkenTests]
+        [StrinkenCase("{lorem:ispum+=abc9}", '9', 17)]
+        [StrinkenCase("{lorem:ispum+=abc-+}", '+', 18)]
+        [StrinkenCase("{lorem:ispum+=abc*}", '*', 17)]
         public void Run_ArgumentTagValue_ChecksCharacters(string input, char illegalChar, int position)
         {
-            var result = this.engine.Run(input);
-            Assert.That(result.Success, Is.False);
-            Assert.That(result.ErrorMessage, Is.EqualTo($"Illegal '{illegalChar}' at position {position}"));
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be($"Illegal '{illegalChar}' at position {position}");
         }
     }
 }
