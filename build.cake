@@ -92,24 +92,14 @@ Task("Run-Unit-Tests")
         Configuration = configuration
     };
 
-    settings.ArgumentCustomization = args => args.Append("-xml \"TestResult.xml\"");
     DotNetCoreTest("./test/Strinken.Tests/", settings);
-    settings.ArgumentCustomization = args => args.Append("-xml \"TestResult.Public.xml\"");
     DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
 });
 
-Task("Upload-Tests")
-    .WithCriteria(() => false)
-    .IsDependentOn("Run-Unit-Tests")
-    .Does(() =>
-{
-    AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.XUnit);   
-    AppVeyor.UploadTestResults("TestResult.Public.xml", AppVeyorTestResultsType.XUnit);   
-});
-
 Task("Display-Build-Info")
-.IsDependentOn("Upload-Tests")
-.Does(() => {
+    .IsDependentOn("Run-Unit-Tests")
+    .Does(() => 
+{
     Information("Public members:");
     Assembly a = Assembly.LoadFrom("./src/" + solution + "/bin/" + configuration + "/" + framework + "/Strinken.dll");
     Type[] types = a.GetTypes();
