@@ -89,22 +89,22 @@ Task("Run-Unit-Tests")
 {
     var settings = new DotNetCoreTestSettings
     {
-        Configuration = configuration,
-        ArgumentCustomization = args => args.Append("-xml \"TestResult.xml\"")
+        Configuration = configuration
     };
 
+    settings.ArgumentCustomization = args => args.Append("-xml \"TestResult.xml\"");
     DotNetCoreTest("./test/Strinken.Tests/", settings);
-    MoveFile("TestResult.xml", "TestResult.first.xml");
+    settings.ArgumentCustomization = args => args.Append("-xml \"TestResult.Public.xml\"");
     DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
 });
 
 Task("Upload-Tests")
-    .WithCriteria(() => isOnAppVeyor)
+    .WithCriteria(() => false)
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-    AppVeyor.UploadTestResults("TestResult.first.xml", AppVeyorTestResultsType.XUnit);   
     AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.XUnit);   
+    AppVeyor.UploadTestResults("TestResult.Public.xml", AppVeyorTestResultsType.XUnit);   
 });
 
 Task("Display-Build-Info")
