@@ -89,7 +89,8 @@ Task("Run-Unit-Tests")
 {
     var settings = new DotNetCoreTestSettings
     {
-        Configuration = configuration
+        Configuration = configuration,
+        ArgumentCustomization = args => args.Append("-xml \"TestResult.xml\"")
     };
 
     DotNetCoreTest("./test/Strinken.Tests/", settings);
@@ -102,8 +103,8 @@ Task("Upload-Tests")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-    AppVeyor.UploadTestResults("TestResult.first.xml", AppVeyorTestResultsType.NUnit3);   
-    AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.NUnit3);   
+    AppVeyor.UploadTestResults("TestResult.first.xml", AppVeyorTestResultsType.XUnit);   
+    AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.XUnit);   
 });
 
 Task("Display-Build-Info")
