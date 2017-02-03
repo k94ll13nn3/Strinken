@@ -1,81 +1,80 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using FluentAssertions;
 using Strinken.Parser;
-using System.Linq;
 using Strinken.Public.Tests.TestsClasses;
 
 namespace Strinken.Public.Tests.Parser
 {
-    [TestFixture]
     public class ExtensionsTests
     {
-        [Test]
+        [StrinkenTest]
         public void WithTag_OnTheFlyCreation_ReturnsResolvedString()
         {
             var solver = new Parser<Data>().WithTag("OTF", "OTF", a => a.Name);
 
-            Assert.That(solver.Tags, Has.Count.EqualTo(1));
-            Assert.That(solver.Tags.First().Name, Is.EqualTo("OTF"));
-            Assert.That(solver.Resolve("The {OTF} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The Lorem is in the kitchen."));
+            solver.Tags.Should().HaveCount(1);
+            solver.Tags.First().Name.Should().Be("OTF");
+            solver.Resolve("The {OTF} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Lorem is in the kitchen.");
         }
 
-        [Test]
+        [StrinkenTest]
         public void WithTag_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
             var solver2 = solver.WithTag("TagBis", "TagBis", a => a.Name);
 
-            Assert.That(solver.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid, Is.True);
+            solver.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid.Should().BeFalse();
+            solver2.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void WithTags_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
             var solver2 = solver.WithTags(new[] { new DataNameTag() });
 
-            Assert.That(solver.Validate("The {DataName} {Tag} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {DataName} {Tag} is in the kitchen.").IsValid, Is.True);
+            solver.Validate("The {DataName} {Tag} is in the kitchen.").IsValid.Should().BeFalse();
+            solver2.Validate("The {DataName} {Tag} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void WithFilter_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
             var solver2 = solver.WithFilter(new AppendFilter());
 
-            Assert.That(solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid, Is.True);
+            solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeFalse();
+            solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void WithFilters_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
             var solver2 = solver.WithFilters(new[] { new AppendFilter() });
 
-            Assert.That(solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid, Is.True);
+            solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeFalse();
+            solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void WithParameterTag_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
             var solver2 = solver.WithParameterTag(new BlueParameterTag());
 
-            Assert.That(solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid, Is.True);
+            solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeFalse();
+            solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void WithParameterTags_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
             var solver2 = solver.WithParameterTags(new[] { new BlueParameterTag() });
 
-            Assert.That(solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid, Is.False);
-            Assert.That(solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid, Is.True);
+            solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeFalse();
+            solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeTrue();
         }
     }
 }

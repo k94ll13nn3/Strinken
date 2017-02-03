@@ -1,60 +1,59 @@
-using NUnit.Framework;
+using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
 
 namespace Strinken.Tests.FiltersTests
 {
-    [TestFixture]
     public class IfEqualFilterTests
     {
-        [Test]
+        [StrinkenTest]
         public void Resolve_IsEqual_ReturnsData()
         {
             var filter = new IfEqualFilter();
 
-            Assert.That(filter.Resolve("data", new string[] { "data", "true", "false" }), Is.EqualTo("true"));
+            filter.Resolve("data", new string[] { "data", "true", "false" }).Should().Be("true");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Resolve_IsNotEqual_ReturnsArgument()
         {
             var filter = new IfEqualFilter();
 
-            Assert.That(filter.Resolve("value", new string[] { "data", "true", "false" }), Is.EqualTo("false"));
+            filter.Resolve("value", new string[] { "data", "true", "false" }).Should().Be("false");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_NoArguments_ReturnsFalse()
         {
             var filter = new IfEqualFilter();
 
-            Assert.That(filter.Validate(null), Is.False);
-            Assert.That(filter.Validate(new string[] { }), Is.False);
+            filter.Validate(null).Should().BeFalse();
+            filter.Validate(new string[] { }).Should().BeFalse();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_OneArgument_ReturnsFalse()
         {
             var filter = new IfEqualFilter();
 
-            Assert.That(filter.Validate(new string[] { "" }), Is.False);
+            filter.Validate(new string[] { "" }).Should().BeFalse();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_ThreeArguments_ReturnsTrue()
         {
             var filter = new IfEqualFilter();
 
-            Assert.That(filter.Validate(new string[] { "", "", "" }), Is.True);
+            filter.Validate(new string[] { "", "", "" }).Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Resolve__ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
-            Assert.That(stringSolver.Resolve("The {DataName:IfEqual+Lorem,T,F} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The T is in the kitchen."));
-            Assert.That(stringSolver.Resolve("The {DataName:IfEqual+Ipsum,T,F} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The F is in the kitchen."));
+            stringSolver.Resolve("The {DataName:IfEqual+Lorem,T,F} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The T is in the kitchen.");
+            stringSolver.Resolve("The {DataName:IfEqual+Ipsum,T,F} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The F is in the kitchen.");
         }
     }
 }

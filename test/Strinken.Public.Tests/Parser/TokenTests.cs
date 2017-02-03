@@ -1,62 +1,65 @@
-using NUnit.Framework;
-using Strinken.Parser;
-using Strinken.Public.Tests.TestsClasses;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using FluentAssertions;
+using Strinken.Parser;
+using Strinken.Public.Tests.TestsClasses;
 
 namespace Strinken.Public.Tests.Parser
 {
-    [TestFixture]
     public class TokenTests
     {
-        private Parser<Data> stringSolver;
-
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            this.stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
-        }
-
-        [Test]
+        [StrinkenTest]
         public void Tags_Get_ReturnsReadOnlyCollection()
         {
-            Assert.That(this.stringSolver.Tags as List<ITag<Data>>, Is.Null);
-            Assert.That(this.stringSolver.Tags as ReadOnlyCollection<ITag<Data>>, Is.Not.Null);
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            (stringSolver.Tags as List<ITag<Data>>).Should().BeNull();
+            (stringSolver.Tags as ReadOnlyCollection<ITag<Data>>).Should().NotBeNull();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Tags_Get_ReturnsOneTag()
         {
-            Assert.That(this.stringSolver.Tags, Has.Count.EqualTo(1));
-            Assert.That(this.stringSolver.Tags.First().Name, Is.EqualTo("DataName"));
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            stringSolver.Tags.Should().HaveCount(1);
+            stringSolver.Tags.First().Name.Should().Be("DataName");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Filters_Get_ReturnsReadOnlyCollection()
         {
-            Assert.That(this.stringSolver.Filters as List<IFilter>, Is.Null);
-            Assert.That(this.stringSolver.Filters as ReadOnlyCollection<IFilter>, Is.Not.Null);
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            (stringSolver.Filters as List<IFilter>).Should().BeNull();
+            (stringSolver.Filters as ReadOnlyCollection<IFilter>).Should().NotBeNull();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Filters_Get_ReturnsEightFilters()
         {
-            Assert.That(this.stringSolver.Filters, Has.Count.EqualTo(8));
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            stringSolver.Filters.Should().HaveCount(8);
         }
 
-        [Test]
+        [StrinkenTest]
         public void ParameterTags_Get_ReturnsReadOnlyCollection()
         {
-            Assert.That(this.stringSolver.ParameterTags as List<IParameterTag>, Is.Null);
-            Assert.That(this.stringSolver.ParameterTags as ReadOnlyCollection<IParameterTag>, Is.Not.Null);
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            (stringSolver.ParameterTags as List<IParameterTag>).Should().BeNull();
+            (stringSolver.ParameterTags as ReadOnlyCollection<IParameterTag>).Should().NotBeNull();
         }
 
-        [Test]
+        [StrinkenTest]
         public void ParameterTags_Get_ReturnsOneParameterTag()
         {
-            Assert.That(this.stringSolver.ParameterTags, Has.Count.EqualTo(1));
-            Assert.That(this.stringSolver.ParameterTags.First().Name, Is.EqualTo("Blue"));
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            stringSolver.ParameterTags.Should().HaveCount(1);
+            stringSolver.ParameterTags.First().Name.Should().Be("Blue");
         }
     }
 }

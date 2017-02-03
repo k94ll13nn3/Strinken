@@ -1,13 +1,12 @@
-using NUnit.Framework;
-using Strinken.Machine;
 using System;
+using FluentAssertions;
+using Strinken.Machine;
 
 namespace Strinken.Tests
 {
-    [TestFixture]
     public class StateMachineTests
     {
-        [Test]
+        [StrinkenTest]
         public void On_StateAlreadyRegistered_ThrowsInvalidOperationException()
         {
             Func<StateMachine> createMachine = () => StateMachineBuilder
@@ -18,10 +17,12 @@ namespace Strinken.Tests
                 .On(State.OutsideToken).Do(null)
                 .Build();
 
-            Assert.That(() => createMachine(), Throws.InvalidOperationException.With.Message.EqualTo("The state OutsideToken was already registered in the machine."));
+            Action act = () => createMachine();
+
+            act.ShouldThrow<InvalidOperationException>().WithMessage("The state OutsideToken was already registered in the machine.");
         }
 
-        [Test]
+        [StrinkenTest]
         public void On_StateWithNoAction_ThrowsInvalidOperationException()
         {
             var machine = StateMachineBuilder
@@ -31,10 +32,12 @@ namespace Strinken.Tests
                 .On(State.OutsideToken).Do(() => State.OnTokenEndIndicator)
                 .Build();
 
-            Assert.That(() => machine.Run(), Throws.InvalidOperationException.With.Message.EqualTo("The state OnTokenEndIndicator does not have a corresponding action."));
+            Action act = () => machine.Run();
+
+            act.ShouldThrow<InvalidOperationException>().WithMessage("The state OnTokenEndIndicator does not have a corresponding action.");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_WithSinkState_ReturnsFailure()
         {
             var machine = StateMachineBuilder
@@ -45,10 +48,10 @@ namespace Strinken.Tests
                 .On(State.OnTokenEndIndicator).Sink()
                 .Build();
 
-            Assert.That(() => machine.Run(), Is.False);
+            machine.Run().Should().BeFalse();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_BaseMachine_ReturnsSuccess()
         {
             var machine = StateMachineBuilder
@@ -58,7 +61,7 @@ namespace Strinken.Tests
                 .On(State.OutsideToken).Do(() => State.OutsideToken)
                 .Build();
 
-            Assert.That(() => machine.Run(), Is.True);
+            machine.Run().Should().BeTrue();
         }
     }
 }

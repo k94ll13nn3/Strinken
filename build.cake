@@ -93,22 +93,13 @@ Task("Run-Unit-Tests")
     };
 
     DotNetCoreTest("./test/Strinken.Tests/", settings);
-    MoveFile("TestResult.xml", "TestResult.first.xml");
     DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
 });
 
-Task("Upload-Tests")
-    .WithCriteria(() => isOnAppVeyor)
-    .IsDependentOn("Run-Unit-Tests")
-    .Does(() =>
-{
-    AppVeyor.UploadTestResults("TestResult.first.xml", AppVeyorTestResultsType.NUnit3);   
-    AppVeyor.UploadTestResults("TestResult.xml", AppVeyorTestResultsType.NUnit3);   
-});
-
 Task("Display-Build-Info")
-.IsDependentOn("Upload-Tests")
-.Does(() => {
+    .IsDependentOn("Run-Unit-Tests")
+    .Does(() => 
+{
     Information("Public members:");
     Assembly a = Assembly.LoadFrom("./src/" + solution + "/bin/" + configuration + "/" + framework + "/Strinken.dll");
     Type[] types = a.GetTypes();

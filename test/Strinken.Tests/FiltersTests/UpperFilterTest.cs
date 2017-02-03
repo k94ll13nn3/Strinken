@@ -1,44 +1,43 @@
-using NUnit.Framework;
+using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
 
 namespace Strinken.Tests.FiltersTests
 {
-    [TestFixture]
     public class UpperFilterTest
     {
-        [Test]
+        [StrinkenTest]
         public void Resolve_Data_ReturnsDataToUpperCase()
         {
             var filter = new UpperFilter();
 
-            Assert.That(filter.Resolve("data", null), Is.EqualTo("DATA"));
+            filter.Resolve("data", null).Should().Be("DATA");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_NoArguments_ReturnsTrue()
         {
             var filter = new UpperFilter();
 
-            Assert.That(filter.Validate(null), Is.True);
-            Assert.That(filter.Validate(new string[] { }), Is.True);
+            filter.Validate(null).Should().BeTrue();
+            filter.Validate(new string[] { }).Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_OneOrMoreArguments_ReturnsFalse()
         {
             var filter = new UpperFilter();
 
-            Assert.That(filter.Validate(new string[] { "" }), Is.False);
-            Assert.That(filter.Validate(new string[] { "", "" }), Is.False);
+            filter.Validate(new string[] { "" }).Should().BeFalse();
+            filter.Validate(new string[] { "", "" }).Should().BeFalse();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Resolve__ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
-            Assert.That(stringSolver.Resolve("The {DataName:Upper} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The LOREM is in the kitchen."));
+            stringSolver.Resolve("The {DataName:Upper} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The LOREM is in the kitchen.");
         }
     }
 }

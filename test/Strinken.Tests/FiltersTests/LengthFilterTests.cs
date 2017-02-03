@@ -1,44 +1,43 @@
-using NUnit.Framework;
+using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
 
 namespace Strinken.Tests.FiltersTests
 {
-    [TestFixture]
     public class LengthFilterTests
     {
-        [Test]
+        [StrinkenTest]
         public void Resolve_Data_ReturnsDataLength()
         {
             var filter = new LengthFilter();
 
-            Assert.That(filter.Resolve("DAta", null), Is.EqualTo("4"));
+            filter.Resolve("DAta", null).Should().Be("4");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_NoArguments_ReturnsTrue()
         {
             var filter = new LengthFilter();
 
-            Assert.That(filter.Validate(null), Is.True);
-            Assert.That(filter.Validate(new string[] { }), Is.True);
+            filter.Validate(null).Should().BeTrue();
+            filter.Validate(new string[] { }).Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_OneOrMoreArguments_ReturnsFalse()
         {
             var filter = new LengthFilter();
 
-            Assert.That(filter.Validate(new string[] { "" }), Is.False);
-            Assert.That(filter.Validate(new string[] { "", "" }), Is.False);
+            filter.Validate(new string[] { "" }).Should().BeFalse();
+            filter.Validate(new string[] { "", "" }).Should().BeFalse();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Resolve__ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
-            Assert.That(stringSolver.Resolve("The {DataName:Length} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The 5 is in the kitchen."));
+            stringSolver.Resolve("The {DataName:Length} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The 5 is in the kitchen.");
         }
     }
 }

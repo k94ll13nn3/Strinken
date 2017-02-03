@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using FluentAssertions;
 using Strinken.Engine;
 
 namespace Strinken.Tests
 {
-    [TestFixture]
     public class ActionsTests
     {
-        [Test]
+        [StrinkenTest]
         public void Run_OneTag_ActionOnTagCalledOnce()
         {
             var numberOfCall = 0;
@@ -28,12 +27,12 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(tagSeen.Count, Is.EqualTo(1));
-            Assert.That(tagSeen[0], Is.EqualTo("ispum"));
+            numberOfCall.Should().Be(1);
+            tagSeen.Count.Should().Be(1);
+            tagSeen[0].Should().Be("ispum");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TwoTags_ActionOnTagCalledTwice()
         {
             var numberOfCall = 0;
@@ -53,53 +52,53 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(2));
-            Assert.That(tagSeen.Count, Is.EqualTo(2));
-            Assert.That(tagSeen[0], Is.EqualTo("belli"));
-            Assert.That(tagSeen[1], Is.EqualTo("ispum"));
+            numberOfCall.Should().Be(2);
+            tagSeen.Count.Should().Be(2);
+            tagSeen[0].Should().Be("belli");
+            tagSeen[1].Should().Be("ispum");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_NoTokens_ActionOnCharactersReturnsString()
         {
             var engine = new StrinkenEngine();
             const string input = "loremtute";
             var result = engine.Run(input);
 
-            Assert.That(result.Stack.Resolve(new ActionDictionary()), Is.EqualTo("loremtute"));
+            result.Stack.Resolve(new ActionDictionary()).Should().Be("loremtute");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_StringWithTokens_ActionOnCharactersReturnsStringWithoutTokens()
         {
             var engine = new StrinkenEngine();
             const string input = "lorem{ipsum}tu{ti}te";
             var result = engine.Run(input);
 
-            Assert.That(result.Stack.Resolve(new ActionDictionary()), Is.EqualTo("loremtute"));
+            result.Stack.Resolve(new ActionDictionary()).Should().Be("loremtute");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_StringWithEscapedOpenBracket_ActionOnCharactersReturnsStringWithOneOpenBracket()
         {
             var engine = new StrinkenEngine();
             const string input = "lorem{{te";
             var result = engine.Run(input);
 
-            Assert.That(result.Stack.Resolve(new ActionDictionary()), Is.EqualTo("lorem{te"));
+            result.Stack.Resolve(new ActionDictionary()).Should().Be("lorem{te");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_StringWithEscapedCloseBracket_ActionOnCharactersReturnsStringWithOneCloseBracket()
         {
             var engine = new StrinkenEngine();
             const string input = "lorem}}te";
             var result = engine.Run(input);
 
-            Assert.That(result.Stack.Resolve(new ActionDictionary()), Is.EqualTo("lorem}te"));
+            result.Stack.Resolve(new ActionDictionary()).Should().Be("lorem}te");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithFilter_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -119,12 +118,12 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(filterSeen.Count, Is.EqualTo(1));
-            Assert.That(filterSeen[0], Is.EqualTo("belli"));
+            numberOfCall.Should().Be(1);
+            filterSeen.Count.Should().Be(1);
+            filterSeen[0].Should().Be("belli");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithFilter_ActionOnFilterCalledOnceWithTag()
         {
             var numberOfCall = 0;
@@ -145,13 +144,13 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(filterSeen.Count, Is.EqualTo(1));
-            Assert.That(filterSeen.ContainsKey("belli"), Is.True);
-            Assert.That(filterSeen["belli"], Is.EqualTo("ispum"));
+            numberOfCall.Should().Be(1);
+            filterSeen.Count.Should().Be(1);
+            filterSeen.ContainsKey("belli").Should().BeTrue();
+            filterSeen["belli"].Should().Be("ispum");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithMultipleFilters_ActionOnFilterCalledTwice()
         {
             var numberOfCall = 0;
@@ -171,13 +170,13 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(2));
-            Assert.That(filterSeen.Count, Is.EqualTo(2));
-            Assert.That(filterSeen[0], Is.EqualTo("belli"));
-            Assert.That(filterSeen[1], Is.EqualTo("tutti"));
+            numberOfCall.Should().Be(2);
+            filterSeen.Count.Should().Be(2);
+            filterSeen[0].Should().Be("belli");
+            filterSeen[1].Should().Be("tutti");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithMultipleFiltersAndOneArgumentOnFirstFilter_ActionOnFilterCalledTwice()
         {
             var numberOfCall = 0;
@@ -197,13 +196,13 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(2));
-            Assert.That(filterSeen.Count, Is.EqualTo(2));
-            Assert.That(filterSeen[0], Is.EqualTo("belli"));
-            Assert.That(filterSeen[1], Is.EqualTo("tutti"));
+            numberOfCall.Should().Be(2);
+            filterSeen.Count.Should().Be(2);
+            filterSeen[0].Should().Be("belli");
+            filterSeen[1].Should().Be("tutti");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithMultipleFilters_ActionOnFilterCalledTwiceAndFiltersChained()
         {
             var numberOfCall = 0;
@@ -224,15 +223,15 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(2));
-            Assert.That(filterSeen.Count, Is.EqualTo(2));
-            Assert.That(filterSeen.ContainsKey("patse"), Is.True);
-            Assert.That(filterSeen.ContainsKey("belli"), Is.True);
-            Assert.That(filterSeen["patse"], Is.EqualTo("belliispum"));
-            Assert.That(filterSeen["belli"], Is.EqualTo("ispum"));
+            numberOfCall.Should().Be(2);
+            filterSeen.Count.Should().Be(2);
+            filterSeen.ContainsKey("patse").Should().BeTrue();
+            filterSeen.ContainsKey("belli").Should().BeTrue();
+            filterSeen["patse"].Should().Be("belliispum");
+            filterSeen["belli"].Should().Be("ispum");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithFilterAndOneArgument_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -252,14 +251,14 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(filterSeen, Has.Count.EqualTo(1));
-            Assert.That(filterSeen, Contains.Key("belli"));
-            Assert.That(filterSeen["belli"], Has.Length.EqualTo(1));
-            Assert.That(filterSeen["belli"][0], Is.EqualTo("toto"));
+            numberOfCall.Should().Be(1);
+            filterSeen.Should().HaveCount(1);
+            filterSeen.Should().ContainKey("belli");
+            filterSeen["belli"].Should().HaveCount(1);
+            filterSeen["belli"][0].Should().Be("toto");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithFilterAndTwoArguments_ActionOnFilterCalledOnceAndArgumentsProperlySorted()
         {
             var numberOfCall = 0;
@@ -279,15 +278,15 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(filterSeen, Has.Count.EqualTo(1));
-            Assert.That(filterSeen, Contains.Key("belli"));
-            Assert.That(filterSeen["belli"], Has.Length.EqualTo(2));
-            Assert.That(filterSeen["belli"][0], Is.EqualTo("toto"));
-            Assert.That(filterSeen["belli"][1], Is.EqualTo("titi"));
+            numberOfCall.Should().Be(1);
+            filterSeen.Should().HaveCount(1);
+            filterSeen.Should().ContainKey("belli");
+            filterSeen["belli"].Should().HaveCount(2);
+            filterSeen["belli"][0].Should().Be("toto");
+            filterSeen["belli"][1].Should().Be("titi");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithFilterAndOneArgumentTag_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -308,14 +307,14 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(filterSeen, Has.Count.EqualTo(1));
-            Assert.That(filterSeen, Contains.Key("belli"));
-            Assert.That(filterSeen["belli"], Has.Length.EqualTo(1));
-            Assert.That(filterSeen["belli"][0], Is.EqualTo("TOTO"));
+            numberOfCall.Should().Be(1);
+            filterSeen.Should().HaveCount(1);
+            filterSeen.Should().ContainKey("belli");
+            filterSeen["belli"].Should().HaveCount(1);
+            filterSeen["belli"][0].Should().Be("TOTO");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithFilterAndOneArgumentTagAndOneArgument_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -336,15 +335,15 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(filterSeen, Has.Count.EqualTo(1));
-            Assert.That(filterSeen, Contains.Key("belli"));
-            Assert.That(filterSeen["belli"], Has.Length.EqualTo(2));
-            Assert.That(filterSeen["belli"][0], Is.EqualTo("TOTO"));
-            Assert.That(filterSeen["belli"][1], Is.EqualTo("tata"));
+            numberOfCall.Should().Be(1);
+            filterSeen.Should().HaveCount(1);
+            filterSeen.Should().ContainKey("belli");
+            filterSeen["belli"].Should().HaveCount(2);
+            filterSeen["belli"][0].Should().Be("TOTO");
+            filterSeen["belli"][1].Should().Be("tata");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithMultipleFiltersAndArguments_ActionOnFilterCalledTwiceAndFiltersChained()
         {
             var numberOfCall = 0;
@@ -365,18 +364,18 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             var parsedString = result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(3));
-            Assert.That(filterSeen, Has.Count.EqualTo(3));
-            Assert.That(filterSeen, Contains.Key("patse"));
-            Assert.That(filterSeen, Contains.Key("belli"));
-            Assert.That(filterSeen, Contains.Key("kuki"));
-            Assert.That(filterSeen["kuki"], Is.EqualTo("patsebelliIPSUMtutepaku|MALO"));
-            Assert.That(filterSeen["patse"], Is.EqualTo("belliIPSUMtute"));
-            Assert.That(filterSeen["belli"], Is.EqualTo("IPSUM"));
-            Assert.That(parsedString, Is.EqualTo("loremkukipatsebelliIPSUMtutepaku|MALO"));
+            numberOfCall.Should().Be(3);
+            filterSeen.Should().HaveCount(3);
+            filterSeen.Should().ContainKey("patse");
+            filterSeen.Should().ContainKey("belli");
+            filterSeen.Should().ContainKey("kuki");
+            filterSeen["kuki"].Should().Be("patsebelliIPSUMtutepaku|MALO");
+            filterSeen["patse"].Should().Be("belliIPSUMtute");
+            filterSeen["belli"].Should().Be("IPSUM");
+            parsedString.Should().Be("loremkukipatsebelliIPSUMtutepaku|MALO");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_ActionOnTagIsNull_ActionOnFilterCalledTwiceAndFiltersChained()
         {
             var numberOfCall = 0;
@@ -396,21 +395,21 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             var parsedString = result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(filterSeen, Has.Count.EqualTo(1));
-            Assert.That(filterSeen, Contains.Key("patse"));
-            Assert.That(filterSeen["patse"], Is.Null);
-            Assert.That(parsedString, Is.EqualTo("lorempatsepaku|"));
+            numberOfCall.Should().Be(1);
+            filterSeen.Should().HaveCount(1);
+            filterSeen.Should().ContainKey("patse");
+            filterSeen["patse"].Should().BeNull();
+            parsedString.Should().Be("lorempatsepaku|");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_NoActions_ReturnsOutsideString()
         {
             const string input = "lorem{ipsum:patse+paku,=malo}aku";
-            Assert.That(new StrinkenEngine().Run(input).Stack.Resolve(null), Is.EqualTo("loremaku"));
+            new StrinkenEngine().Run(input).Stack.Resolve(null).Should().Be("loremaku");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_OneParameterTag_ActionOnParameterTagCalledOnce()
         {
             var numberOfCall = 0;
@@ -430,12 +429,12 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(tagSeen.Count, Is.EqualTo(1));
-            Assert.That(tagSeen[0], Is.EqualTo("ispum"));
+            numberOfCall.Should().Be(1);
+            tagSeen.Count.Should().Be(1);
+            tagSeen[0].Should().Be("ispum");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Run_TagWithFilterAndOneArgumentParameterTag_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -457,12 +456,12 @@ namespace Strinken.Tests
             var result = engine.Run(input);
             result.Stack.Resolve(actions);
 
-            Assert.That(numberOfCall, Is.EqualTo(1));
-            Assert.That(filterSeen, Has.Count.EqualTo(1));
-            Assert.That(filterSeen, Contains.Key("belli"));
-            Assert.That(filterSeen["belli"], Has.Length.EqualTo(1));
-            Assert.That(filterSeen["belli"][0], Is.EqualTo("KAPOUE"));
-            Assert.That(filterSeen["belli"][0], Is.Not.EqualTo("toto"));
+            numberOfCall.Should().Be(1);
+            filterSeen.Should().HaveCount(1);
+            filterSeen.Should().ContainKey("belli");
+            filterSeen["belli"].Should().HaveCount(1);
+            filterSeen["belli"][0].Should().Be("KAPOUE");
+            filterSeen["belli"][0].Should().NotBe("toto");
         }
     }
 }

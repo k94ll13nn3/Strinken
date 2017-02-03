@@ -1,48 +1,47 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
 
 namespace Strinken.Tests.FiltersTests
 {
-    [TestFixture]
     public class ReplaceFilterTests
     {
-        [Test]
+        [StrinkenTest]
         public void Resolve_IsEqual_ReturnsStringWithReplacements()
         {
             var filter = new ReplaceFilter();
 
-            Assert.That(filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol" }), Is.EqualTo("Merol ipsum"));
-            Assert.That(filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol", "ipsum", "-----" }), Is.EqualTo("Merol -----"));
-            Assert.That(filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol", "Merol", "-----" }), Is.EqualTo("----- ipsum"));
+            filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol" }).Should().Be("Merol ipsum");
+            filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol", "ipsum", "-----" }).Should().Be("Merol -----");
+            filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol", "Merol", "-----" }).Should().Be("----- ipsum");
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_NoArgumentsOrOddNumberOfArguments_ReturnsFalse()
         {
             var filter = new ReplaceFilter();
 
-            Assert.That(filter.Validate(null), Is.False);
-            Assert.That(filter.Validate(new string[] { }), Is.False);
-            Assert.That(filter.Validate(new string[] { "" }), Is.False);
-            Assert.That(filter.Validate(new string[] { "", "", "" }), Is.False);
+            filter.Validate(null).Should().BeFalse();
+            filter.Validate(new string[] { }).Should().BeFalse();
+            filter.Validate(new string[] { "" }).Should().BeFalse();
+            filter.Validate(new string[] { "", "", "" }).Should().BeFalse();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Validate_EvenNumberOfArguments_ReturnsTrue()
         {
             var filter = new ReplaceFilter();
 
-            Assert.That(filter.Validate(new string[] { "", "" }), Is.True);
-            Assert.That(filter.Validate(new string[] { "", "", "", "" }), Is.True);
+            filter.Validate(new string[] { "", "" }).Should().BeTrue();
+            filter.Validate(new string[] { "", "", "", "" }).Should().BeTrue();
         }
 
-        [Test]
+        [StrinkenTest]
         public void Resolve__ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
-            Assert.That(stringSolver.Resolve("The {DataName:Replace+Lorem,Merol} is in the kitchen.", new Data { Name = "Lorem" }), Is.EqualTo("The Merol is in the kitchen."));
+            stringSolver.Resolve("The {DataName:Replace+Lorem,Merol} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Merol is in the kitchen.");
         }
     }
 }
