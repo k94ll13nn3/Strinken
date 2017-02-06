@@ -83,6 +83,10 @@ namespace Strinken.Filters
 
                     RegisteredFilters.Add(filter.Name, filter);
                 }
+                else
+                {
+                    throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
+                }
             }
         }
 

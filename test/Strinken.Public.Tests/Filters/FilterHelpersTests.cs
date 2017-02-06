@@ -11,30 +11,30 @@ namespace Strinken.Public.Tests.Filters
         [StrinkenTest]
         public void Validate_FilterRegistered_ReturnsTrue()
         {
-            FilterHelpers.Register(new RegisterFilter());
+            FilterHelpers.Register(new FilterGenerator("ROne"));
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             var validationResult = stringSolver.Validate("The {DataName:ROne} is in the kitchen.");
             validationResult.IsValid.Should().BeTrue();
 
-            FilterHelpers.UnRegister(new RegisterFilter());
+            FilterHelpers.UnRegister(new FilterGenerator("ROne"));
         }
 
         [StrinkenTest]
         public void Validate_FilterRegisteredAfterValidation_ReturnsFalse()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
-            FilterHelpers.Register(new Register2Filter());
+            FilterHelpers.Register(new FilterGenerator("RTwo"));
             var validationResult = stringSolver.Validate("The {DataName:RTwo} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
 
-            FilterHelpers.UnRegister(new Register2Filter());
+            FilterHelpers.UnRegister(new FilterGenerator("RTwo"));
         }
 
         [StrinkenTest]
         public void Validate_FilterRegisteredAndThenUnRegistered_ReturnsTrueAndThenFalse()
         {
-            FilterHelpers.Register(new Register3Filter());
-            FilterHelpers.UnRegister(new Register3Filter());
+            FilterHelpers.Register(new FilterGenerator("RThree"));
+            FilterHelpers.UnRegister(new FilterGenerator("RThree"));
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             var validationResult = stringSolver.Validate("The {DataName:RThree} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
@@ -56,37 +56,26 @@ namespace Strinken.Public.Tests.Filters
             act.ShouldThrow<ArgumentException>().WithMessage("! is an invalid character for a name.");
         }
 
-        private class RegisterFilter : IFilter
+        [StrinkenTest]
+        public void Register_FilterWithNameAlreadyRegistered_ThrowsArgumentException()
         {
-            public string Description => "ROne";
+            Action act = () => FilterHelpers.Register(new FilterGenerator("Length"));
 
-            public string Name => "ROne";
-
-            public string Usage => "";
-
-            public string Resolve(string value, string[] arguments) => value;
-
-            public bool Validate(string[] arguments) => true;
+            act.ShouldThrow<ArgumentException>().WithMessage("Length was already registered in the filter list.");
         }
 
-        private class Register2Filter : IFilter
+        private class FilterGenerator : IFilter
         {
-            public string Description => "RTwo";
+            private readonly string data;
 
-            public string Name => "RTwo";
+            public FilterGenerator(string data)
+            {
+                this.data = data;
+            }
 
-            public string Usage => "";
+            public string Description => data;
 
-            public string Resolve(string value, string[] arguments) => value;
-
-            public bool Validate(string[] arguments) => true;
-        }
-
-        private class Register3Filter : IFilter
-        {
-            public string Description => "RThree";
-
-            public string Name => "RThree";
+            public string Name => data;
 
             public string Usage => "";
 
