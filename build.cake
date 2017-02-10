@@ -90,8 +90,9 @@ Task("Build")
     DotNetCoreBuild("./src/" + solution, settings);
 });
 
-Task("Run-Unit-Tests")
+Task("Run-Unit-Tests-And-Coverage")
     .IsDependentOn("Build")
+    .WithCriteria(() => IsRunningOnWindows() && isOnAppVeyor)
     .Does(() =>
 {
     var settings = new DotNetCoreTestSettings
@@ -115,16 +116,32 @@ Task("Run-Unit-Tests")
     },
     coverageDir + new FilePath("./result.xml"),
     settings1);
+
     if (isOnAppVeyor && isOnMaster)
     {
-    CoverallsIo(coverageDir + new FilePath("./result.xml"), new CoverallsIoSettings()
-    {
-        RepoToken = "AdcZIzYYT7CJ3qnFbeymp8QsGpstETDRy" // one-time only token for the PR
-    });
+        CoverallsIo(coverageDir + new FilePath("./result.xml"), new CoverallsIoSettings()
+        {
+            RepoToken = EnvironmentVariable("coveralls_token")
+        });
     }  
 });
 
+Task("Run-Unit-Tests")
+    .IsDependentOn("Build")
+    .WithCriteria(() => !IsRunningOnWindows() || !isOnAppVeyor)
+    .Does(() =>
+{
+    var settings = new DotNetCoreTestSettings
+    {
+        Configuration = "Coverage"
+    };
+
+    DotNetCoreTest("./test/Strinken.Tests/", settings);
+    DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
+});
+
 Task("Display-Build-Info")
+    .IsDependentOn("Run-Unit-Tests-And-Coverage")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() => 
 {
