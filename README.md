@@ -3,6 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Strinken.svg)](https://www.nuget.org/packages/Strinken/)
 [![GitHub release](https://img.shields.io/github/release/k94ll13nn3/Strinken.svg)](https://github.com/k94ll13nn3/Strinken/releases/latest)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/k94ll13nn3/Strinken/badge.svg?branch=master)](https://coveralls.io/github/k94ll13nn3/Strinken?branch=master)
 
 | Build server   | Platform     | Status                                                                                                                    |
 |----------------|--------------|---------------------------------------------------------------------------------------------------------------------------|
