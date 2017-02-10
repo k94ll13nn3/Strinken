@@ -115,10 +115,13 @@ Task("Run-Unit-Tests")
     },
     coverageDir + new FilePath("./result.xml"),
     settings1);
+    if (isOnAppVeyor && isOnMaster)
+    {
     CoverallsIo(coverageDir + new FilePath("./result.xml"), new CoverallsIoSettings()
     {
-        RepoToken = EnvironmentVariable("coveralls_token")
+        RepoToken = "AdcZIzYYT7CJ3qnFbeymp8QsGpstETDRy" // one-time only token for the PR
     });
+    }  
 });
 
 Task("Display-Build-Info")
