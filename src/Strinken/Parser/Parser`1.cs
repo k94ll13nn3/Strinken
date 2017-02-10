@@ -39,14 +39,26 @@ namespace Strinken.Parser
         /// Initializes a new instance of the <see cref="Parser{T}"/> class.
         /// </summary>
         public Parser()
+            : this(false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Parser{T}"/> class.
+        /// </summary>
+        /// <param name="ignoreBaseFilters">A value indicating whether the base filters should be ignored.</param>
+        public Parser(bool ignoreBaseFilters)
         {
             this.tags = new Dictionary<string, ITag<T>>();
             this.parameterTags = new Dictionary<string, IParameterTag>();
             this.filters = new Dictionary<string, IFilter>();
 
-            foreach (var filter in FilterHelpers.BaseFilters)
+            if (!ignoreBaseFilters)
             {
-                this.AddFilter(filter);
+                foreach (var filter in FilterHelpers.BaseFilters)
+                {
+                    this.AddFilter(filter);
+                }
             }
         }
 
@@ -254,7 +266,7 @@ namespace Strinken.Parser
         /// <returns>A deep copy of the parser.</returns>
         internal Parser<T> DeepCopy()
         {
-            var newParser = new Parser<T>();
+            var newParser = new Parser<T>(true);
             foreach (var tag in this.tags.Values)
             {
                 newParser.AddTag(tag);
@@ -265,10 +277,9 @@ namespace Strinken.Parser
                 newParser.AddParameterTag(parameterTag);
             }
 
-            var parserOwnFilters = this.filters.Where(f => !FilterHelpers.BaseFilters.Select(bf => bf.Name).Contains(f.Value.Name));
-            foreach (var filter in parserOwnFilters)
+            foreach (var filter in this.filters.Values)
             {
-                newParser.AddFilter(filter.Value);
+                newParser.AddFilter(filter);
             }
 
             return newParser;

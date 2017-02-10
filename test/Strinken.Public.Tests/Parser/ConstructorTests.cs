@@ -8,6 +8,14 @@ namespace Strinken.Public.Tests.Parser
     public class ConstructorTests
     {
         [StrinkenTest]
+        public void Constructor_IgnoreBaseFilters_ReturnsParserWithoutFilters()
+        {
+            var solver = new Parser<Data>(true);
+
+            solver.Filters.Should().HaveCount(0);
+        }
+
+        [StrinkenTest]
         public void Constructor_TwoTagWithSameName_ThrowsArgumentException()
         {
             Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithTag(new DataNameTag());
