@@ -3,6 +3,11 @@
 //////////////////////////////////////////////////////////////////////
 
 #tool nuget:?package=GitVersion.CommandLine&version=3.6.2
+#tool nuget:?package=OpenCover&version=4.6.519
+
+#tool coveralls.io
+
+#addin Cake.Coveralls
 
 using System.Reflection
 using System.Diagnostics
@@ -23,6 +28,7 @@ var framework = Argument("framework", "netstandard1.0");
 // Define directories.
 var buildDir = Directory("./src/") + Directory(solution) + Directory("bin");
 var publishDir = Directory("./artifacts");
+var coverageDir = Directory("./coverage");
 var versionSuffix = "";
 var nugetVersion = "";
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
@@ -38,6 +44,7 @@ Task("Clean")
 {
     CleanDirectory(buildDir);
 	CleanDirectory(publishDir);
+	CleanDirectory(coverageDir);
 });
 
 Task("Restore")
@@ -89,11 +96,29 @@ Task("Run-Unit-Tests")
 {
     var settings = new DotNetCoreTestSettings
     {
-        Configuration = configuration
+        Configuration = "Coverage"
     };
 
-    DotNetCoreTest("./test/Strinken.Tests/", settings);
-    DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
+    var settings1 = new OpenCoverSettings().WithFilter("+[Strinken*]*").WithFilter("-[Strinken.Tests]*").WithFilter("-[Strinken.Public.Tests]*");
+    settings1.ReturnTargetCodeOffset = 1000; // Offset in order to have Cake fail if a test is a failure
+    settings1.Register = "user";
+    settings1.MergeOutput = true;
+    settings1.OldStyle = true;
+    settings1.SkipAutoProps = true;
+    OpenCover(tool => {
+        tool.DotNetCoreTest("./test/Strinken.Tests/", settings);
+    },
+    coverageDir + new FilePath("./result.xml"),
+    settings1);
+    OpenCover(tool => {
+        tool.DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
+    },
+    coverageDir + new FilePath("./result.xml"),
+    settings1);
+    CoverallsNet("coverage.xml", CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+    {
+        RepoToken = EnvironmentVariable("coveralls_token")
+    });
 });
 
 Task("Display-Build-Info")
@@ -148,7 +173,7 @@ Task("Upload-Artifact")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Upload-Artifact");
+    .IsDependentOn("Run-Unit-Tests");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

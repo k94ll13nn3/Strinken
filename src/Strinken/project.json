@@ -39,6 +39,11 @@
     "debugType": "portable"
   },
   "configurations": {
+    "Coverage": {
+      "buildOptions": {
+        "debugType": "full"
+      }
+    },
     "Debug": {
       "buildOptions": {
         "define": [ "DEBUG", "TRACE" ]

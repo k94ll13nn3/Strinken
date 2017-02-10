@@ -1,3 +1,7 @@
+environment:
+  coveralls_token:
+    secure: t242MjKJ0kzRKMqUQrFrfPrMWrNVsVxsor7hOESUAKM3+29m0OAo9XkcJzKNfWDw
+
 build_script:
 - ps: .\build.ps1
 
