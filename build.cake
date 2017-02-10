@@ -115,7 +115,7 @@ Task("Run-Unit-Tests")
     },
     coverageDir + new FilePath("./result.xml"),
     settings1);
-    CoverallsIo(coverageDir + new FilePath("./result.xml"), CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+    CoverallsIo(coverageDir + new FilePath("./result.xml"), new CoverallsIoSettings()
     {
         RepoToken = EnvironmentVariable("coveralls_token")
     });
