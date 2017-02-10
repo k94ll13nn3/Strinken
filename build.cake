@@ -133,7 +133,7 @@ Task("Run-Unit-Tests")
 {
     var settings = new DotNetCoreTestSettings
     {
-        Configuration = "Coverage"
+        Configuration = configuration
     };
 
     DotNetCoreTest("./test/Strinken.Tests/", settings);
