@@ -1,15 +1,11 @@
 language: csharp
 
-sudo: required
-dist: trusty
-
-addons:
-  apt:
-    packages:
-    - gettext
-    - libunwind8
-    - libicu52
-    - dbus
+matrix:
+  include:
+    - os: linux # Ubuntu 14.04
+      dist: trusty
+      sudo: required
+      dotnet: 1.0.0-preview2-003131
 
 notifications:
   email: false
@@ -20,12 +16,6 @@ branches:
 
 before_install:  
   - chmod +x build.sh
-
-install:
-- sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
-- sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
-- sudo apt-get update
-- sudo apt-get install -y dotnet-dev-1.0.0-preview2-003131
 
 script:  
   - ./build.sh
