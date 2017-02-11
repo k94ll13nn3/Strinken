@@ -35,10 +35,7 @@ namespace Strinken.Engine
         /// </summary>
         public int Value { get; private set; }
 
-        /// <summary>
-        /// Gets the current value of the cursor as a <see cref="char"/>.
-        /// </summary>
-        public char CharValue => (char)this.Value;
+
 
         /// <inheritdoc/>
         public void Dispose()
@@ -51,6 +48,11 @@ namespace Strinken.Engine
         /// </summary>
         /// <returns>A value indicating whether the cursor as reached the end.</returns>
         public bool HasEnded() => this.Position != -1 && this.Value == -1;
+
+        /// <summary>
+        /// Gets the current value of the cursor as a <see cref="char"/>.
+        /// </summary>
+        public char CharValue => (char)this.Value;
 
         /// <summary>
         /// Moves the cursor.
