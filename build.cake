@@ -9,7 +9,6 @@
 #tool coveralls.io
 
 #addin Cake.Coveralls
-#addin Cake.Git
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -34,7 +33,7 @@ var coverageResultPath = new FilePath("./coverage.xml");
 var framework = "netstandard1.0";
 var versionSuffix = "";
 var nugetVersion = "";
-var currentBranch = GitBranchCurrent(".").FriendlyName;
+var currentBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 var isOnMaster =  currentBranch == "master";
 var isPullRequest = isOnAppVeyor ? !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")) : false;
