@@ -22,10 +22,7 @@ var buildDir = solutionDir + Directory("bin/");
 //////////////////////////////////////////////////////////////////////
 
 Task("Clean")
-    .Does(() =>
-{
-    CleanDirectory(buildDir);
-});
+    .Does(() => CleanDirectory(buildDir));
 
 Task("Restore")
     .IsDependentOn("Clean")

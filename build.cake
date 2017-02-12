@@ -2,15 +2,14 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool nuget:?package=GitVersion.CommandLine&version=3.6.2
+#tool nuget:?package=GitVersion.CommandLine&version=3.6.5
 #tool nuget:?package=OpenCover&version=4.6.519
+#tool nuget:?package=GitReleaseNotes&version=0.7.0
 
 #tool coveralls.io
 
 #addin Cake.Coveralls
-
-using System.Reflection
-using System.Diagnostics
+#addin Cake.Git
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -18,21 +17,26 @@ using System.Diagnostics
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var solution = Argument("solution", "Strinken/");
-var framework = Argument("framework", "netstandard1.0");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
 //////////////////////////////////////////////////////////////////////
 
 // Define directories.
-var buildDir = Directory("./src/") + Directory(solution) + Directory("bin");
+var solutionDir = Directory("./src/") + Directory("Strinken/");
+var buildDir = solutionDir + Directory("bin/");
 var publishDir = Directory("./artifacts");
 var coverageDir = Directory("./coverage");
+
+// Define script variables
+var releaseNotesPath = new FilePath("releaseNotes.md");
+var coverageResultPath = new FilePath("./coverage.xml");
+var framework = "netstandard1.0";
 var versionSuffix = "";
 var nugetVersion = "";
+var currentBranch = GitBranchCurrent(".").FriendlyName;
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
-var isOnMaster = isOnAppVeyor ? EnvironmentVariable("APPVEYOR_REPO_BRANCH") == "master" : false;
+var isOnMaster =  currentBranch == "master";
 var isPullRequest = isOnAppVeyor ? !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")) : false;
 
 //////////////////////////////////////////////////////////////////////
@@ -49,28 +53,24 @@ Task("Clean")
 
 Task("Restore")
     .IsDependentOn("Clean")
-    .Does(() =>DotNetCoreRestore());
+    .Does(() => DotNetCoreRestore());
 
-Task("Update-Assembly-Info")
-    .WithCriteria(() => IsRunningOnWindows() && isOnAppVeyor)
+Task("Set-Environment")
     .IsDependentOn("Restore")
     .Does(() =>
 {
-    Information("Current branch:      " + (isOnAppVeyor ? EnvironmentVariable("APPVEYOR_REPO_BRANCH") : "----"));
+    Information("Current branch:      " + currentBranch);
     Information("Master branch:       " + isOnMaster.ToString());
     Information("Pull Request:        " + isPullRequest.ToString());
     Information("Running on AppVeyor: " + isOnAppVeyor.ToString());
-    Information("Running on Windows:  " + IsRunningOnWindows().ToString());
-    // does not currently run on mono 4.3.2, see https://github.com/GitTools/GitVersion/pull/890
-    var version = GitVersion(new GitVersionSettings {
-        UpdateAssemblyInfo = true
-    });
 
+    var version = GitVersion();
     nugetVersion = version.NuGetVersion;
     if(version.CommitsSinceVersionSource != "0")
     {
         versionSuffix = "ci" + version.CommitsSinceVersionSource.PadLeft(4, '0');
     }    
+
     if (isOnAppVeyor)
     {
         Information("Build version:       " + nugetVersion + " (" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")");
@@ -79,113 +79,93 @@ Task("Update-Assembly-Info")
 });
 
 Task("Build")
-    .IsDependentOn("Update-Assembly-Info")
+    .IsDependentOn("Set-Environment")
     .Does(() =>
 {
     var settings = new DotNetCoreBuildSettings
     {
-        Configuration = configuration
+        Configuration = configuration,
+        VersionSuffix = versionSuffix
     };
-            
-    DotNetCoreBuild("./src/" + solution, settings);
+
+    DotNetCoreBuild(solutionDir, settings);
 });
 
-Task("Run-Unit-Tests-And-Coverage")
+Task("Run-Unit-Tests")
     .IsDependentOn("Build")
-    .WithCriteria(() => IsRunningOnWindows() && isOnAppVeyor)
     .Does(() =>
 {
+    EnsureDirectoryExists(coverageDir);
     var settings = new DotNetCoreTestSettings
     {
         Configuration = "Coverage"
     };
 
-    var settings1 = new OpenCoverSettings().WithFilter("+[Strinken*]*").WithFilter("-[Strinken.Tests]*").WithFilter("-[Strinken.Public.Tests]*");
-    settings1.ReturnTargetCodeOffset = 1000; // Offset in order to have Cake fail if a test is a failure
-    settings1.Register = "user";
-    settings1.MergeOutput = true;
-    settings1.OldStyle = true;
-    settings1.SkipAutoProps = true;
+    var coverageSettings = new OpenCoverSettings().WithFilter("+[Strinken*]*").WithFilter("-[Strinken.Tests]*").WithFilter("-[Strinken.Public.Tests]*");
+    coverageSettings.ReturnTargetCodeOffset = 1000; // Offset in order to have Cake fail if a test is a failure
+    coverageSettings.Register = "user";
+    coverageSettings.MergeOutput = true;
+    coverageSettings.OldStyle = true;
+    coverageSettings.SkipAutoProps = true;
+
     OpenCover(tool => {
-        tool.DotNetCoreTest("./test/Strinken.Tests/", settings);
-    },
-    coverageDir + new FilePath("./result.xml"),
-    settings1);
+            tool.DotNetCoreTest("./test/Strinken.Tests/", settings);
+        },
+        coverageDir + coverageResultPath,
+        coverageSettings
+    );
+
     OpenCover(tool => {
-        tool.DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
-    },
-    coverageDir + new FilePath("./result.xml"),
-    settings1);
-
-    if (isOnAppVeyor && isOnMaster)
-    {
-        CoverallsIo(coverageDir + new FilePath("./result.xml"), new CoverallsIoSettings()
-        {
-            RepoToken = EnvironmentVariable("coveralls_token")
-        });
-    }  
-});
-
-Task("Run-Unit-Tests")
-    .IsDependentOn("Build")
-    .WithCriteria(() => !IsRunningOnWindows() || !isOnAppVeyor)
-    .Does(() =>
-{
-    var settings = new DotNetCoreTestSettings
-    {
-        Configuration = configuration
-    };
-
-    DotNetCoreTest("./test/Strinken.Tests/", settings);
-    DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
-});
-
-Task("Display-Build-Info")
-    .IsDependentOn("Run-Unit-Tests-And-Coverage")
-    .IsDependentOn("Run-Unit-Tests")
-    .Does(() => 
-{
-    Information("Public members:");
-    Assembly a = Assembly.LoadFrom("./src/" + solution + "/bin/" + configuration + "/" + framework + "/Strinken.dll");
-    Type[] types = a.GetTypes();
-    foreach (Type type in types)
-    {
-        if (!type.IsPublic) continue;
-        MemberInfo[] members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.Static);
-        foreach (MemberInfo member in members) Console.WriteLine("\t" + type.Name + "." + member.Name);
-    }
-    Information("Version:");
-    Information("\tAssembly Version: {0}", a.GetName().Version.ToString());
-    Information("\tFile Version: {0}", FileVersionInfo.GetVersionInfo(a.Location).FileVersion);
-    Information("\tInformational Version: {0}", FileVersionInfo.GetVersionInfo(a.Location).ProductVersion);
+            tool.DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
+        },
+        coverageDir + coverageResultPath,
+        coverageSettings
+    );
 });
 
 Task("Nuget-Pack")
-    .WithCriteria(() => isOnMaster && !isPullRequest)
-    .IsDependentOn("Display-Build-Info")
+    .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
     EnsureDirectoryExists(publishDir);
     var settings = new DotNetCorePackSettings
     {
         Configuration = configuration,
-        OutputDirectory = "./artifacts/"
+        OutputDirectory = publishDir,
+        VersionSuffix = versionSuffix
     };
 
-    if(versionSuffix != "")
-    {
-        settings.VersionSuffix = versionSuffix;
-    }
+    DotNetCorePack(solutionDir, settings);
+});
 
-    DotNetCorePack("./src/" + solution, settings);
+Task("Generate-Release-Notes")
+    .IsDependentOn("Nuget-Pack")
+    .Does(() =>
+{
+    GitReleaseNotes(publishDir + releaseNotesPath, new GitReleaseNotesSettings {
+        WorkingDirectory         = ".",
+        AllTags                  = true
+    });
+});
+
+Task("Upload-Coverage")
+    .WithCriteria(() => isOnAppVeyor && isOnMaster && !isPullRequest)
+    .IsDependentOn("Generate-Release-Notes")
+    .Does(() =>
+{
+    CoverallsIo(coverageDir + coverageResultPath, new CoverallsIoSettings
+    {
+        RepoToken = EnvironmentVariable("coveralls_token")
+    });
 });
 
 Task("Upload-Artifact")
     .WithCriteria(() => isOnAppVeyor && isOnMaster && !isPullRequest)
-    .IsDependentOn("Nuget-Pack")
+    .IsDependentOn("Upload-Coverage")
     .Does(() =>
 {
-    AppVeyor.UploadArtifact("./artifacts/Strinken." + nugetVersion +".nupkg");
+    AppVeyor.UploadArtifact(publishDir + releaseNotesPath);
+    AppVeyor.UploadArtifact(publishDir + new FilePath("Strinken." + nugetVersion +".nupkg"));
 });
 
 //////////////////////////////////////////////////////////////////////
