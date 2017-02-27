@@ -47,7 +47,7 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Indicates if the cursor as reached the end.
+        /// Indicates if the cursor has reached the end.
         /// </summary>
         /// <returns>A value indicating whether the cursor as reached the end.</returns>
         public bool HasEnded() => this.Position != -1 && this.Value == -1;
