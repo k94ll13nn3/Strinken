@@ -95,7 +95,7 @@ namespace Strinken.Filters
         /// </summary>
         /// <typeparam name="T">The type of the filter.</typeparam>
         /// <param name="filter">The filter to unregister.</param>
-        public static void UnRegister<T>(T filter)
+        public static void Unregister<T>(T filter)
             where T : IFilter
         {
             lock (Lock)
