@@ -124,7 +124,9 @@ namespace Strinken.Engine
             var subtype = TokenSubtype.Base;
             this.Next();
 
-            // Special characters before the token can be parsed here.
+            /*
+             * Special characters before the token can be parsed here.
+             */
 
             var ends = new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator };
             var result = this.ParseName(ends, c => !c.IsInvalidTokenNameCharacter());
