@@ -44,7 +44,7 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 if [ ! -f "$CAKE_EXE" ]; then
-    curl -Lsfo Cake.CoreCLR.zip "https://www.nuget.org/api/v2/package/Cake.CoreCLR/$CAKE_VERSION" && unzip -q Cake.CoreCLR.zip -d "$TOOLS_DIR/Cake.CoreCLR/$CAKE_VERSION" && rm -f Cake.CoreCLR.zip
+    mkdir -p "$TOOLS_DIR/Cake.CoreCLR/$CAKE_VERSION" && curl -Lsfo Cake.CoreCLR.zip "https://www.nuget.org/api/v2/package/Cake.CoreCLR/$CAKE_VERSION" && unzip -q Cake.CoreCLR.zip -d "$TOOLS_DIR/Cake.CoreCLR/$CAKE_VERSION" && rm -f Cake.CoreCLR.zip
     if [ $? -ne 0 ]; then
         echo "An error occured while installing Cake."
         exit 1
