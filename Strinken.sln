@@ -1,17 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C886EF68-10DC-4C2B-B370-FB4387575205}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Strinken", "src\Strinken\Strinken.xproj", "{344A64DE-1EC6-4C83-A08C-F0909E33BB6D}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Strinken.Tests", "test\Strinken.Tests\Strinken.Tests.xproj", "{3B3D0FEC-99CA-469C-B337-99492672196A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{052F6B63-D2B3-4A98-9D7A-3E83524B8B95}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Strinken.Public.Tests", "test\Strinken.Public.Tests\Strinken.Public.Tests.xproj", "{4696D864-467E-492C-BBC0-D2EE638E47E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strinken", "src\Strinken\Strinken.csproj", "{344A64DE-1EC6-4C83-A08C-F0909E33BB6D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strinken.Tests", "test\Strinken.Tests\Strinken.Tests.csproj", "{3B3D0FEC-99CA-469C-B337-99492672196A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strinken.Public.Tests", "test\Strinken.Public.Tests\Strinken.Public.Tests.csproj", "{4696D864-467E-492C-BBC0-D2EE638E47E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{05D87119-F2DC-4B23-9288-60EEC7AA09DA}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
