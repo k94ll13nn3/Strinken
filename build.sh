@@ -44,10 +44,7 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 if [ ! -f "$CAKE_EXE" ]; then
-    if [ ! -f "$TOOLS_DIR/project.json" ]; then
-        echo '{"dependencies":{"Cake.CoreCLR": "'$CAKE_VERSION'"},"frameworks":{"netstandard1.6":{}}}' > "$TOOLS_DIR/project.json"
-    fi
-    dotnet restore "$TOOLS_DIR" --packages "$TOOLS_DIR"
+    curl -Lsfo Cake.CoreCLR.zip "https://www.nuget.org/api/v2/package/Cake.CoreCLR/$CAKE_VERSION" && unzip -q Cake.CoreCLR.zip -d "$TOOLS_DIR/Cake.CoreCLR/$CAKE_VERSION" && rm -f Cake.CoreCLR.zip
     if [ $? -ne 0 ]; then
         echo "An error occured while installing Cake."
         exit 1
