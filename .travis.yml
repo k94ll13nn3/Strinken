@@ -19,4 +19,5 @@ before_install:
   - chmod +x build.sh
 
 script:  
+  - dotnet --info
   - ./build.sh
