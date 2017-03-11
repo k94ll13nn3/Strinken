@@ -108,14 +108,14 @@ Task("Run-Unit-Tests")
     coverageSettings.SkipAutoProps = true;
 
     OpenCover(tool => {
-            tool.DotNetCoreTest("./test/Strinken.Tests/", settings);
+            tool.DotNetCoreTest("./test/Strinken.Tests/Strinken.Tests.csproj", settings);
         },
         coverageDir + coverageResultPath,
         coverageSettings
     );
 
     OpenCover(tool => {
-            tool.DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
+            tool.DotNetCoreTest("./test/Strinken.Public.Tests/Strinken.Public.Tests.csproj", settings);
         },
         coverageDir + coverageResultPath,
         coverageSettings

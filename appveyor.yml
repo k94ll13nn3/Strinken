@@ -8,3 +8,4 @@ build_script:
 test: off
 skip_tags: true
 skip_branch_with_pr: true
+image: Visual Studio 2017

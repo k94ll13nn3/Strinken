@@ -50,8 +50,8 @@ Task("Run-Unit-Tests")
         Configuration = configuration
     };
 
-    DotNetCoreTest("./test/Strinken.Tests/", settings);
-    DotNetCoreTest("./test/Strinken.Public.Tests/", settings);
+    DotNetCoreTest("./test/Strinken.Tests/Strinken.Tests.csproj", settings);
+    DotNetCoreTest("./test/Strinken.Public.Tests/Strinken.Public.Tests.csproj", settings);
 });
 
 //////////////////////////////////////////////////////////////////////

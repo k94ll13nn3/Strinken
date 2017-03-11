@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>A parametrized string library !</Description>
+    <AssemblyTitle>Strinken</AssemblyTitle>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <VersionPrefix>3.1.0</VersionPrefix>
+    <Authors>k94ll13nn3</Authors>
+    <TargetFrameworks>netstandard1.0;net45</TargetFrameworks>
+    <DebugType>portable</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Strinken</AssemblyName>
+    <PackageId>Strinken</PackageId>
+    <PackageTags>parametrized;string;parser;strinken</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/docs/img/logo_64x64.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/k94ll13nn3/Strinken</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git://github.com/k94ll13nn3/Strinken</RepositoryUrl>
+    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.0' ">1.6.0</NetStandardImplicitPackageVersion>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Coverage' ">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>

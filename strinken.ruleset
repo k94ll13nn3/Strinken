@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="WhatIsNext rules" Description="WhatIsNext rules" ToolsVersion="14.0">
-  <IncludeAll Action="Warning" />
-  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1413" Action="None" />
-  </Rules>
-</RuleSet>

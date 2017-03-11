@@ -23,8 +23,7 @@ namespace Strinken.Filters
         /// <inheritdoc/>
         public bool Validate(string[] arguments)
         {
-            int n;
-            return arguments?.Length == 1 && int.TryParse(arguments[0], out n);
+            return arguments?.Length == 1 && int.TryParse(arguments[0], out var n);
         }
     }
 }
