@@ -26,6 +26,8 @@ namespace Strinken.Engine
             reader = new StringReader(input);
             Position = -1;
             Value = '\0';
+
+            Next();
         }
 
         /// <summary>
@@ -63,6 +65,18 @@ namespace Strinken.Engine
             Value = reader.Read();
             Position++;
         }
+
+        /// <summary>
+        /// Peeks the next character of the cursor.
+        /// </summary>
+        /// <returns>The next character of the cursor.</returns>
+        public int Peek() => reader.Peek();
+
+        /// <summary>
+        /// Indicates if the next character is the end.
+        /// </summary>
+        /// <returns>A value indicating whether the next character is the end.</returns>
+        public bool PeekIsEnd() => Position != -1 && Peek() == -1;
 
         /// <summary>
         /// Parses an argument.
@@ -266,6 +280,41 @@ namespace Strinken.Engine
             }
 
             return ParseResult<Token>.FailureWithMessage(result.Message);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        public ParseResult<string> ParseOutsideString()
+        {
+            var builder = new StringBuilder();
+
+            while (true)
+            {
+                switch (Value)
+                {
+                    // Escaped indicator
+                    case SpecialCharacter.TokenStartIndicator when Peek() == SpecialCharacter.TokenStartIndicator:
+                    case SpecialCharacter.TokenEndIndicator when Peek() == SpecialCharacter.TokenEndIndicator:
+                        Next();
+                        break;
+
+                    // Start of token or end of string
+                    case SpecialCharacter.TokenStartIndicator:
+                    case int _ when HasEnded():
+                        return ParseResult<string>.Success(builder.ToString());
+
+                    case SpecialCharacter.TokenEndIndicator when PeekIsEnd():
+                        return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacterAtStringEnd, CharValue));
+
+                    case SpecialCharacter.TokenEndIndicator:
+                        return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                }
+
+                builder.Append(CharValue);
+                Next();
+            }
         }
     }
 }
