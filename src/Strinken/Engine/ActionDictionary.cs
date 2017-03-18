@@ -19,14 +19,14 @@ namespace Strinken.Engine
         /// </summary>
         public ActionDictionary()
         {
-            this.items = new Dictionary<TokenType, IDictionary<TokenSubtype, Func<string[], string>>>();
+            items = new Dictionary<TokenType, IDictionary<TokenSubtype, Func<string[], string>>>();
             foreach (TokenType type in Enum.GetValues(typeof(TokenType)))
             {
-                this.items[type] = new Dictionary<TokenSubtype, Func<string[], string>>();
+                items[type] = new Dictionary<TokenSubtype, Func<string[], string>>();
             }
 
             // For a base argument, the base action is to return the first element of the arguments list.
-            this.items[TokenType.Argument][TokenSubtype.Base] = a => a[0];
+            items[TokenType.Argument][TokenSubtype.Base] = a => a[0];
         }
 
         /// <summary>
@@ -37,8 +37,8 @@ namespace Strinken.Engine
         /// <returns>The element with the specified key, or null if the key is not present.</returns>
         public Func<string[], string> this[TokenType type, TokenSubtype subtype]
         {
-            get { return this.Get(type, subtype); }
-            set { this.items[type][subtype] = value; }
+            get { return Get(type, subtype); }
+            set { items[type][subtype] = value; }
         }
 
         /// <summary>
@@ -53,16 +53,16 @@ namespace Strinken.Engine
             {
                 if (subtype == TokenSubtype.Tag)
                 {
-                    return this.Get(TokenType.Tag, TokenSubtype.Base);
+                    return Get(TokenType.Tag, TokenSubtype.Base);
                 }
 
                 if (subtype == TokenSubtype.ParameterTag)
                 {
-                    return this.Get(TokenType.Tag, TokenSubtype.ParameterTag);
+                    return Get(TokenType.Tag, TokenSubtype.ParameterTag);
                 }
             }
 
-            return this.items[type].ContainsKey(subtype) ? this.items[type][subtype] : null;
+            return items[type].ContainsKey(subtype) ? items[type][subtype] : null;
         }
     }
 }

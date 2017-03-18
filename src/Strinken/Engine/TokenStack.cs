@@ -20,7 +20,7 @@ namespace Strinken.Engine
         /// </summary>
         public TokenStack()
         {
-            this.tokenStack = new Stack<Token>();
+            tokenStack = new Stack<Token>();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Strinken.Engine
         /// <param name="data">The data of the token.</param>
         public void PushVerbatim(char data)
         {
-            this.InternalPush(data.ToString(), TokenType.None, TokenSubtype.Base);
+            InternalPush(data.ToString(), TokenType.None, TokenSubtype.Base);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Strinken.Engine
         /// <param name="data">The data of the token.</param>
         public void PushVerbatim(string data)
         {
-            this.InternalPush(data, TokenType.None, TokenSubtype.Base);
+            InternalPush(data, TokenType.None, TokenSubtype.Base);
         }
 
         /// <summary>
@@ -48,24 +48,24 @@ namespace Strinken.Engine
         /// <returns>The result of the resolution of the stack.</returns>
         public string Resolve(ActionDictionary actions)
         {
-            if (this.tokenStack.Count == 1 && this.tokenStack.Peek().Type == TokenType.None)
+            if (tokenStack.Count == 1 && tokenStack.Peek().Type == TokenType.None)
             {
-                return this.tokenStack.Peek().Data;
+                return tokenStack.Peek().Data;
             }
 
             var result = new StringBuilder();
-            while (this.tokenStack.Count > 0)
+            while (tokenStack.Count > 0)
             {
-                var nextToken = this.tokenStack.Peek();
+                var nextToken = tokenStack.Peek();
                 switch (nextToken.Type)
                 {
                     case TokenType.None:
-                        var currentToken = this.tokenStack.Pop();
+                        var currentToken = tokenStack.Pop();
                         result.Insert(0, currentToken.Data);
                         break;
 
                     default:
-                        result.Insert(0, this.ResolveTagOrFilter(actions));
+                        result.Insert(0, ResolveTagOrFilter(actions));
                         break;
                 }
             }
@@ -79,7 +79,7 @@ namespace Strinken.Engine
         /// <param name="token">The token to push.</param>
         public void Push(Token token)
         {
-            this.tokenStack.Push(token);
+            tokenStack.Push(token);
         }
 
         /// <summary>
@@ -91,14 +91,14 @@ namespace Strinken.Engine
         private void InternalPush(string data, TokenType type, TokenSubtype subtype)
         {
             // If the top token is a verbatim token and the new token is also a verbatim token, their data are cumulated.
-            if (this.tokenStack.Count > 0 && type == TokenType.None && this.tokenStack.Peek().Type == TokenType.None)
+            if (tokenStack.Count > 0 && type == TokenType.None && tokenStack.Peek().Type == TokenType.None)
             {
-                var lastToken = this.tokenStack.Pop();
-                this.tokenStack.Push(new Token(lastToken.Data + data, TokenType.None, TokenSubtype.Base));
+                var lastToken = tokenStack.Pop();
+                tokenStack.Push(new Token(lastToken.Data + data, TokenType.None, TokenSubtype.Base));
             }
             else
             {
-                this.tokenStack.Push(new Token(data, type, subtype));
+                tokenStack.Push(new Token(data, type, subtype));
             }
         }
 
@@ -111,9 +111,9 @@ namespace Strinken.Engine
         {
             var arguments = new List<string>();
 
-            while (this.tokenStack.Count > 0)
+            while (tokenStack.Count > 0)
             {
-                var currentToken = this.tokenStack.Pop();
+                var currentToken = tokenStack.Pop();
                 switch (currentToken.Type)
                 {
                     case TokenType.Argument:
@@ -121,7 +121,7 @@ namespace Strinken.Engine
                         break;
 
                     case TokenType.Filter:
-                        var temporaryResult = this.ResolveTagOrFilter(actions);
+                        var temporaryResult = ResolveTagOrFilter(actions);
 
                         // An array is created containing all arguments.
                         var concatenatedArguments = new string[arguments.Count + 2];

@@ -14,9 +14,9 @@ namespace Strinken.Machine
         /// </summary>
         public StateMachine()
         {
-            this.StateMapper = new Dictionary<State, Func<State>>();
-            this.SinkingStates = new List<State>();
-            this.StoppingStates = new List<State>();
+            StateMapper = new Dictionary<State, Func<State>>();
+            SinkingStates = new List<State>();
+            StoppingStates = new List<State>();
         }
 
         /// <summary>
@@ -55,25 +55,25 @@ namespace Strinken.Machine
         /// <returns>A value indicating whether the machine successfully ran.</returns>
         internal bool Run()
         {
-            var runningState = this.StartingState;
+            var runningState = StartingState;
 
             do
             {
-                this.BeforeAction?.Invoke();
-                if (!this.StateMapper.ContainsKey(runningState))
+                BeforeAction?.Invoke();
+                if (!StateMapper.ContainsKey(runningState))
                 {
                     throw new InvalidOperationException($"The state {runningState} does not have a corresponding action.");
                 }
 
-                runningState = this.StateMapper[runningState]();
+                runningState = StateMapper[runningState]();
 
                 // if the machine goes into a sink state, stop it and returns false (= failure)
-                if (this.SinkingStates.Contains(runningState))
+                if (SinkingStates.Contains(runningState))
                 {
                     return false;
                 }
             }
-            while (!this.StoppingStates.Contains(runningState));
+            while (!StoppingStates.Contains(runningState));
 
             return true;
         }

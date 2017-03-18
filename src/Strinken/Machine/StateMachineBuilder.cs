@@ -18,7 +18,7 @@ namespace Strinken.Machine
         /// </summary>
         private StateMachineBuilder()
         {
-            this.machine = new StateMachine();
+            machine = new StateMachine();
         }
 
         /// <summary>
@@ -30,50 +30,50 @@ namespace Strinken.Machine
         /// <inheritdoc/>
         public ICanAddState BeforeEachStep(Action action)
         {
-            this.machine.BeforeAction = action;
+            machine.BeforeAction = action;
             return this;
         }
 
         /// <inheritdoc/>
-        public StateMachine Build() => this.machine;
+        public StateMachine Build() => machine;
 
         /// <inheritdoc/>
         public ICanAddState Do(Func<State> action)
         {
-            this.machine.StateMapper.Add(this.machine.CurrentState, action);
+            machine.StateMapper.Add(machine.CurrentState, action);
             return this;
         }
 
         /// <inheritdoc/>
         public ICanAddAction On(State state)
         {
-            if (this.machine.StateMapper.ContainsKey(state))
+            if (machine.StateMapper.ContainsKey(state))
             {
-                throw new InvalidOperationException($"The state {this.machine.CurrentState} was already registered in the machine.");
+                throw new InvalidOperationException($"The state {machine.CurrentState} was already registered in the machine.");
             }
 
-            this.machine.CurrentState = state;
+            machine.CurrentState = state;
             return this;
         }
 
         /// <inheritdoc/>
         public ICanAddState Sink()
         {
-            this.machine.SinkingStates.Add(this.machine.CurrentState);
+            machine.SinkingStates.Add(machine.CurrentState);
             return this;
         }
 
         /// <inheritdoc/>
         public ICanAddStop StartOn(State state)
         {
-            this.machine.StartingState = state;
+            machine.StartingState = state;
             return this;
         }
 
         /// <inheritdoc/>
         public ICanAddStateOrSteppingMethodOrStop StopOn(State state)
         {
-            this.machine.StoppingStates.Add(state);
+            machine.StoppingStates.Add(state);
             return this;
         }
     }

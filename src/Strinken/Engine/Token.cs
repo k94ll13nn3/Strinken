@@ -15,9 +15,9 @@ namespace Strinken.Engine
         /// <param name="subtype">The subtype of the token.</param>
         public Token(string data, TokenType type, TokenSubtype subtype)
         {
-            this.Data = data;
-            this.Type = type;
-            this.Subtype = subtype;
+            Data = data;
+            Type = type;
+            Subtype = subtype;
         }
 
         /// <summary>

@@ -16,9 +16,9 @@ namespace Strinken.Engine
         /// <param name="message">The message associated to the parsing.</param>
         private ParseResult(bool result, T value, string message)
         {
-            this.Result = result;
-            this.Value = value;
-            this.Message = message;
+            Result = result;
+            Value = value;
+            Message = message;
         }
 
         /// <summary>

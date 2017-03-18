@@ -37,10 +37,10 @@ namespace Strinken.Parser
             /// <param name="resolveAction">The action linked to the tag.</param>
             public BaseTag(string name, string description, Func<T, string> resolveAction)
             {
-                this.resolve = resolveAction;
+                resolve = resolveAction;
 
-                this.Description = description;
-                this.Name = name;
+                Description = description;
+                Name = name;
             }
 
             /// <inheritdoc/>
@@ -50,7 +50,7 @@ namespace Strinken.Parser
             public string Name { get; }
 
             /// <inheritdoc/>
-            public string Resolve(T value) => this.resolve(value);
+            public string Resolve(T value) => resolve(value);
         }
     }
 }

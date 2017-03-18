@@ -42,19 +42,19 @@ namespace Strinken.Engine
                 };
             }
 
-            this.tokenStack = new TokenStack();
-            this.errorMessage = null;
+            tokenStack = new TokenStack();
+            errorMessage = null;
 
-            using (this.cursor = new Cursor(input))
+            using (cursor = new Cursor(input))
             {
                 var machine = StateMachineBuilder
                     .Initialize()
                     .StartOn(State.OutsideToken)
                     .StopOn(State.EndOfString)
-                    .BeforeEachStep(this.cursor.Next)
-                    .On(State.OutsideToken).Do(this.ProcessOutsideToken)
-                    .On(State.OnTokenStartIndicator).Do(this.ProcessToken)
-                    .On(State.OnTokenEndIndicator).Do(this.ProcessOnTokenEndIndicator)
+                    .BeforeEachStep(cursor.Next)
+                    .On(State.OutsideToken).Do(ProcessOutsideToken)
+                    .On(State.OnTokenStartIndicator).Do(ProcessToken)
+                    .On(State.OnTokenEndIndicator).Do(ProcessOnTokenEndIndicator)
                     .On(State.InvalidString).Sink()
                     .Build();
 
@@ -62,8 +62,8 @@ namespace Strinken.Engine
                 return new EngineResult
                 {
                     Success = success,
-                    Stack = success ? this.tokenStack : null,
-                    ErrorMessage = this.errorMessage
+                    Stack = success ? tokenStack : null,
+                    ErrorMessage = errorMessage
                 };
             }
         }
@@ -75,13 +75,13 @@ namespace Strinken.Engine
         private State ProcessOnTokenEndIndicator()
         {
             // Escaped TokenEnd
-            if (this.cursor.Value == SpecialCharacter.TokenEndIndicator)
+            if (cursor.Value == SpecialCharacter.TokenEndIndicator)
             {
-                this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenEndIndicator);
+                tokenStack.PushVerbatim((char)SpecialCharacter.TokenEndIndicator);
                 return State.OutsideToken;
             }
 
-            this.errorMessage = string.Format(Errors.IllegalCharacter, (char)SpecialCharacter.TokenEndIndicator, this.cursor.Position - 1);
+            errorMessage = string.Format(Errors.IllegalCharacter, (char)SpecialCharacter.TokenEndIndicator, cursor.Position - 1);
             return State.InvalidString;
         }
 
@@ -92,7 +92,7 @@ namespace Strinken.Engine
         private State ProcessOutsideToken()
         {
             State state;
-            switch (this.cursor.Value)
+            switch (cursor.Value)
             {
                 case SpecialCharacter.EndOfStringIndicator:
                     state = State.EndOfString;
@@ -107,7 +107,7 @@ namespace Strinken.Engine
                     break;
 
                 default:
-                    this.tokenStack.PushVerbatim(this.cursor.CharValue);
+                    tokenStack.PushVerbatim(cursor.CharValue);
                     state = State.OutsideToken;
                     break;
             }
@@ -122,28 +122,28 @@ namespace Strinken.Engine
         private State ProcessToken()
         {
             // Escaped TokenStart
-            if (this.cursor.Value == SpecialCharacter.TokenStartIndicator)
+            if (cursor.Value == SpecialCharacter.TokenStartIndicator)
             {
-                this.tokenStack.PushVerbatim((char)SpecialCharacter.TokenStartIndicator);
+                tokenStack.PushVerbatim((char)SpecialCharacter.TokenStartIndicator);
                 return State.OutsideToken;
             }
 
-            if (this.cursor.HasEnded())
+            if (cursor.HasEnded())
             {
-                this.errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, '{');
+                errorMessage = string.Format(Errors.IllegalCharacterAtStringEnd, '{');
                 return State.InvalidString;
             }
 
-            var parsingResult = this.cursor.ParseString();
+            var parsingResult = cursor.ParseString();
             if (!parsingResult.Result)
             {
-                this.errorMessage = parsingResult.Message;
+                errorMessage = parsingResult.Message;
                 return State.InvalidString;
             }
 
             foreach (var token in parsingResult.Value)
             {
-                this.tokenStack.Push(token);
+                tokenStack.Push(token);
             }
 
             return State.OutsideToken;

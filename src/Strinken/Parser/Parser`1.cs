@@ -49,15 +49,15 @@ namespace Strinken.Parser
         /// <param name="ignoreBaseFilters">A value indicating whether the base filters should be ignored.</param>
         public Parser(bool ignoreBaseFilters)
         {
-            this.tags = new Dictionary<string, ITag<T>>();
-            this.parameterTags = new Dictionary<string, IParameterTag>();
-            this.filters = new Dictionary<string, IFilter>();
+            tags = new Dictionary<string, ITag<T>>();
+            parameterTags = new Dictionary<string, IParameterTag>();
+            filters = new Dictionary<string, IFilter>();
 
             if (!ignoreBaseFilters)
             {
                 foreach (var filter in FilterHelpers.BaseFilters)
                 {
-                    this.AddFilter(filter);
+                    AddFilter(filter);
                 }
             }
         }
@@ -65,17 +65,17 @@ namespace Strinken.Parser
         /// <summary>
         /// Gets the filters used by the parser.
         /// </summary>
-        public IReadOnlyCollection<IFilter> Filters => new ReadOnlyCollection<IFilter>(this.filters.Values.ToList());
+        public IReadOnlyCollection<IFilter> Filters => new ReadOnlyCollection<IFilter>(filters.Values.ToList());
 
         /// <summary>
         /// Gets the tags used by the parser.
         /// </summary>
-        public IReadOnlyCollection<ITag<T>> Tags => new ReadOnlyCollection<ITag<T>>(this.tags.Values.ToList());
+        public IReadOnlyCollection<ITag<T>> Tags => new ReadOnlyCollection<ITag<T>>(tags.Values.ToList());
 
         /// <summary>
         /// Gets the tags used by the parser.
         /// </summary>
-        public IReadOnlyCollection<IParameterTag> ParameterTags => new ReadOnlyCollection<IParameterTag>(this.parameterTags.Values.ToList());
+        public IReadOnlyCollection<IParameterTag> ParameterTags => new ReadOnlyCollection<IParameterTag>(parameterTags.Values.ToList());
 
         /// <summary>
         /// Resolves the input.
@@ -91,9 +91,9 @@ namespace Strinken.Parser
             {
                 var actions = new ActionDictionary
                 {
-                    [TokenType.Tag, TokenSubtype.Base] = a => this.tags[a[0]].Resolve(value),
-                    [TokenType.Tag, TokenSubtype.ParameterTag] = a => this.parameterTags[a[0]].Resolve(),
-                    [TokenType.Filter, TokenSubtype.Base] = a => this.filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+                    [TokenType.Tag, TokenSubtype.Base] = a => tags[a[0]].Resolve(value),
+                    [TokenType.Tag, TokenSubtype.ParameterTag] = a => parameterTags[a[0]].Resolve(),
+                    [TokenType.Filter, TokenSubtype.Base] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
                 };
 
                 return runResult.Stack.Resolve(actions);
@@ -142,28 +142,28 @@ namespace Strinken.Parser
             runResult.Stack.Resolve(actions);
 
             // Find the first tag that was not registered in the parser.
-            var invalidParameter = tagList.Find(tagName => !this.tags.ContainsKey(tagName));
+            var invalidParameter = tagList.Find(tagName => !tags.ContainsKey(tagName));
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
             }
 
             // Find the first parameter tag that was not registered in the parser.
-            invalidParameter = parameterTagList.Find(parameterTagName => !this.parameterTags.ContainsKey(parameterTagName));
+            invalidParameter = parameterTagList.Find(parameterTagName => !parameterTags.ContainsKey(parameterTagName));
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} is not a valid parameter tag.", IsValid = false };
             }
 
             // Find the first filter that was not registered in the parser.
-            invalidParameter = filterList.Find(filter => !this.filters.ContainsKey(filter.Item1))?.Item1;
+            invalidParameter = filterList.Find(filter => !filters.ContainsKey(filter.Item1))?.Item1;
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
             }
 
             // Find the first filter that has invalid arguments.
-            invalidParameter = filterList.Find(filter => !this.filters[filter.Item1].Validate(filter.Item2))?.Item1;
+            invalidParameter = filterList.Find(filter => !filters[filter.Item1].Validate(filter.Item2))?.Item1;
             if (invalidParameter != null)
             {
                 return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
@@ -182,7 +182,7 @@ namespace Strinken.Parser
             var runResult = new StrinkenEngine().Run(input);
             if (runResult.Success)
             {
-                this.compiledStack = runResult.Stack;
+                compiledStack = runResult.Stack;
                 return;
             }
 
@@ -197,19 +197,19 @@ namespace Strinken.Parser
         /// <exception cref="InvalidOperationException">No string were previously compiled.</exception>
         public string ResolveCompiledString(T value)
         {
-            if (this.compiledStack == null)
+            if (compiledStack == null)
             {
                 throw new InvalidOperationException("No string were compiled.");
             }
 
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a => this.tags[a[0]].Resolve(value),
-                [TokenType.Tag, TokenSubtype.ParameterTag] = a => this.parameterTags[a[0]].Resolve(),
-                [TokenType.Filter, TokenSubtype.Base] = a => this.filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+                [TokenType.Tag, TokenSubtype.Base] = a => tags[a[0]].Resolve(value),
+                [TokenType.Tag, TokenSubtype.ParameterTag] = a => parameterTags[a[0]].Resolve(),
+                [TokenType.Filter, TokenSubtype.Base] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
             };
 
-            return this.compiledStack.Resolve(actions);
+            return compiledStack.Resolve(actions);
         }
 
         /// <summary>
@@ -219,13 +219,13 @@ namespace Strinken.Parser
         /// <exception cref="ArgumentException">The filter name is already present in the filter list.</exception>
         public void AddFilter(IFilter filter)
         {
-            if (this.filters.ContainsKey(filter.Name))
+            if (filters.ContainsKey(filter.Name))
             {
                 throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
             }
 
             ThrowIfInvalidName(filter.Name);
-            this.filters.Add(filter.Name, filter);
+            filters.Add(filter.Name, filter);
         }
 
         /// <summary>
@@ -235,13 +235,13 @@ namespace Strinken.Parser
         /// <exception cref="ArgumentException">The tag name is already present in the tag list.</exception>
         public void AddTag(ITag<T> tag)
         {
-            if (this.tags.ContainsKey(tag.Name))
+            if (tags.ContainsKey(tag.Name))
             {
                 throw new ArgumentException($"{tag.Name} was already registered in the tag list.");
             }
 
             ThrowIfInvalidName(tag.Name);
-            this.tags.Add(tag.Name, tag);
+            tags.Add(tag.Name, tag);
         }
 
         /// <summary>
@@ -251,13 +251,13 @@ namespace Strinken.Parser
         /// <exception cref="ArgumentException">The parameter tag name is already present in the parameter tag list.</exception>
         public void AddParameterTag(IParameterTag parameterTag)
         {
-            if (this.parameterTags.ContainsKey(parameterTag.Name))
+            if (parameterTags.ContainsKey(parameterTag.Name))
             {
                 throw new ArgumentException($"{parameterTag.Name} was already registered in the parameter tag list.");
             }
 
             ThrowIfInvalidName(parameterTag.Name);
-            this.parameterTags.Add(parameterTag.Name, parameterTag);
+            parameterTags.Add(parameterTag.Name, parameterTag);
         }
 
         /// <summary>
@@ -267,17 +267,17 @@ namespace Strinken.Parser
         internal Parser<T> DeepCopy()
         {
             var newParser = new Parser<T>(true);
-            foreach (var tag in this.tags.Values)
+            foreach (var tag in tags.Values)
             {
                 newParser.AddTag(tag);
             }
 
-            foreach (var parameterTag in this.parameterTags.Values)
+            foreach (var parameterTag in parameterTags.Values)
             {
                 newParser.AddParameterTag(parameterTag);
             }
 
-            foreach (var filter in this.filters.Values)
+            foreach (var filter in filters.Values)
             {
                 newParser.AddFilter(filter);
             }
