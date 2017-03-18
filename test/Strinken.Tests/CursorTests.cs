@@ -19,7 +19,7 @@ namespace Strinken.Tests
         }
 
         [StrinkenTest]
-        public void ParseOutsideString_StringWithEscapedTokenStartIndicator_ReturnsTheStringWithOneTokenStartIndicator()
+        public void ParseOutsideString_StringWithEscapedTokenStartIndicatorInside_ReturnsTheStringWithOneTokenStartIndicatorInside()
         {
             var input = "Mustache : {{ !";
             var expected = "Mustache : { !";
@@ -47,7 +47,7 @@ namespace Strinken.Tests
         }
 
         [StrinkenTest]
-        public void ParseOutsideString_StringWithEscapedTokenEndIndicator_ReturnsTheStringWithOneTokenEndIndicator()
+        public void ParseOutsideString_StringWithEscapedTokenEndIndicatorInside_ReturnsTheStringWithOneTokenEndIndicatorInside()
         {
             var input = "Mustache : }} !";
             var expected = "Mustache : } !";
@@ -75,7 +75,7 @@ namespace Strinken.Tests
 
 
         [StrinkenTest]
-        public void ParseOutsideString_StringWithOneTokenStartIndicator_ReturnsPartBeforeTokenStartIndicator()
+        public void ParseOutsideString_StringWithOneTokenStartIndicatorInside_ReturnsPartBeforeTokenStartIndicator()
         {
             var input = "Mustache : { !";
             var expected = "Mustache : ";
@@ -103,7 +103,7 @@ namespace Strinken.Tests
         }
 
         [StrinkenTest]
-        public void ParseOutsideString_StringWithOneTokenEndIndicator_ReturnsFailure()
+        public void ParseOutsideString_StringWithOneTokenEndIndicatorInside_ReturnsFailure()
         {
             var input = "Mustache : } !";
             using (var cursor = new Cursor(input))
@@ -116,7 +116,7 @@ namespace Strinken.Tests
         }
 
         [StrinkenTest]
-        public void ParseOutsideString_StringWithOneTokenStartIndicatorAtEnd_ReturnsFailure()
+        public void ParseOutsideString_StringWithOneTokenEndIndicatorAtEnd_ReturnsFailure()
         {
             var input = "Mustache : }";
             using (var cursor = new Cursor(input))
@@ -125,6 +125,19 @@ namespace Strinken.Tests
 
                 parsedStringResult.Result.Should().BeFalse();
                 parsedStringResult.Message.Should().Be("Illegal '}' at the end of the string");
+            }
+        }
+
+        [StrinkenTest]
+        public void ParseOutsideString_StringWithOneTokenEndIndicatorAtStart_ReturnsFailure()
+        {
+            var input = "}Mustache";
+            using (var cursor = new Cursor(input))
+            {
+                var parsedStringResult = cursor.ParseOutsideString();
+
+                parsedStringResult.Result.Should().BeFalse();
+                parsedStringResult.Message.Should().Be("Illegal '}' at position 0");
             }
         }
     }
