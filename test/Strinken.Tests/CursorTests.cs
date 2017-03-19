@@ -14,7 +14,34 @@ namespace Strinken.Tests
                 var parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
-                parsedStringResult.Value.Should().Be(input);
+                parsedStringResult.Value.Data.Should().Be(input);
+            }
+        }
+
+        [StrinkenTest]
+        public void ParseOutsideString_EmptyString_ReturnsEmptyString()
+        {
+            var input = "";
+            using (var cursor = new Cursor(input))
+            {
+                var parsedStringResult = cursor.ParseOutsideString();
+
+                parsedStringResult.Result.Should().BeTrue();
+                parsedStringResult.Value.Data.Should().Be(input);
+            }
+        }
+
+        [StrinkenTest]
+        public void ParseOutsideString_OnlyTokenStartIndicator_ReturnsEmptyString()
+        {
+            var input = "{";
+            var expected = "";
+            using (var cursor = new Cursor(input))
+            {
+                var parsedStringResult = cursor.ParseOutsideString();
+
+                parsedStringResult.Result.Should().BeTrue();
+                parsedStringResult.Value.Data.Should().Be(expected);
             }
         }
 
@@ -28,7 +55,7 @@ namespace Strinken.Tests
                 var parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
-                parsedStringResult.Value.Should().Be(expected);
+                parsedStringResult.Value.Data.Should().Be(expected);
             }
         }
 
@@ -42,7 +69,7 @@ namespace Strinken.Tests
                 var parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
-                parsedStringResult.Value.Should().Be(expected);
+                parsedStringResult.Value.Data.Should().Be(expected);
             }
         }
 
@@ -56,7 +83,7 @@ namespace Strinken.Tests
                 var parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
-                parsedStringResult.Value.Should().Be(expected);
+                parsedStringResult.Value.Data.Should().Be(expected);
             }
         }
         [StrinkenTest]
@@ -69,7 +96,7 @@ namespace Strinken.Tests
                 var parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
-                parsedStringResult.Value.Should().Be(expected);
+                parsedStringResult.Value.Data.Should().Be(expected);
             }
         }
 
@@ -84,7 +111,7 @@ namespace Strinken.Tests
                 var parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
-                parsedStringResult.Value.Should().Be(expected);
+                parsedStringResult.Value.Data.Should().Be(expected);
             }
         }
 
@@ -98,7 +125,7 @@ namespace Strinken.Tests
                 var parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
-                parsedStringResult.Value.Should().Be(expected);
+                parsedStringResult.Value.Data.Should().Be(expected);
             }
         }
 

@@ -221,11 +221,18 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Parses a string.
+        /// Parses a token.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<IList<Token>> ParseString()
+        public ParseResult<IList<Token>> ParseToken()
         {
+            if (Value != SpecialCharacter.TokenStartIndicator)
+            {
+                return ParseResult<IList<Token>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+            }
+
+            Next();
+
             var tokenList = new List<Token>();
             var tagParseResult = ParseTag();
             if (!tagParseResult.Result)
@@ -286,7 +293,7 @@ namespace Strinken.Engine
         ///
         /// </summary>
         /// <returns></returns>
-        public ParseResult<string> ParseOutsideString()
+        public ParseResult<Token> ParseOutsideString()
         {
             var builder = new StringBuilder();
 
@@ -303,18 +310,84 @@ namespace Strinken.Engine
                     // Start of token or end of string
                     case SpecialCharacter.TokenStartIndicator:
                     case int _ when HasEnded():
-                        return ParseResult<string>.Success(builder.ToString());
+                        return ParseResult<Token>.Success(new Token(builder.ToString(), TokenType.None, TokenSubtype.Base));
 
                     case SpecialCharacter.TokenEndIndicator when PeekIsEnd():
-                        return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacterAtStringEnd, CharValue));
+                        return ParseResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacterAtStringEnd, CharValue));
 
                     case SpecialCharacter.TokenEndIndicator:
-                        return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                        return ParseResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
                 }
 
                 builder.Append(CharValue);
                 Next();
             }
+        }
+
+        /// <summary>
+        /// Parses a token and the following outside string.
+        /// </summary>
+        /// <returns>The result of the parsing.</returns>
+        public ParseResult<IList<Token>> ParseTokenAndOutsideString()
+        {
+            var tokenList = new List<Token>();
+            var tokenParseResult = ParseToken();
+            if (!tokenParseResult.Result)
+            {
+                return ParseResult<IList<Token>>.FailureWithMessage(tokenParseResult.Message != Errors.EmptyName ? tokenParseResult.Message : Errors.EmptyFilter);
+            }
+
+            tokenList.AddRange(tokenParseResult.Value);
+
+            if (Value != SpecialCharacter.TokenEndIndicator)
+            {
+                return ParseResult<IList<Token>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+            }
+
+            Next();
+
+            var outsideParseResult = ParseOutsideString();
+            if (!outsideParseResult.Result)
+            {
+                return ParseResult<IList<Token>>.FailureWithMessage(outsideParseResult.Message);
+            }
+
+            tokenList.Add(outsideParseResult.Value);
+
+            return ParseResult<IList<Token>>.Success(tokenList);
+        }
+
+        /// <summary>
+        /// Parses a string.
+        /// </summary>
+        /// <returns>The result of the parsing.</returns>
+        public ParseResult<IList<Token>> ParseString()
+        {
+            var tokenList = new List<Token>();
+            var outsideParseResult = ParseOutsideString();
+            if (!outsideParseResult.Result)
+            {
+                return ParseResult<IList<Token>>.FailureWithMessage(outsideParseResult.Message);
+            }
+
+            tokenList.Add(outsideParseResult.Value);
+            while (!HasEnded())
+            {
+                var tokenParseResult = ParseTokenAndOutsideString();
+                if (tokenParseResult.Result)
+                {
+                    foreach (var token in tokenParseResult.Value)
+                    {
+                        tokenList.Add(token);
+                    }
+                }
+                else
+                {
+                    return ParseResult<IList<Token>>.FailureWithMessage(tokenParseResult.Message);
+                }
+            }
+
+            return ParseResult<IList<Token>>.Success(tokenList);
         }
     }
 }

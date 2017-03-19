@@ -30,7 +30,7 @@ namespace Strinken.Tests
             const string input = "lorem ipsum{";
             var result = new StrinkenEngine().Run(input);
             result.Success.Should().BeFalse();
-            result.ErrorMessage.Should().Be("Illegal '{' at the end of the string");
+            result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
         [StrinkenTest]
@@ -147,7 +147,7 @@ namespace Strinken.Tests
             const string input = "lorem}";
             var result = new StrinkenEngine().Run(input);
             result.Success.Should().BeFalse();
-            result.ErrorMessage.Should().Be("Illegal '}' at position 5");
+            result.ErrorMessage.Should().Be("Illegal '}' at the end of the string");
         }
 
         [StrinkenTest]
