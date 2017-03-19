@@ -2,12 +2,13 @@
 using FluentAssertions;
 using Strinken.Parser;
 using Strinken.Public.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Public.Tests.Parser
 {
     public class ResolveTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Resolve_OneTag_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -15,7 +16,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.Resolve("The {DataName} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Lorem is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_OneParameterTag_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -23,7 +24,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.Resolve("The {!Blue} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Blue is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_OneTagAndOneFilter_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -31,7 +32,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.Resolve("The {DataName:Upper} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The LOREM is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_OneTagAndOneFilterAndOneArgument_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -39,7 +40,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.Resolve("The {DataName:Length} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The 5 is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_OneTagAndTwoFilters_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -47,7 +48,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.Resolve("The {DataName:Append+One,Two:Length} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The 11 is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_OneTagAndOneFilterWithTagAsArgument_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -56,7 +57,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.Resolve("The {DataName:Append+DataName} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The LoremDataName is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_OneTagAndOneFilterWithParameterTagAsArgument_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -65,7 +66,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.Resolve("The {DataName:Append+Blue} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The LoremBlue is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_InvalidString_ThrowsFormatException()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());

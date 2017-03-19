@@ -2,12 +2,13 @@
 using FluentAssertions;
 using Strinken.Parser;
 using Strinken.Public.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Public.Tests.Parser
 {
     public class ConstructorTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Constructor_IgnoreBaseFilters_ReturnsParserWithoutFilters()
         {
             var solver = new Parser<Data>(true);
@@ -15,7 +16,7 @@ namespace Strinken.Public.Tests.Parser
             solver.Filters.Should().HaveCount(0);
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_TwoTagWithSameName_ThrowsArgumentException()
         {
             Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithTag(new DataNameTag());
@@ -23,7 +24,7 @@ namespace Strinken.Public.Tests.Parser
             act.ShouldThrow<ArgumentException>().WithMessage("DataName was already registered in the tag list.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_TwoFilterWithSameName_ThrowsArgumentException()
         {
             Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new AppendFilter(), new AppendFilter() });
@@ -31,7 +32,7 @@ namespace Strinken.Public.Tests.Parser
             act.ShouldThrow<ArgumentException>().WithMessage("Append was already registered in the filter list.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_TwoParameterTagsWithSameName_ThrowsArgumentException()
         {
             Action act = () => new Parser<Data>().WithParameterTags(new IParameterTag[] { new BlueParameterTag(), new BlueParameterTag() });
@@ -39,7 +40,7 @@ namespace Strinken.Public.Tests.Parser
             act.ShouldThrow<ArgumentException>().WithMessage("Blue was already registered in the parameter tag list.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_TagWithEmptyName_ThrowsArgumentException()
         {
             Action actWithTagParameters = () => new Parser<string>().WithTag("", "", s => s);
@@ -49,7 +50,7 @@ namespace Strinken.Public.Tests.Parser
             actWithTag.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_FilterWithEmptyName_ThrowsArgumentException()
         {
             Action act = () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new EmptyNameFilter());
@@ -57,7 +58,7 @@ namespace Strinken.Public.Tests.Parser
             act.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_ParameterTagWithEmptyName_ThrowsArgumentException()
         {
             Action act = () => new Parser<string>().WithParameterTag(new EmptyNameParameterTag());
@@ -65,7 +66,7 @@ namespace Strinken.Public.Tests.Parser
             act.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_TagWithInvalidName_ThrowsArgumentException()
         {
             Action actWithTagParameters = () => new Parser<string>().WithTag("st*r", "", s => s);
@@ -75,7 +76,7 @@ namespace Strinken.Public.Tests.Parser
             actWithTag.ShouldThrow<ArgumentException>().WithMessage("$ is an invalid character for a name.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_FilterWithInvalidName_ThrowsArgumentException()
         {
             Action act = () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new InvalidNameFilter());
@@ -83,7 +84,7 @@ namespace Strinken.Public.Tests.Parser
             act.ShouldThrow<ArgumentException>().WithMessage("! is an invalid character for a name.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Constructor_ParameterTagWithInvalidName_ThrowsArgumentException()
         {
             Action act = () => new Parser<string>().WithParameterTag(new InvalidNameParameterTag());

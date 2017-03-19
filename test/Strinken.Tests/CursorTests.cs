@@ -1,11 +1,12 @@
 ﻿using FluentAssertions;
 using Strinken.Engine;
+using Xunit;
 
 namespace Strinken.Tests
 {
     public class CursorTests
     {
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithoutToken_ReturnsTheString()
         {
             var input = "some string !";
@@ -18,7 +19,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_EmptyString_ReturnsEmptyString()
         {
             var input = "";
@@ -31,7 +32,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_OnlyTokenStartIndicator_ReturnsEmptyString()
         {
             var input = "{";
@@ -45,7 +46,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithEscapedTokenStartIndicatorInside_ReturnsTheStringWithOneTokenStartIndicatorInside()
         {
             var input = "Mustache : {{ !";
@@ -59,7 +60,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithEscapedTokenStartIndicatorAtEnd_ReturnsTheStringWithOneTokenStartIndicatorAtEnd()
         {
             var input = "Mustache : {{";
@@ -73,7 +74,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithEscapedTokenEndIndicatorInside_ReturnsTheStringWithOneTokenEndIndicatorInside()
         {
             var input = "Mustache : }} !";
@@ -86,7 +87,8 @@ namespace Strinken.Tests
                 parsedStringResult.Value.Data.Should().Be(expected);
             }
         }
-        [StrinkenTest]
+
+        [Fact]
         public void ParseOutsideString_StringWithEscapedTokenEndIndicatorAtEnd_ReturnsTheStringWithOneTokenEndIndicatorAtEnd()
         {
             var input = "Mustache : }}";
@@ -100,8 +102,7 @@ namespace Strinken.Tests
             }
         }
 
-
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithOneTokenStartIndicatorInside_ReturnsPartBeforeTokenStartIndicator()
         {
             var input = "Mustache : { !";
@@ -115,7 +116,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithOneTokenStartIndicatorAtEnd_ReturnsPartBeforeTokenStartIndicator()
         {
             var input = "Mustache : {";
@@ -129,7 +130,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithOneTokenEndIndicatorInside_ReturnsFailure()
         {
             var input = "Mustache : } !";
@@ -142,7 +143,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithOneTokenEndIndicatorAtEnd_ReturnsFailure()
         {
             var input = "Mustache : }";
@@ -155,7 +156,7 @@ namespace Strinken.Tests
             }
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ParseOutsideString_StringWithOneTokenEndIndicatorAtStart_ReturnsFailure()
         {
             var input = "}Mustache";

@@ -2,12 +2,13 @@ using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Tests.FiltersTests
 {
     public class LowerFilterTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Resolve_Data_ReturnsDataToLowerCase()
         {
             var filter = new LowerFilter();
@@ -15,7 +16,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Resolve("DAta", null).Should().Be("data");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_NoArguments_ReturnsTrue()
         {
             var filter = new LowerFilter();
@@ -24,7 +25,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { }).Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_OneOrMoreArguments_ReturnsFalse()
         {
             var filter = new LowerFilter();
@@ -33,7 +34,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { "", "" }).Should().BeFalse();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve__ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());

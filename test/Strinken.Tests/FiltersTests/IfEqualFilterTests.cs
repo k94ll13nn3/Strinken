@@ -2,12 +2,13 @@ using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Tests.FiltersTests
 {
     public class IfEqualFilterTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Resolve_IsEqual_ReturnsData()
         {
             var filter = new IfEqualFilter();
@@ -15,7 +16,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Resolve("data", new string[] { "data", "true", "false" }).Should().Be("true");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_IsNotEqual_ReturnsArgument()
         {
             var filter = new IfEqualFilter();
@@ -23,7 +24,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Resolve("value", new string[] { "data", "true", "false" }).Should().Be("false");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_NoArguments_ReturnsFalse()
         {
             var filter = new IfEqualFilter();
@@ -32,7 +33,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { }).Should().BeFalse();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_OneArgument_ReturnsFalse()
         {
             var filter = new IfEqualFilter();
@@ -40,7 +41,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { "" }).Should().BeFalse();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_ThreeArguments_ReturnsTrue()
         {
             var filter = new IfEqualFilter();
@@ -48,7 +49,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { "", "", "" }).Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve__ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());

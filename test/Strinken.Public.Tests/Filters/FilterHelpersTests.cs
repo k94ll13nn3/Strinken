@@ -3,12 +3,13 @@ using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Public.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Public.Tests.Filters
 {
     public class FilterHelpersTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Validate_FilterRegistered_ReturnsTrue()
         {
             FilterHelpers.Register(new FilterGenerator("ROne"));
@@ -19,7 +20,7 @@ namespace Strinken.Public.Tests.Filters
             FilterHelpers.Unregister(new FilterGenerator("ROne"));
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_FilterRegisteredAfterValidation_ReturnsFalse()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
@@ -30,7 +31,7 @@ namespace Strinken.Public.Tests.Filters
             FilterHelpers.Unregister(new FilterGenerator("RTwo"));
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_FilterRegisteredAndThenUnRegistered_ReturnsTrueAndThenFalse()
         {
             FilterHelpers.Register(new FilterGenerator("RThree"));
@@ -40,7 +41,7 @@ namespace Strinken.Public.Tests.Filters
             validationResult.IsValid.Should().BeFalse();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Register_FilterWithEmptyName_ThrowsArgumentException()
         {
             Action act = () => FilterHelpers.Register(new EmptyNameFilter());
@@ -48,7 +49,7 @@ namespace Strinken.Public.Tests.Filters
             act.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Register_FilterWithInvalidName_ThrowsArgumentException()
         {
             Action act = () => FilterHelpers.Register(new InvalidNameFilter());
@@ -56,7 +57,7 @@ namespace Strinken.Public.Tests.Filters
             act.ShouldThrow<ArgumentException>().WithMessage("! is an invalid character for a name.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Register_FilterWithNameAlreadyRegistered_ThrowsArgumentException()
         {
             Action act = () => FilterHelpers.Register(new FilterGenerator("Length"));

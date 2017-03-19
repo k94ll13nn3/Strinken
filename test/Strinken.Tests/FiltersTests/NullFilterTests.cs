@@ -2,12 +2,13 @@ using FluentAssertions;
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Tests.FiltersTests
 {
     public class NullFilterTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Resolve_Data_ReturnsData()
         {
             var filter = new NullFilter();
@@ -15,7 +16,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Resolve("value", new string[] { "data" }).Should().Be("value");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve_NullData_ReturnsArgument()
         {
             var filter = new NullFilter();
@@ -23,7 +24,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Resolve(null, new string[] { "data" }).Should().Be("data");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_NoArguments_ReturnsFalse()
         {
             var filter = new NullFilter();
@@ -32,7 +33,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { }).Should().BeFalse();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_MoreThanOneArgument_ReturnsFalse()
         {
             var filter = new NullFilter();
@@ -40,7 +41,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { "", "", "" }).Should().BeFalse();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_OneArgument_ReturnsTrue()
         {
             var filter = new NullFilter();
@@ -48,7 +49,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { "data" }).Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve__ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());

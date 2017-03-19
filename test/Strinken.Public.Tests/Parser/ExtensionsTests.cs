@@ -2,12 +2,13 @@
 using FluentAssertions;
 using Strinken.Parser;
 using Strinken.Public.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Public.Tests.Parser
 {
     public class ExtensionsTests
     {
-        [StrinkenTest]
+        [Fact]
         public void WithTag_OnTheFlyCreation_ReturnsResolvedString()
         {
             var solver = new Parser<Data>().WithTag("OTF", "OTF", a => a.Name);
@@ -17,7 +18,7 @@ namespace Strinken.Public.Tests.Parser
             solver.Resolve("The {OTF} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Lorem is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void WithTag_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
@@ -27,7 +28,7 @@ namespace Strinken.Public.Tests.Parser
             solver2.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void WithTags_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
@@ -37,7 +38,7 @@ namespace Strinken.Public.Tests.Parser
             solver2.Validate("The {DataName} {Tag} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void WithFilter_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
@@ -47,7 +48,7 @@ namespace Strinken.Public.Tests.Parser
             solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void WithFilters_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
@@ -57,7 +58,7 @@ namespace Strinken.Public.Tests.Parser
             solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void WithParameterTag_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
@@ -67,7 +68,7 @@ namespace Strinken.Public.Tests.Parser
             solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void WithParameterTags_Called_DoesNotModifyCallingInstance()
         {
             var solver = new Parser<Data>().WithParameterTag(new RedParameterTag());

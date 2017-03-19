@@ -6,7 +6,7 @@ namespace Strinken.Tests
 {
     public class EngineTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Run_NullInput_ReturnsNull()
         {
             var result = new StrinkenEngine().Run(null);
@@ -15,7 +15,7 @@ namespace Strinken.Tests
             result.Stack.Resolve(null).Should().BeNull();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EmptyInput_ReturnsEmptyString()
         {
             var result = new StrinkenEngine().Run(string.Empty);
@@ -24,7 +24,7 @@ namespace Strinken.Tests
             result.Stack.Resolve(null).Should().BeEmpty();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_OpenBracketAtStringEnd_ReturnsFalse()
         {
             const string input = "lorem ipsum{";
@@ -33,7 +33,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EmptyTag_ReturnsFalse()
         {
             const string input = "lorem{}";
@@ -42,7 +42,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Empty tag");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagNotClosed_ReturnsFalse()
         {
             const string input = "lorem{a";
@@ -51,7 +51,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_OpenBracketInTag_ReturnsFalse()
         {
             const string input = "lorem{test{tm";
@@ -60,7 +60,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Illegal '{' at position 10");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EmptyFilter_ReturnsFalse()
         {
             const string input = "lorem{test:}";
@@ -69,7 +69,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Empty filter");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EmptyFirstArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+}";
@@ -78,7 +78,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EmptySecondArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+arg,}";
@@ -87,7 +87,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EmptySecondArgumentAndThreeArgument_ReturnsFalse()
         {
             const string input = "lorem{test:filter+someThing,,}";
@@ -96,7 +96,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EmptyFirstAndSecond_ReturnsFalse()
         {
             const string input = "lorem{tag:filter+,}";
@@ -105,7 +105,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EmptyArgumentTag_ReturnsFalse()
         {
             const string input = "lorem{test:filter+arg,=}";
@@ -114,7 +114,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Empty argument");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_OpenBracketInsideFilter_ReturnsFalse()
         {
             const string input = "lorem{test:a{r}";
@@ -123,7 +123,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Illegal '{' at position 12");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_FilterSeparatorInsideFilter_ReturnsFalse()
         {
             const string input = "lorem{test:a:}";
@@ -132,7 +132,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Empty filter");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TwoArgumentTagSeparator_ReturnsFalse()
         {
             const string input = "lorem{test:a+==}";
@@ -141,7 +141,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Illegal '=' at position 14");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_CloseBracketOutisdeToken_ReturnsFalse()
         {
             const string input = "lorem}";
@@ -150,7 +150,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Illegal '}' at the end of the string");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EndOfStringOnFilterSeparator_ReturnsFalse()
         {
             const string input = "lorem{ispum:";
@@ -159,7 +159,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_FilterNotClosed_ReturnsFalse()
         {
             const string input = "lorem{ispum:abc";
@@ -178,7 +178,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EndOfStringOnArgumentSeparator_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,";
@@ -187,7 +187,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EndOfStringOnArgumentTagIndicator_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,=";
@@ -196,7 +196,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EndOfStringInsideArgumentTag_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+h,=a";
@@ -205,7 +205,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_EndOfStringOnArgumentInitializer_ReturnsFalse()
         {
             const string input = "lorem{ispum:tot+";
@@ -214,7 +214,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("End of string reached while inside a token");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_ArgumentAfterTag_ReturnsFalse()
         {
             const string input = "lorem{ispum+arg}";
@@ -223,7 +223,7 @@ namespace Strinken.Tests
             result.ErrorMessage.Should().Be("Illegal '+' at position 11");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_ValidString_DoesNotThrow()
         {
             const string input = "lorem{ispum:abc}";

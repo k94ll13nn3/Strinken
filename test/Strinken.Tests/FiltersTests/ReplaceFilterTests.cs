@@ -2,12 +2,13 @@
 using Strinken.Filters;
 using Strinken.Parser;
 using Strinken.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Tests.FiltersTests
 {
     public class ReplaceFilterTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Resolve_IsEqual_ReturnsStringWithReplacements()
         {
             var filter = new ReplaceFilter();
@@ -17,7 +18,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol", "Merol", "-----" }).Should().Be("----- ipsum");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_NoArgumentsOrOddNumberOfArguments_ReturnsFalse()
         {
             var filter = new ReplaceFilter();
@@ -28,7 +29,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { "", "", "" }).Should().BeFalse();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Validate_EvenNumberOfArguments_ReturnsTrue()
         {
             var filter = new ReplaceFilter();
@@ -37,7 +38,7 @@ namespace Strinken.Tests.FiltersTests
             filter.Validate(new string[] { "", "", "", "" }).Should().BeTrue();
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Resolve__ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());

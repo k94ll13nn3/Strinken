@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Strinken.Engine;
+using Xunit;
 
 namespace Strinken.Tests
 {
     public class ActionsTests
     {
-        [StrinkenTest]
+        [Fact]
         public void Run_OneTag_ActionOnTagCalledOnce()
         {
             var numberOfCall = 0;
@@ -32,7 +33,7 @@ namespace Strinken.Tests
             tagSeen[0].Should().Be("ispum");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TwoTags_ActionOnTagCalledTwice()
         {
             var numberOfCall = 0;
@@ -58,7 +59,7 @@ namespace Strinken.Tests
             tagSeen[1].Should().Be("ispum");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_NoTokens_ActionOnCharactersReturnsString()
         {
             var engine = new StrinkenEngine();
@@ -68,7 +69,7 @@ namespace Strinken.Tests
             result.Stack.Resolve(new ActionDictionary()).Should().Be("loremtute");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_StringWithTokens_ActionOnCharactersReturnsStringWithoutTokens()
         {
             var engine = new StrinkenEngine();
@@ -78,7 +79,7 @@ namespace Strinken.Tests
             result.Stack.Resolve(new ActionDictionary()).Should().Be("loremtute");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_StringWithEscapedOpenBracket_ActionOnCharactersReturnsStringWithOneOpenBracket()
         {
             var engine = new StrinkenEngine();
@@ -88,7 +89,7 @@ namespace Strinken.Tests
             result.Stack.Resolve(new ActionDictionary()).Should().Be("lorem{te");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_StringWithEscapedCloseBracket_ActionOnCharactersReturnsStringWithOneCloseBracket()
         {
             var engine = new StrinkenEngine();
@@ -98,7 +99,7 @@ namespace Strinken.Tests
             result.Stack.Resolve(new ActionDictionary()).Should().Be("lorem}te");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithFilter_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -123,7 +124,7 @@ namespace Strinken.Tests
             filterSeen[0].Should().Be("belli");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithFilter_ActionOnFilterCalledOnceWithTag()
         {
             var numberOfCall = 0;
@@ -150,7 +151,7 @@ namespace Strinken.Tests
             filterSeen["belli"].Should().Be("ispum");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithMultipleFilters_ActionOnFilterCalledTwice()
         {
             var numberOfCall = 0;
@@ -176,7 +177,7 @@ namespace Strinken.Tests
             filterSeen[1].Should().Be("tutti");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithMultipleFiltersAndOneArgumentOnFirstFilter_ActionOnFilterCalledTwice()
         {
             var numberOfCall = 0;
@@ -202,7 +203,7 @@ namespace Strinken.Tests
             filterSeen[1].Should().Be("tutti");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithMultipleFilters_ActionOnFilterCalledTwiceAndFiltersChained()
         {
             var numberOfCall = 0;
@@ -231,7 +232,7 @@ namespace Strinken.Tests
             filterSeen["belli"].Should().Be("ispum");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithFilterAndOneArgument_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -258,7 +259,7 @@ namespace Strinken.Tests
             filterSeen["belli"][0].Should().Be("toto");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithFilterAndTwoArguments_ActionOnFilterCalledOnceAndArgumentsProperlySorted()
         {
             var numberOfCall = 0;
@@ -286,7 +287,7 @@ namespace Strinken.Tests
             filterSeen["belli"][1].Should().Be("titi");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithFilterAndOneArgumentTag_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -314,7 +315,7 @@ namespace Strinken.Tests
             filterSeen["belli"][0].Should().Be("TOTO");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithFilterAndOneArgumentTagAndOneArgument_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;
@@ -343,7 +344,7 @@ namespace Strinken.Tests
             filterSeen["belli"][1].Should().Be("tata");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithMultipleFiltersAndArguments_ActionOnFilterCalledTwiceAndFiltersChained()
         {
             var numberOfCall = 0;
@@ -375,7 +376,7 @@ namespace Strinken.Tests
             parsedString.Should().Be("loremkukipatsebelliIPSUMtutepaku|MALO");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_ActionOnTagIsNull_ActionOnFilterCalledTwiceAndFiltersChained()
         {
             var numberOfCall = 0;
@@ -402,14 +403,14 @@ namespace Strinken.Tests
             parsedString.Should().Be("lorempatsepaku|");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_NoActions_ReturnsOutsideString()
         {
             const string input = "lorem{ipsum:patse+paku,=malo}aku";
             new StrinkenEngine().Run(input).Stack.Resolve(null).Should().Be("loremaku");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_OneParameterTag_ActionOnParameterTagCalledOnce()
         {
             var numberOfCall = 0;
@@ -434,7 +435,7 @@ namespace Strinken.Tests
             tagSeen[0].Should().Be("ispum");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void Run_TagWithFilterAndOneArgumentParameterTag_ActionOnFilterCalledOnce()
         {
             var numberOfCall = 0;

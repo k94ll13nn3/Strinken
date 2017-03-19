@@ -2,12 +2,13 @@
 using FluentAssertions;
 using Strinken.Parser;
 using Strinken.Public.Tests.TestsClasses;
+using Xunit;
 
 namespace Strinken.Public.Tests.Parser
 {
     public class CompilationTests
     {
-        [StrinkenTest]
+        [Fact]
         public void ResolveCompiledString_StringCompiled_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -17,7 +18,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.ResolveCompiledString(new Data { Name = "Lorem" }).Should().Be("The Lorem is in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ResolveCompiledString_TwoStringCompiled_ReturnsResolvedStringForLastString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -28,7 +29,7 @@ namespace Strinken.Public.Tests.Parser
             stringSolver.ResolveCompiledString(new Data { Name = "Lorem" }).Should().Be("The Lorem is not in the kitchen.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ResolveCompiledString_NoCompiledString_ThrowsInvalidOperationException()
         {
             var stringSolver = new Parser<Data>();
@@ -38,7 +39,7 @@ namespace Strinken.Public.Tests.Parser
             act.ShouldThrow<InvalidOperationException>().WithMessage("No string were compiled.");
         }
 
-        [StrinkenTest]
+        [Fact]
         public void ResolveCompiledString_InvalidString_ThrowsFormatException()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
