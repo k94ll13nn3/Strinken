@@ -197,27 +197,25 @@ namespace Strinken.Engine
 
             while (true)
             {
-                if (updatedEnd.Contains(Value))
+                switch (Value)
                 {
-                    break;
-                }
+                    case int _ when updatedEnd.Contains(Value):
+                        var parsedName = builder.ToString();
+                        return !string.IsNullOrEmpty(parsedName) ? ParseResult<string>.Success(parsedName) : ParseResult<string>.FailureWithMessage(Errors.EmptyName);
 
-                if (HasEnded())
-                {
-                    return ParseResult<string>.FailureWithMessage(Errors.EndOfString);
-                }
+                    case int _ when HasEnded():
+                        return ParseResult<string>.FailureWithMessage(Errors.EndOfString);
 
-                if (!isValidChar?.Invoke(CharValue) ?? false)
-                {
-                    return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                    case int _ when !isValidChar?.Invoke(CharValue) ?? false:
+                        return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+
+                    default:
+                        break;
                 }
 
                 builder.Append(CharValue);
                 Next();
             }
-
-            var parsedName = builder.ToString();
-            return !string.IsNullOrEmpty(parsedName) ? ParseResult<string>.Success(parsedName) : ParseResult<string>.FailureWithMessage(Errors.EmptyName);
         }
 
         /// <summary>
@@ -290,13 +288,12 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        ///
+        /// Parses an outside string.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The result of the parsing.</returns>
         public ParseResult<Token> ParseOutsideString()
         {
             var builder = new StringBuilder();
-
             while (true)
             {
                 switch (Value)
