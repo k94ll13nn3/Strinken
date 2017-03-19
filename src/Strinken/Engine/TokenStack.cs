@@ -27,18 +27,18 @@ namespace Strinken.Engine
         /// Adds a new verbatim token to the stack.
         /// </summary>
         /// <param name="data">The data of the token.</param>
-        public void PushVerbatim(char data)
-        {
-            InternalPush(data.ToString(), TokenType.None, TokenSubtype.Base);
-        }
-
-        /// <summary>
-        /// Adds a new verbatim token to the stack.
-        /// </summary>
-        /// <param name="data">The data of the token.</param>
         public void PushVerbatim(string data)
         {
             InternalPush(data, TokenType.None, TokenSubtype.Base);
+        }
+
+        /// <summary>
+        /// Pushes a token to the stack.
+        /// </summary>
+        /// <param name="token">The token to push.</param>
+        public void Push(Token token)
+        {
+            tokenStack.Push(token);
         }
 
         /// <summary>
@@ -71,15 +71,6 @@ namespace Strinken.Engine
             }
 
             return result.ToString();
-        }
-
-        /// <summary>
-        /// Pushes a token to the stack.
-        /// </summary>
-        /// <param name="token">The token to push.</param>
-        public void Push(Token token)
-        {
-            tokenStack.Push(token);
         }
 
         /// <summary>
