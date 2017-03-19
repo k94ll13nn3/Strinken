@@ -1,5 +1,4 @@
 // stylecop.header
-using Strinken.Machine;
 
 namespace Strinken.Engine
 {
