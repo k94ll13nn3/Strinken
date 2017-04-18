@@ -1,4 +1,5 @@
 ﻿// stylecop.header
+using System;
 
 namespace Strinken.Engine
 {
@@ -49,5 +50,19 @@ namespace Strinken.Engine
         /// <param name="message">The message associated to the parsing.</param>
         /// <returns>The result.</returns>
         public static ParseResult<T> FailureWithMessage(string message) => new ParseResult<T>(false, default(T), message);
+
+        /// <summary>
+        /// Defines an implicit conversion of a <see cref="ParseResult{T}"/> to a <see cref="bool"/>.
+        /// </summary>
+        /// <param name="parseResult">The value to convert.</param>
+        public static implicit operator bool(ParseResult<T> parseResult)
+        {
+            if (parseResult is null)
+            {
+                throw new ArgumentNullException(nameof(parseResult));
+            }
+
+            return parseResult.Result;
+        }
     }
 }

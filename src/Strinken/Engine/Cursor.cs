@@ -91,7 +91,7 @@ namespace Strinken.Engine
                 // Consume ArgumentTagIndicator
                 Next();
                 var result = ParseTag(true);
-                if (result.Result)
+                if (result)
                 {
                     if (result.Value.Subtype == TokenSubtype.Base)
                     {
@@ -110,7 +110,7 @@ namespace Strinken.Engine
             else
             {
                 var result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, c => true);
-                if (result.Result)
+                if (result)
                 {
                     return ParseResult<Token>.Success(new Token(result.Value, TokenType.Argument, subtype));
                 }
@@ -127,7 +127,7 @@ namespace Strinken.Engine
         {
             var ends = new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator };
             var result = ParseName(ends, c => !c.IsInvalidTokenNameCharacter());
-            if (result.Result)
+            if (result)
             {
                 return ParseResult<Token>.Success(new Token(result.Value, TokenType.Filter, TokenSubtype.Base));
             }
@@ -143,7 +143,7 @@ namespace Strinken.Engine
         {
             var tokenList = new List<Token>();
             var filterParseResult = ParseFilter();
-            if (!filterParseResult.Result)
+            if (!filterParseResult)
             {
                 return ParseResult<IList<Token>>.FailureWithMessage(filterParseResult.Message);
             }
@@ -158,7 +158,7 @@ namespace Strinken.Engine
 
                 Next();
                 var argumentParseResult = ParseArgument();
-                if (!argumentParseResult.Result)
+                if (!argumentParseResult)
                 {
                     return ParseResult<IList<Token>>.FailureWithMessage(argumentParseResult.Message);
                 }
@@ -215,7 +215,7 @@ namespace Strinken.Engine
         {
             var tokenList = new List<Token>();
             var tagParseResult = ParseTag();
-            if (!tagParseResult.Result)
+            if (!tagParseResult)
             {
                 return ParseResult<IList<Token>>.FailureWithMessage(tagParseResult.Message);
             }
@@ -230,7 +230,7 @@ namespace Strinken.Engine
 
                 Next();
                 var filterAndArgumentsParseResult = ParseFilterAndArguments();
-                if (filterAndArgumentsParseResult.Result)
+                if (filterAndArgumentsParseResult)
                 {
                     tokenList.AddRange(filterAndArgumentsParseResult.Value ?? Enumerable.Empty<Token>());
                 }
@@ -264,7 +264,7 @@ namespace Strinken.Engine
             }
 
             var result = ParseName(ends, c => !c.IsInvalidTokenNameCharacter());
-            if (result.Result)
+            if (result)
             {
                 return ParseResult<Token>.Success(new Token(result.Value, TokenType.Tag, subtype));
             }
@@ -314,7 +314,7 @@ namespace Strinken.Engine
         {
             var tokenList = new List<Token>();
             var tokenParseResult = ParseToken();
-            if (!tokenParseResult.Result)
+            if (!tokenParseResult)
             {
                 return ParseResult<IList<Token>>.FailureWithMessage(tokenParseResult.Message);
             }
@@ -327,7 +327,7 @@ namespace Strinken.Engine
 
             Next();
             var outsideParseResult = ParseOutsideString();
-            if (!outsideParseResult.Result)
+            if (!outsideParseResult)
             {
                 return ParseResult<IList<Token>>.FailureWithMessage(outsideParseResult.Message);
             }
@@ -344,7 +344,7 @@ namespace Strinken.Engine
         {
             var tokenList = new List<Token>();
             var outsideParseResult = ParseOutsideString();
-            if (!outsideParseResult.Result)
+            if (!outsideParseResult)
             {
                 return ParseResult<IList<Token>>.FailureWithMessage(outsideParseResult.Message);
             }
@@ -359,7 +359,7 @@ namespace Strinken.Engine
 
                 Next();
                 var tokenParseResult = ParseTokenAndOutsideString();
-                if (tokenParseResult.Result)
+                if (tokenParseResult)
                 {
                     foreach (var token in tokenParseResult.Value)
                     {
