@@ -138,6 +138,7 @@ Task("Nuget-Pack")
 });
 
 Task("Generate-Release-Notes")
+    .WithCriteria(false)
     .IsDependentOn("Nuget-Pack")
     .Does(() =>
 {
