@@ -164,7 +164,7 @@ Task("Upload-Artifact")
     .IsDependentOn("Upload-Coverage")
     .Does(() =>
 {
-    AppVeyor.UploadArtifact(publishDir + releaseNotesPath);
+    //AppVeyor.UploadArtifact(publishDir + releaseNotesPath);
     AppVeyor.UploadArtifact(publishDir + new FilePath("Strinken." + nugetVersion +".nupkg"));
 });
 
