@@ -93,16 +93,14 @@ namespace Strinken.Filters
         /// <summary>
         /// Unregisters a filter from the base filters.
         /// </summary>
-        /// <typeparam name="T">The type of the filter.</typeparam>
-        /// <param name="filter">The filter to unregister.</param>
-        public static void Unregister<T>(T filter)
-            where T : IFilter
+        /// <param name="filterName">The name of the filter to unregister.</param>
+        public static void Unregister(string filterName)
         {
             lock (Lock)
             {
-                if (RegisteredFilters.ContainsKey(filter.Name))
+                if (RegisteredFilters.ContainsKey(filterName))
                 {
-                    RegisteredFilters.Remove(filter.Name);
+                    RegisteredFilters.Remove(filterName);
                 }
             }
         }

@@ -17,7 +17,7 @@ namespace Strinken.Public.Tests.Filters
             var validationResult = stringSolver.Validate("The {DataName:ROne} is in the kitchen.");
             validationResult.IsValid.Should().BeTrue();
 
-            FilterHelpers.Unregister(new FilterGenerator("ROne"));
+            FilterHelpers.Unregister("ROne");
         }
 
         [Fact]
@@ -28,14 +28,14 @@ namespace Strinken.Public.Tests.Filters
             var validationResult = stringSolver.Validate("The {DataName:RTwo} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
 
-            FilterHelpers.Unregister(new FilterGenerator("RTwo"));
+            FilterHelpers.Unregister("RTwo");
         }
 
         [Fact]
         public void Validate_FilterRegisteredAndThenUnRegistered_ReturnsTrueAndThenFalse()
         {
             FilterHelpers.Register(new FilterGenerator("RThree"));
-            FilterHelpers.Unregister(new FilterGenerator("RThree"));
+            FilterHelpers.Unregister("RThree");
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             var validationResult = stringSolver.Validate("The {DataName:RThree} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
