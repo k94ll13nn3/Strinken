@@ -297,7 +297,7 @@ namespace Strinken.Parser
                 throw new ArgumentException("A name cannot be empty.");
             }
 
-            for (int i = 0; i < name.Length; i++)
+            for (var i = 0; i < name.Length; i++)
             {
                 if (name[i].IsInvalidTokenNameCharacter())
                 {

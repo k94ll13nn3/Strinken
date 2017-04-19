@@ -9,7 +9,7 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithoutToken_ReturnsTheString()
         {
-            var input = "some string !";
+            const string input = "some string !";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -22,7 +22,7 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_EmptyString_ReturnsEmptyString()
         {
-            var input = "";
+            const string input = "";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -35,8 +35,8 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_OnlyTokenStartIndicator_ReturnsEmptyString()
         {
-            var input = "{";
-            var expected = "";
+            const string input = "{";
+            const string expected = "";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -49,8 +49,8 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithEscapedTokenStartIndicatorInside_ReturnsTheStringWithOneTokenStartIndicatorInside()
         {
-            var input = "Mustache : {{ !";
-            var expected = "Mustache : { !";
+            const string input = "Mustache : {{ !";
+            const string expected = "Mustache : { !";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -63,8 +63,8 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithEscapedTokenStartIndicatorAtEnd_ReturnsTheStringWithOneTokenStartIndicatorAtEnd()
         {
-            var input = "Mustache : {{";
-            var expected = "Mustache : {";
+            const string input = "Mustache : {{";
+            const string expected = "Mustache : {";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -77,8 +77,8 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithEscapedTokenEndIndicatorInside_ReturnsTheStringWithOneTokenEndIndicatorInside()
         {
-            var input = "Mustache : }} !";
-            var expected = "Mustache : } !";
+            const string input = "Mustache : }} !";
+            const string expected = "Mustache : } !";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -91,8 +91,8 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithEscapedTokenEndIndicatorAtEnd_ReturnsTheStringWithOneTokenEndIndicatorAtEnd()
         {
-            var input = "Mustache : }}";
-            var expected = "Mustache : }";
+            const string input = "Mustache : }}";
+            const string expected = "Mustache : }";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -105,8 +105,8 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithOneTokenStartIndicatorInside_ReturnsPartBeforeTokenStartIndicator()
         {
-            var input = "Mustache : { !";
-            var expected = "Mustache : ";
+            const string input = "Mustache : { !";
+            const string expected = "Mustache : ";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -119,8 +119,8 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithOneTokenStartIndicatorAtEnd_ReturnsPartBeforeTokenStartIndicator()
         {
-            var input = "Mustache : {";
-            var expected = "Mustache : ";
+            const string input = "Mustache : {";
+            const string expected = "Mustache : ";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -133,7 +133,7 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithOneTokenEndIndicatorInside_ReturnsFailure()
         {
-            var input = "Mustache : } !";
+            const string input = "Mustache : } !";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -146,7 +146,7 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithOneTokenEndIndicatorAtEnd_ReturnsFailure()
         {
-            var input = "Mustache : }";
+            const string input = "Mustache : }";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
@@ -159,7 +159,7 @@ namespace Strinken.Tests
         [Fact]
         public void ParseOutsideString_StringWithOneTokenEndIndicatorAtStart_ReturnsFailure()
         {
-            var input = "}Mustache";
+            const string input = "}Mustache";
             using (var cursor = new Cursor(input))
             {
                 var parsedStringResult = cursor.ParseOutsideString();
