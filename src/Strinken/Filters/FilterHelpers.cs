@@ -59,11 +59,14 @@ namespace Strinken.Filters
         /// <summary>
         /// Registers a filter that will be used as a base filter for all parser built after.
         /// </summary>
-        /// <typeparam name="T">The type of the filter.</typeparam>
         /// <param name="filter">The filter to register.</param>
-        public static void Register<T>(T filter)
-            where T : IFilter
+        public static void Register(IFilter filter)
         {
+            if (filter is null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
             lock (Lock)
             {
                 if (!RegisteredFilters.ContainsKey(filter.Name))

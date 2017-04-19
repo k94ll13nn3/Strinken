@@ -65,6 +65,14 @@ namespace Strinken.Public.Tests.Filters
             act.ShouldThrow<ArgumentException>().WithMessage("Length was already registered in the filter list.");
         }
 
+        [Fact]
+        public void Register_FilterNull_ThrowsArgumentNullException()
+        {
+            Action act = () => FilterHelpers.Register(null);
+
+            act.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "filter");
+        }
+
         private class FilterGenerator : IFilter
         {
             private readonly string data;
