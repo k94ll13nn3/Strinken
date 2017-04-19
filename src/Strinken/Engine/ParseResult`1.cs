@@ -7,7 +7,7 @@ namespace Strinken.Engine
     /// Base class for all parsing result.
     /// </summary>
     /// <typeparam name="T">The type of the parsed data.</typeparam>
-    internal class ParseResult<T>
+    internal struct ParseResult<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ParseResult{T}"/> class.
@@ -55,14 +55,6 @@ namespace Strinken.Engine
         /// Defines an implicit conversion of a <see cref="ParseResult{T}"/> to a <see cref="bool"/>.
         /// </summary>
         /// <param name="parseResult">The value to convert.</param>
-        public static implicit operator bool(ParseResult<T> parseResult)
-        {
-            if (parseResult is null)
-            {
-                throw new ArgumentNullException(nameof(parseResult));
-            }
-
-            return parseResult.Result;
-        }
+        public static implicit operator bool(ParseResult<T> parseResult) => parseResult.Result;
     }
 }
