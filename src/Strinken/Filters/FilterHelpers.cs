@@ -36,7 +36,8 @@ namespace Strinken.Filters
                 new LeadingZerosFilter(),
                 new NullFilter(),
                 new IfEqualFilter(),
-                new ReplaceFilter()
+                new ReplaceFilter(),
+                new ReapeatFilter()
             };
 
             RegisteredFilters = baseFilters.ToDictionary(x => x.Name, x => x);
