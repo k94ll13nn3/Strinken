@@ -10,73 +10,41 @@
 | AppVeyor       | Windows      | [![AppVeyor](https://ci.appveyor.com/api/projects/status/038gqsusfw0srmst/branch/master?svg=true)](https://ci.appveyor.com/project/k94ll13nn3/strinken) |
 | Travis         | Linux        | [![Travis](https://travis-ci.org/k94ll13nn3/Strinken.svg?branch=master)](https://travis-ci.org/k94ll13nn3/Strinken) |
 
-A parametrized string library !
+A parametrized string library ! ([Documentation](https://k94ll13nn3.github.io/Strinken/))
 
-## Installation
+# Installation
 
-Nuget `Install-Package Strinken`
+## NuGet
 
-## Parser usage
+- Grab the latest package on [NuGet](https://www.nuget.org/packages/Strinken/).
+- Install it via the Package Manager Console: `Install-Package Strinken`.
 
-Create a tag:
+## Manual downloads
+
+- Get the latest release on [GitHub](https://github.com/k94ll13nn3/Strinken/releases/latest).
+- Get the latest CI build on [AppVeyor](https://ci.appveyor.com/project/k94ll13nn3/strinken/build/artifacts).
+
+# Basic example
+
+1. Create a class that implements `ITag<T>` for the wanted type (a class Person with a Name property for example):
 
 ``` csharp
-public class ExampleTag : ITag<ExampleClass>
+public class NameTag : ITag<Person>
 {
-    public string Description => "Example";
-    public string Name => "Example";
-    public string Resolve(ExampleClass value) => value.Name;
+    public string Description => "Returns the name of a Person.";
+    public string Name => "Name";
+    public string Resolve(Person value) => value.Name.ToString();
 }
 ```
 
-Create a parameter tag:
+2. Create a `Parser<T>` with this tag:
 
 ``` csharp
-public class DateParameterTag : IParameterTag
-{
-    public string Description => "Date";
-    public string Name => "Date";
-    public string Resolve() => DateTime.Now.ToString();
-}
+var parser = new Parser<Person>().WithTag(new NameTag());
 ```
 
-Create a filter (example taken from the base filters):
+3. Resolve a string with the parser:
 
 ``` csharp
-public class LowerFilter : IFilter
-{
-    public string Description => "Converts a string to lowercase.";
-    public string Name => "Lower";
-    public string Usage => "{tag:Lower}";
-    public string Resolve(string value, string[] arguments) => value.ToLowerInvariant();
-    public bool Validate(string[] arguments) => arguments == null || arguments.Length == 0;
-}
-```
-
-Create a parser:
-
-``` csharp
-var parser = new Parser<ExampleClass>()
-                .WithTag(new ExampleTag())
-                .WithFilter(new LowerFilter()) // for the example, but the LowerFilter is a base filter.
-                .WithParameterTag(new DateParameterTag());
-```
-
-Validate a string:
-
-``` csharp
-parser.Validate("My name is {Example:Lower}.")
-// returns a ValidationResult with IsValid = true
-```
-
-``` csharp
-parser.Validate("My name is {Example:Lower+arg}.")
-// returns a ValidationResult with IsValid = false and Message = "Lower does not have valid arguments."
-```
-
-Parse a string:
-
-``` csharp
-var result = parser.Resolve("My name is {Example:Lower}.", new ExampleClass { Name = "Lorem" })
-// returns "My name is lorem."
+var result = parser.Resolve("My name is {Name}.", new Person { Name = "James" }); // will return "My name is James."
 ```
