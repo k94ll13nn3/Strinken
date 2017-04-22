@@ -9,9 +9,9 @@ using Strinken.Parser;
 namespace Strinken.Filters
 {
     /// <summary>
-    /// Base class to share data amongst all parsers.
+    /// Class that handles the base filters and (un)registration of base filters.
     /// </summary>
-    public static class FilterHelpers
+    public static class BaseFilters
     {
         /// <summary>
         /// Lock object for operations on the filters list.
@@ -21,12 +21,12 @@ namespace Strinken.Filters
         /// <summary>
         /// The list of registered filters.
         /// </summary>
-        private static readonly IDictionary<string, IFilter> RegisteredFilters;
+        private static readonly IDictionary<string, IFilter> InternalRegisteredFilters;
 
         /// <summary>
-        /// Initializes static members of the <see cref="FilterHelpers"/> class.
+        /// Initializes static members of the <see cref="BaseFilters"/> class.
         /// </summary>
-        static FilterHelpers()
+        static BaseFilters()
         {
             var baseFilters = new List<IFilter>
             {
@@ -40,19 +40,19 @@ namespace Strinken.Filters
                 new ReapeatFilter()
             };
 
-            RegisteredFilters = baseFilters.ToDictionary(x => x.Name, x => x);
+            InternalRegisteredFilters = baseFilters.ToDictionary(x => x.Name, x => x);
         }
 
         /// <summary>
         /// Gets base filters shared by all parsers.
         /// </summary>
-        internal static IReadOnlyCollection<IFilter> BaseFilters
+        internal static IReadOnlyCollection<IFilter> RegisteredFilters
         {
             get
             {
                 lock (Lock)
                 {
-                    return new ReadOnlyCollection<IFilter>(RegisteredFilters.Values.ToList());
+                    return new ReadOnlyCollection<IFilter>(InternalRegisteredFilters.Values.ToList());
                 }
             }
         }
@@ -61,6 +61,7 @@ namespace Strinken.Filters
         /// Registers a filter that will be used as a base filter for all parser built after.
         /// </summary>
         /// <param name="filter">The filter to register.</param>
+        /// <exception cref="ArgumentNullException">The filter is null.</exception>
         /// <exception cref="ArgumentException">The filter name is invalid or already present.</exception>
         public static void Register(IFilter filter)
         {
@@ -71,14 +72,14 @@ namespace Strinken.Filters
 
             lock (Lock)
             {
-                if (!RegisteredFilters.ContainsKey(filter.Name))
+                if (!InternalRegisteredFilters.ContainsKey(filter.Name))
                 {
                     if (string.IsNullOrWhiteSpace(filter.Name))
                     {
                         throw new ArgumentException("A name cannot be empty.");
                     }
 
-                    for (int i = 0; i < filter.Name.Length; i++)
+                    for (var i = 0; i < filter.Name.Length; i++)
                     {
                         if (filter.Name[i].IsInvalidTokenNameCharacter())
                         {
@@ -86,7 +87,7 @@ namespace Strinken.Filters
                         }
                     }
 
-                    RegisteredFilters.Add(filter.Name, filter);
+                    InternalRegisteredFilters.Add(filter.Name, filter);
                 }
                 else
                 {
@@ -103,9 +104,9 @@ namespace Strinken.Filters
         {
             lock (Lock)
             {
-                if (RegisteredFilters.ContainsKey(filterName))
+                if (InternalRegisteredFilters.ContainsKey(filterName))
                 {
-                    RegisteredFilters.Remove(filterName);
+                    InternalRegisteredFilters.Remove(filterName);
                 }
             }
         }

@@ -55,7 +55,7 @@ namespace Strinken.Parser
 
             if (!ignoreBaseFilters)
             {
-                foreach (var filter in FilterHelpers.BaseFilters)
+                foreach (var filter in BaseFilters.RegisteredFilters)
                 {
                     AddFilter(filter);
                 }

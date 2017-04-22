@@ -7,35 +7,35 @@ using Xunit;
 
 namespace Strinken.Public.Tests.Filters
 {
-    public class FilterHelpersTests
+    public class BaseFiltersTests
     {
         [Fact]
         public void Validate_FilterRegistered_ReturnsTrue()
         {
-            FilterHelpers.Register(new FilterGenerator("ROne"));
+            BaseFilters.Register(new FilterGenerator("ROne"));
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             var validationResult = stringSolver.Validate("The {DataName:ROne} is in the kitchen.");
             validationResult.IsValid.Should().BeTrue();
 
-            FilterHelpers.Unregister("ROne");
+            BaseFilters.Unregister("ROne");
         }
 
         [Fact]
         public void Validate_FilterRegisteredAfterValidation_ReturnsFalse()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
-            FilterHelpers.Register(new FilterGenerator("RTwo"));
+            BaseFilters.Register(new FilterGenerator("RTwo"));
             var validationResult = stringSolver.Validate("The {DataName:RTwo} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
 
-            FilterHelpers.Unregister("RTwo");
+            BaseFilters.Unregister("RTwo");
         }
 
         [Fact]
         public void Validate_FilterRegisteredAndThenUnRegistered_ReturnsTrueAndThenFalse()
         {
-            FilterHelpers.Register(new FilterGenerator("RThree"));
-            FilterHelpers.Unregister("RThree");
+            BaseFilters.Register(new FilterGenerator("RThree"));
+            BaseFilters.Unregister("RThree");
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             var validationResult = stringSolver.Validate("The {DataName:RThree} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
@@ -44,7 +44,7 @@ namespace Strinken.Public.Tests.Filters
         [Fact]
         public void Register_FilterWithEmptyName_ThrowsArgumentException()
         {
-            Action act = () => FilterHelpers.Register(new EmptyNameFilter());
+            Action act = () => BaseFilters.Register(new EmptyNameFilter());
 
             act.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
         }
@@ -52,7 +52,7 @@ namespace Strinken.Public.Tests.Filters
         [Fact]
         public void Register_FilterWithInvalidName_ThrowsArgumentException()
         {
-            Action act = () => FilterHelpers.Register(new InvalidNameFilter());
+            Action act = () => BaseFilters.Register(new InvalidNameFilter());
 
             act.ShouldThrow<ArgumentException>().WithMessage("! is an invalid character for a name.");
         }
@@ -60,7 +60,7 @@ namespace Strinken.Public.Tests.Filters
         [Fact]
         public void Register_FilterWithNameAlreadyRegistered_ThrowsArgumentException()
         {
-            Action act = () => FilterHelpers.Register(new FilterGenerator("Length"));
+            Action act = () => BaseFilters.Register(new FilterGenerator("Length"));
 
             act.ShouldThrow<ArgumentException>().WithMessage("Length was already registered in the filter list.");
         }
@@ -68,7 +68,7 @@ namespace Strinken.Public.Tests.Filters
         [Fact]
         public void Register_FilterNull_ThrowsArgumentNullException()
         {
-            Action act = () => FilterHelpers.Register(null);
+            Action act = () => BaseFilters.Register(null);
 
             act.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "filter");
         }
