@@ -61,6 +61,7 @@ namespace Strinken.Filters
         /// Registers a filter that will be used as a base filter for all parser built after.
         /// </summary>
         /// <param name="filter">The filter to register.</param>
+        /// <exception cref="ArgumentException">The filter name is invalid or already present.</exception>
         public static void Register(IFilter filter)
         {
             if (filter is null)
