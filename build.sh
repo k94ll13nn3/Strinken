@@ -14,7 +14,7 @@ CAKE_VERSION=0.18.0
 CAKE_EXE=$TOOLS_DIR/Cake.CoreCLR/$CAKE_VERSION/Cake.dll
 
 # Define default arguments.
-SCRIPT="build-travis.cake"
+SCRIPT="travis.cake"
 TARGET="Default"
 CONFIGURATION="Release"
 VERBOSITY="verbose"
