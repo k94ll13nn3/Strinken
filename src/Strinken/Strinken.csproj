@@ -12,7 +12,7 @@
     <AssemblyName>Strinken</AssemblyName>
     <PackageId>Strinken</PackageId>
     <PackageTags>parametrized;string;parser;strinken</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/docs/img/logo_64x64.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/docs/input/assets/img/logo_64x64.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/k94ll13nn3/Strinken</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
