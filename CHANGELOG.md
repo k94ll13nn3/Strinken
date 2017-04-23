@@ -8,7 +8,7 @@ Thanks to [Keep a CHANGELOG](http://keepachangelog.com/) for the formating.
 
 ### Added 
 
-- New filter : Reapeat
+- New filter : Repeat
 - Add possibility to register and unregister base filters
 - Add a Parser contructor that allows the creation of a parser without base filters
 
