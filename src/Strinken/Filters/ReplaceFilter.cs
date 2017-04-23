@@ -9,13 +9,13 @@ namespace Strinken.Filters
     internal class ReplaceFilter : IFilter
     {
         /// <inheritdoc/>
-        public string Description => "This filter takes some couples of arguments, and replace each occurrence of each first argument by the second.";
+        public string Description => "This filter takes pairs of arguments, and replace each occurrence of each first argument by the second.";
 
         /// <inheritdoc/>
         public string Name => "Replace";
 
         /// <inheritdoc/>
-        public string Usage => "{tag:replace+value1,replaceValue1,value2,replaceValue2...}";
+        public string Usage => "{tag:Replace+value1,replaceValue1,value2,replaceValue2...}";
 
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments)

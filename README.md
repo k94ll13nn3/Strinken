@@ -46,5 +46,6 @@ var parser = new Parser<Person>().WithTag(new NameTag());
 3. Resolve a string with the parser:
 
 ``` csharp
-var result = parser.Resolve("My name is {Name}.", new Person { Name = "James" }); // will return "My name is James."
+var result = parser.Resolve("My name is {Name}.", new Person { Name = "James" });
+// will return "My name is James."
 ```
