@@ -1,8 +1,4 @@
----
-title: "Idea"
-bg: blue
-color: white
-fa-icon: lightbulb-o
+Description: Background on this project.
 ---
 
 In [Fun With Named Formats, String Parsing, and Edge Cases](http://haacked.com/archive/2009/01/04/fun-with-named-formats-string-parsing-and-edge-cases.aspx/), 
@@ -16,6 +12,3 @@ can be used and it can lead to using variables that shouldn't be used.
 
 This library is focused on restricting the possible variables to a definite set (tags) that the user can see and only allowing this set. It also give 
 some utility functions, like filters that can be applied to the tags, or parameter tags.
-
-
-Parsing engine inspired from Henri's solution at [Named Formats Redux](http://haacked.com/archive/2009/01/14/named-formats-redux.aspx/)

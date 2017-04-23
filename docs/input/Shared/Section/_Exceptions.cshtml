@@ -1,0 +1,29 @@
+@using Microsoft.AspNetCore.Html;
+@{
+	IReadOnlyList<ReferenceComment> exceptions = Model.List<ReferenceComment>("Exceptions");
+}
+@if(exceptions != null && exceptions.Count > 0)
+{
+	<h1 id="Exceptions">Exceptions</h1>
+	<div class="box">
+		<div class="box-body no-padding table-responsive">
+			<table class="table table-striped table-hover three-cols">
+				<thead>
+					<tr>
+						<th>Exception</th>
+						<th>Condition</th>
+						<th>Condition</th>
+					</tr>
+				</thead>
+				@foreach(ReferenceComment exception in exceptions)
+				{
+					<tr>
+						<td>@exception.Name</td>
+						<td>@exception.Link</td>
+						<td>@exception.Html</td>
+					</tr>
+				}
+			</table>
+		</div>
+	</div>	
+}

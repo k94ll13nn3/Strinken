@@ -34,7 +34,7 @@ var nugetVersion = "";
 var currentBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 var isOnMaster =  currentBranch == "master";
-var isPullRequest = isOnAppVeyor ? !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")) : false;
+var isPullRequest = isOnAppVeyor ? AppVeyor.Environment.PullRequest.IsPullRequest : false;
 
 //////////////////////////////////////////////////////////////////////
 // TASKS

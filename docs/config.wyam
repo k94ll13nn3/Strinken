@@ -1,0 +1,22 @@
+#r Docs
+#a **/Strinken.dll
+
+Settings[Keys.Host] = "k94ll13nn3.github.io";
+Settings[Keys.LinkRoot] = "/Strinken";
+
+Settings[DocsKeys.Title] = "Strinken";
+Settings[DocsKeys.AssemblyFiles] = "Strinken.dll";
+Settings[DocsKeys.BaseEditUrl] = "https://github.com/k94ll13nn3/Strinken/blob/master/docs/input/";
+Settings[DocsKeys.BlogAtomPath] = null;
+Settings[DocsKeys.BlogRssPath] = null;
+Settings[DocsKeys.BlogRdfPath] = null;
+Settings[DocsKeys.Logo] = "/assets/img/logo.png";
+Settings[DocsKeys.SearchIndex] = false; 
+Settings[DocsKeys.ValidateRelativeLinks] = true;
+Settings[DocsKeys.ValidateAbsoluteLinks] = true;
+Settings[Keys.LinksUseHttps] = true;
+
+Pipelines["Resources"].Clear();
+Pipelines["Resources"].Add(
+    new CopyFiles("**/*{!.cshtml,!.md,!.less,!.xml,!.dll,!.ebnf,}")
+);

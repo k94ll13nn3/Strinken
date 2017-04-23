@@ -1,5 +1,5 @@
-#load "scripts/wyam.cake"
 #load "scripts/library.cake"
+#load "scripts/wyam.cake"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -12,8 +12,8 @@ var target = Argument("target", "Default");
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Build-Documentation")
-    .IsDependentOn("Upload-Artifact");
+    .IsDependentOn("Upload-Artifact")
+    .IsDependentOn("Build-Documentation");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
