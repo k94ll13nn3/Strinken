@@ -26,6 +26,7 @@ var sourceCommit = GitLogTip("./");
 var outputPath = MakeAbsolute(Directory("./docs/output"));
 var rootPublishFolder = MakeAbsolute(Directory("./docs/publish"));
 var shouldGenerateDocumentation = sourceCommit.Message.Contains("[build-doc]");
+var forceDocumentation = sourceCommit.Message.Contains("[build-doc-force]"); // to rebuild when no file was changed
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -40,7 +41,7 @@ Task("Clean-Documentation")
 
 Task("Build-Documentation")
     .IsDependentOn("Clean-Documentation")
-    .WithCriteria(shouldGenerateDocumentation)
+    .WithCriteria(shouldGenerateDocumentation || forceDocumentation)
     .Does(() =>
 {
     // Check to see if any documentation has changed
@@ -64,7 +65,7 @@ Task("Build-Documentation")
         }
     }
 
-    if(docFileChanged)
+    if(docFileChanged || forceDocumentation)
     {
         Information("Detected that documentation files have changed, so running Wyam...");
         
