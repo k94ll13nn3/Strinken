@@ -38,11 +38,11 @@ namespace Strinken.Public.Tests.Parser
         }
 
         [Fact]
-        public void Filters_Get_ReturnsNineFilters()
+        public void Filters_GetWithoutBaseFilters_ReturnsOneFilter()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            var stringSolver = new Parser<Data>(true).WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
-            stringSolver.Filters.Should().HaveCount(9);
+            stringSolver.Filters.Should().HaveCount(1);
         }
 
         [Fact]
