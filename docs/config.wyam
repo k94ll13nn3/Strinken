@@ -18,5 +18,5 @@ Settings[Keys.LinksUseHttps] = true;
 
 Pipelines["Resources"].Clear();
 Pipelines["Resources"].Add(
-    new CopyFiles("**/*{!.cshtml,!.md,!.less,!.xml,!.dll,!.ebnf,}")
+    new CopyFiles("**/*{!.cshtml,!.md,!.less,!.xml,!.dll,}")
 );
