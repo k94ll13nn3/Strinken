@@ -2,12 +2,12 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool nuget:?package=GitVersion.CommandLine&version=3.6.5
-#tool nuget:?package=OpenCover&version=4.6.519
-#tool nuget:?package=GitReleaseNotes&version=0.7.0
-#tool nuget:?package=coveralls.io&version=1.3.4
+#tool GitVersion.CommandLine
+#tool OpenCover
+#tool GitReleaseNotes
+#tool coveralls.io
 
-#addin nuget:?package=Cake.Coveralls&version=0.4.0
+#addin Cake.Coveralls
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
