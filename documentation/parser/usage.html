@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html><html><head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta name="description">
+        <meta name="keywords" content="static content generator,static site generator,static site,HTML,web development,.NET,C#,Razor,Markdown,YAML">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="/Strinken/assets/img/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/Strinken/assets/img/favicon.ico" type="image/x-icon">
+        <title>Strinken - Usage</title>
+        <link href="/Strinken/assets/css/mermaid.css" rel="stylesheet">
+        <link href="/Strinken/assets/css/highlight.css" rel="stylesheet">
+        <link href="/Strinken/assets/css/bootstrap/bootstrap.css" rel="stylesheet">
+        <link href="/Strinken/assets/css/adminlte/AdminLTE.css" rel="stylesheet">
+        <link href="/Strinken/assets/css/theme/theme.css" rel="stylesheet">
+        <link href="//fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,400i,700,700i" rel="stylesheet">
+        <link href="/Strinken/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="/Strinken/assets/css/override.css" rel="stylesheet">
+        <script src="/Strinken/assets/js/jquery-2.2.3.min.js"></script>
+        <script src="/Strinken/assets/js/bootstrap.min.js"></script>        
+        <script src="/Strinken/assets/js/app.min.js"></script>         
+        <script src="/Strinken/assets/js/highlight.pack.js"></script>   
+        <script src="/Strinken/assets/js/jquery.slimscroll.min.js"></script>
+        <script src="/Strinken/assets/js/jquery.sticky-kit.min.js"></script>
+        <script src="/Strinken/assets/js/mermaid.min.js"></script>
+        <!--[if lt IE 9]>
+        <script src="/Strinken/assets/js/html5shiv.min.js"></script>
+        <script src="/Strinken/assets/js/respond.min.js"></script>
+        <![endif]-->  
+
+        <script async="" defer="" src="https://buttons.github.io/buttons.js"></script>
+    </head>
+    <body class="hold-transition wyam layout-boxed  ">    
+        <div class="top-banner"></div>
+        <div class="wrapper with-container">
+            <!-- Header -->
+            <header class="main-header">   
+                     
+                <a href="/Strinken/" class="logo">
+
+                                <!-- mini logo for sidebar mini 50x50 pixels -->
+                                <span class="logo-mini"><img src="/Strinken/assets/img/logo.png"></span>
+                                <!-- logo for regular state and mobile devices -->
+                                <span class="logo-lg"><img src="/Strinken/assets/img/logo.png"></span>
+                                            </a>   
+                         
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <!-- Sidebar toggle button-->
+                        <a href="#" class="sidebar-toggle visible-xs-block" data-toggle="offcanvas" role="button">
+                            <span class="sr-only">Toggle side menu</span>
+                            <i class="fa fa-chevron-circle-right"></i>
+                        </a>
+                                        
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                            <span class="sr-only">Toggle side menu</span>
+                            <i class="fa fa-chevron-circle-down"></i>
+                        </button>
+                    </div>
+            
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                        <ul class="nav navbar-nav">                            
+                                    <li class="active"><a href="/Strinken/documentation">Documentation</a></li>
+        <li><a href="/Strinken/api">API</a></li>
+ 
+                        </ul>       
+                    </div>
+                    <!-- /.navbar-collapse -->
+                
+                    <!-- Navbar Right Menu -->
+                </nav>
+            </header>
+            
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="main-sidebar ">
+                <section class="infobar" data-spy="affix" data-offset-top="60" data-offset-bottom="200"> 
+                    	
+        <div><p><a href="https://github.com/k94ll13nn3/Strinken/blob/master/docs/input/documentation/parser/usage.md"><i class="fa fa-pencil-square" aria-hidden="true"></i> Edit Content</a></p></div>
+    <div id="infobar-headings"><h6>On This Page</h6><p><a href="#token-creation">Token creation</a></p>
+<p><a href="#parser-creation">Parser creation</a></p>
+<p><a href="#string-parsing">String parsing</a></p>
+<hr class="infobar-hidden">
+</div>
+
+                </section>
+                <section class="sidebar">                    
+                    
+
+                    <ul class="sidebar-menu">
+                        
+                <li class="treeview active">
+                    <a href="/Strinken/documentation/parser">Parser</a> <a href="#" class="expand"></a>
+                    <ul class="treeview-menu">
+                                        <li class="selected"><a href="/Strinken/documentation/parser/usage">Usage</a></li>
+                <li><a href="/Strinken/documentation/parser/grammar">Syntax</a></li>
+                <li><a href="/Strinken/documentation/parser/filters">Base filters</a></li>
+                <li><a href="/Strinken/documentation/parser/tokens">Tokens</a></li>
+
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="/Strinken/documentation/resources">Resources</a> <a href="#" class="expand"></a>
+                    <ul class="treeview-menu">
+                                        <li><a href="/Strinken/documentation/resources/why">Why</a></li>
+
+                    </ul>
+                </li>
+
+                    </ul>
+                </section>                
+            </aside>
+            
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                
+
+
+
+	<section class="content-header">
+		<h1>Usage</h1>
+	</section>
+	<section class="content">
+		<p>The usage of Strinken is generally split into two parts: defining the tokens that will be available to a
+parser and the creation of that parser.</p>
+<h1 id="token-creation">Token creation</h1>
+<p>Creation of a tag:</p>
+<pre><code class="language-csharp">public class ExampleTag : ITag&lt;ExampleClass&gt;
+{
+    public string Description =&gt; "Example";
+    public string Name =&gt; "Example";
+    public string Resolve(ExampleClass value) =&gt; value.Name;
+}
+</code></pre>
+<p>Creation of a parameter tag:</p>
+<pre><code class="language-csharp">public class DateParameterTag : <a href="/Strinken/api/Strinken.Parser/IParameterTag">IParameterTag</a>
+{
+    public string Description =&gt; "Date";
+    public string Name =&gt; "Date";
+    public string Resolve() =&gt; DateTime.Now.ToString();
+}
+</code></pre>
+<p>Creation of a filter:</p>
+<pre><code class="language-csharp">public class TrimFilter : <a href="/Strinken/api/Strinken.Parser/IFilter">IFilter</a>
+{
+    public string Description =&gt; "Trims a string.";
+    public string Name =&gt; "Trim";
+    public string Usage =&gt; "{tag:Trim}";
+    public string Resolve(string value, string[] arguments) =&gt; value.Trim();
+    public bool Validate(string[] arguments) =&gt; arguments == null || arguments.Length == 0;
+}
+</code></pre>
+<h1 id="parser-creation">Parser creation</h1>
+<p>Creation of a parser:</p>
+<pre><code class="language-csharp">var parser = new Parser&lt;ExampleClass&gt;();
+</code></pre>
+<h2 id="adding-tokens">Adding tokens</h2>
+<p>There is three methods that can be used to add tokens to a parser:</p>
+<ul>
+<li><code>AddTag</code></li>
+<li><code>AddParameterTag</code></li>
+<li><code>AddFilter</code></li>
+</ul>
+<p>Each method takes an instance of the corresponding token, and returns void (the addition is done to the caller).</p>
+<p>It is also possible to use one of the extension methods defined on the Parser class. Each
+of these extension methods returns a new Parser (so they can be chained) and does not modify the
+caller.</p>
+<h3 id="withtags-extensions">WithTag(s) extensions</h3>
+<p>These methods add one or more tag(s) to the parser.</p>
+<p>You can either pass an existing tag, a list of existing tags or you can pass the tag parameters directly (if you
+don't want to create a class only for a one time use)</p>
+<h3 id="withfilters-extensions">WithFilter(s) extensions</h3>
+<p>These methods add one or more filter(s) to the parser.</p>
+<p>You can either pass an existing filter or a list of existing filters.</p>
+<h3 id="withparametertags-extensions">WithParameterTag(s) extensions</h3>
+<p>These methods add one or more parameter tag(s) to the parser.</p>
+<p>You can either pass an existing parameter tag or a list of existing parameter tags.</p>
+<h1 id="string-parsing">String parsing</h1>
+<p>The string parsing in Strinken is split into three parts:</p>
+<ul>
+<li>The validation of the format of the string</li>
+<li>The validation of the content of the string (find if there is unknown tokens)</li>
+<li>The resolution of the string</li>
+</ul>
+<p>Each of these part must parse the entire string in order to find errors or resolve each tokens. For that reason,
+the validation of the content <strong>is only done</strong> by the validation process, the resolution does not verify that
+all the tokens are known. The validation of the format is done by each process.</p>
+<h2 id="string-validation">String validation</h2>
+<p>Validation of a string:</p>
+<pre><code class="language-csharp">parser.Validate("My name is {Example:Trim}.")
+// returns a <a href="/Strinken/api/Strinken.Parser/ValidationResult">ValidationResult</a> with IsValid = true
+</code></pre>
+<pre><code class="language-csharp">parser.Validate("My name is {Example:Trim+arg}.")
+// returns a <a href="/Strinken/api/Strinken.Parser/ValidationResult">ValidationResult</a> with IsValid = false and Message = "Lower does not have valid arguments."
+</code></pre>
+<h2 id="string-resolution">String resolution</h2>
+<p>The resolution of a string is done by passing to the <code>Resolve</code> method an instance of the class for
+which the parser is designed.</p>
+<pre><code class="language-csharp">var result = parser.Resolve("My name is {Example:Lower}.", new ExampleClass { Name = "Lorem" })
+// returns "My name is lorem."
+</code></pre>
+<p>A string can be compiled into the parser in order to have a faster resolution time. Only the last
+compiled string can be used for the resolution. Like the <code>Resolve</code> method, the compilation does not
+verify the content of the string.</p>
+<p>Compilation of a string:</p>
+<pre><code class="language-csharp">parser.Compile("My name is {Example:Lower}.")
+</code></pre>
+<p>Resolution of a compiled string:</p>
+<pre><code class="language-csharp">var result = parser.ResolveCompiledString(new ExampleClass { Name = "Lorem" })
+// returns "My name is lorem."
+</code></pre>
+
+	</section>
+                
+            </div>           
+            
+            <!-- Footer -->
+            <footer class="main-footer">
+            </footer>
+            
+        </div>
+        <div class="wrapper bottom-wrapper">
+            <footer class="bottom-footer">
+                <p class="text-muted">
+    <a href="https://github.com/k94ll13nn3/Strinken"><i class="fa fa-github"></i> GitHub</a>
+    <br>
+    Generated by <a href="http://wyam.io">Wyam</a>
+</p>
+            </footer>
+        </div>
+        <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+        
+        <script>           
+            // Close the sidebar if we select an anchor link
+            $(".main-sidebar a[href^='#']:not('.expand')").click(function(){
+                $(document.body).removeClass('sidebar-open');
+            });
+            
+            $(document).load(function() {
+                mermaid.initialize(
+                {
+                    flowchart:
+                    {
+                        htmlLabels: false,
+                        useMaxWidth:false
+                    }
+                });  
+                mermaid.init(undefined, ".mermaid")
+                $('svg').addClass('img-responsive');
+                
+                $('pre code').each(function(i, block) {
+                    hljs.highlightBlock(block);
+                });  
+            });
+            hljs.initHighlightingOnLoad();
+
+            // Back to top
+            $(window).scroll(function() {
+                if ($(this).scrollTop() >= 200) {        // If page is scrolled more than 50px
+                    $('#return-to-top').fadeIn(1000);    // Fade in the arrow
+                } else {
+                    $('#return-to-top').fadeOut(1000);   // Else fade out the arrow
+                }
+            });
+            $('#return-to-top').click(function() {      // When arrow is clicked
+                $('body,html').animate({
+                    scrollTop : 0                       // Scroll to top of body
+                }, 500);
+            });
+        </script>
+    
+</body></html>
