@@ -83,7 +83,7 @@ namespace Strinken.Engine
         /// Parses an argument.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<Token> ParseArgument()
+        public ParseResult<TokenDefinition> ParseArgument()
         {
             var subtype = TokenSubtype.Base;
             if (Value == SpecialCharacter.ArgumentTagIndicator)
@@ -102,20 +102,20 @@ namespace Strinken.Engine
                         subtype = TokenSubtype.ParameterTag;
                     }
 
-                    return ParseResult<Token>.Success(new Token(result.Value.Data, TokenType.Argument, subtype));
+                    return ParseResult<TokenDefinition>.Success(new TokenDefinition(result.Value.Data, TokenType.Argument, subtype));
                 }
 
-                return ParseResult<Token>.FailureWithMessage(result.Message != Errors.EmptyTag ? result.Message : Errors.EmptyArgument);
+                return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyTag ? result.Message : Errors.EmptyArgument);
             }
             else
             {
                 var result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, c => true);
                 if (result)
                 {
-                    return ParseResult<Token>.Success(new Token(result.Value, TokenType.Argument, subtype));
+                    return ParseResult<TokenDefinition>.Success(new TokenDefinition(result.Value, TokenType.Argument, subtype));
                 }
 
-                return ParseResult<Token>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyArgument);
+                return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyArgument);
             }
         }
 
@@ -123,29 +123,29 @@ namespace Strinken.Engine
         /// Parses a filter.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<Token> ParseFilter()
+        public ParseResult<TokenDefinition> ParseFilter()
         {
             var ends = new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator };
             var result = ParseName(ends, c => !c.IsInvalidTokenNameCharacter());
             if (result)
             {
-                return ParseResult<Token>.Success(new Token(result.Value, TokenType.Filter, TokenSubtype.Base));
+                return ParseResult<TokenDefinition>.Success(new TokenDefinition(result.Value, TokenType.Filter, TokenSubtype.Base));
             }
 
-            return ParseResult<Token>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyFilter);
+            return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyFilter);
         }
 
         /// <summary>
         /// Parses a filter and its possible arguments.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<IList<Token>> ParseFilterAndArguments()
+        public ParseResult<IList<TokenDefinition>> ParseFilterAndArguments()
         {
-            var tokenList = new List<Token>();
+            var tokenList = new List<TokenDefinition>();
             var filterParseResult = ParseFilter();
             if (!filterParseResult)
             {
-                return ParseResult<IList<Token>>.FailureWithMessage(filterParseResult.Message);
+                return ParseResult<IList<TokenDefinition>>.FailureWithMessage(filterParseResult.Message);
             }
 
             tokenList.Add(filterParseResult.Value);
@@ -153,20 +153,20 @@ namespace Strinken.Engine
             {
                 if (Value != SpecialCharacter.ArgumentIndicator && Value != SpecialCharacter.ArgumentSeparator)
                 {
-                    return ParseResult<IList<Token>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                    return ParseResult<IList<TokenDefinition>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
                 }
 
                 Next();
                 var argumentParseResult = ParseArgument();
                 if (!argumentParseResult)
                 {
-                    return ParseResult<IList<Token>>.FailureWithMessage(argumentParseResult.Message);
+                    return ParseResult<IList<TokenDefinition>>.FailureWithMessage(argumentParseResult.Message);
                 }
 
                 tokenList.Add(argumentParseResult.Value);
             }
 
-            return ParseResult<IList<Token>>.Success(tokenList);
+            return ParseResult<IList<TokenDefinition>>.Success(tokenList);
         }
 
         /// <summary>
@@ -211,13 +211,13 @@ namespace Strinken.Engine
         /// Parses a token.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<IList<Token>> ParseToken()
+        public ParseResult<IList<TokenDefinition>> ParseToken()
         {
-            var tokenList = new List<Token>();
+            var tokenList = new List<TokenDefinition>();
             var tagParseResult = ParseTag();
             if (!tagParseResult)
             {
-                return ParseResult<IList<Token>>.FailureWithMessage(tagParseResult.Message);
+                return ParseResult<IList<TokenDefinition>>.FailureWithMessage(tagParseResult.Message);
             }
 
             tokenList.Add(tagParseResult.Value);
@@ -225,22 +225,22 @@ namespace Strinken.Engine
             {
                 if (Value != SpecialCharacter.FilterSeparator)
                 {
-                    return ParseResult<IList<Token>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                    return ParseResult<IList<TokenDefinition>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
                 }
 
                 Next();
                 var filterAndArgumentsParseResult = ParseFilterAndArguments();
                 if (filterAndArgumentsParseResult)
                 {
-                    tokenList.AddRange(filterAndArgumentsParseResult.Value ?? Enumerable.Empty<Token>());
+                    tokenList.AddRange(filterAndArgumentsParseResult.Value ?? Enumerable.Empty<TokenDefinition>());
                 }
                 else
                 {
-                    return ParseResult<IList<Token>>.FailureWithMessage(filterAndArgumentsParseResult.Message);
+                    return ParseResult<IList<TokenDefinition>>.FailureWithMessage(filterAndArgumentsParseResult.Message);
                 }
             }
 
-            return ParseResult<IList<Token>>.Success(tokenList);
+            return ParseResult<IList<TokenDefinition>>.Success(tokenList);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace Strinken.Engine
         /// </summary>
         /// <param name="isArgument">A value indicating whether the tag is used as an argument.</param>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<Token> ParseTag(bool isArgument = false)
+        public ParseResult<TokenDefinition> ParseTag(bool isArgument = false)
         {
             var subtype = TokenSubtype.Base;
             if (Value == SpecialCharacter.ParameterTagIndicator)
@@ -266,17 +266,17 @@ namespace Strinken.Engine
             var result = ParseName(ends, c => !c.IsInvalidTokenNameCharacter());
             if (result)
             {
-                return ParseResult<Token>.Success(new Token(result.Value, TokenType.Tag, subtype));
+                return ParseResult<TokenDefinition>.Success(new TokenDefinition(result.Value, TokenType.Tag, subtype));
             }
 
-            return ParseResult<Token>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyTag);
+            return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyTag);
         }
 
         /// <summary>
         /// Parses an outside string.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<Token> ParseOutsideString()
+        public ParseResult<TokenDefinition> ParseOutsideString()
         {
             var builder = new StringBuilder();
             while (true)
@@ -292,13 +292,13 @@ namespace Strinken.Engine
                     // Start of token or end of string
                     case SpecialCharacter.TokenStartIndicator:
                     case int _ when HasEnded():
-                        return ParseResult<Token>.Success(new Token(builder.ToString(), TokenType.None, TokenSubtype.Base));
+                        return ParseResult<TokenDefinition>.Success(new TokenDefinition(builder.ToString(), TokenType.None, TokenSubtype.Base));
 
                     case SpecialCharacter.TokenEndIndicator when PeekIsEnd():
-                        return ParseResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacterAtStringEnd, CharValue));
+                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacterAtStringEnd, CharValue));
 
                     case SpecialCharacter.TokenEndIndicator:
-                        return ParseResult<Token>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
                 }
 
                 builder.Append(CharValue);
@@ -310,43 +310,43 @@ namespace Strinken.Engine
         /// Parses a token and the following outside string.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<IList<Token>> ParseTokenAndOutsideString()
+        public ParseResult<IList<TokenDefinition>> ParseTokenAndOutsideString()
         {
-            var tokenList = new List<Token>();
+            var tokenList = new List<TokenDefinition>();
             var tokenParseResult = ParseToken();
             if (!tokenParseResult)
             {
-                return ParseResult<IList<Token>>.FailureWithMessage(tokenParseResult.Message);
+                return ParseResult<IList<TokenDefinition>>.FailureWithMessage(tokenParseResult.Message);
             }
 
-            tokenList.AddRange(tokenParseResult.Value ?? Enumerable.Empty<Token>());
+            tokenList.AddRange(tokenParseResult.Value ?? Enumerable.Empty<TokenDefinition>());
             if (Value != SpecialCharacter.TokenEndIndicator)
             {
-                return ParseResult<IList<Token>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                return ParseResult<IList<TokenDefinition>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
             }
 
             Next();
             var outsideParseResult = ParseOutsideString();
             if (!outsideParseResult)
             {
-                return ParseResult<IList<Token>>.FailureWithMessage(outsideParseResult.Message);
+                return ParseResult<IList<TokenDefinition>>.FailureWithMessage(outsideParseResult.Message);
             }
 
             tokenList.Add(outsideParseResult.Value);
-            return ParseResult<IList<Token>>.Success(tokenList);
+            return ParseResult<IList<TokenDefinition>>.Success(tokenList);
         }
 
         /// <summary>
         /// Parses a string.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
-        public ParseResult<IList<Token>> ParseString()
+        public ParseResult<IList<TokenDefinition>> ParseString()
         {
-            var tokenList = new List<Token>();
+            var tokenList = new List<TokenDefinition>();
             var outsideParseResult = ParseOutsideString();
             if (!outsideParseResult)
             {
-                return ParseResult<IList<Token>>.FailureWithMessage(outsideParseResult.Message);
+                return ParseResult<IList<TokenDefinition>>.FailureWithMessage(outsideParseResult.Message);
             }
 
             tokenList.Add(outsideParseResult.Value);
@@ -354,7 +354,7 @@ namespace Strinken.Engine
             {
                 if (Value != SpecialCharacter.TokenStartIndicator)
                 {
-                    return ParseResult<IList<Token>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                    return ParseResult<IList<TokenDefinition>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
                 }
 
                 Next();
@@ -368,11 +368,11 @@ namespace Strinken.Engine
                 }
                 else
                 {
-                    return ParseResult<IList<Token>>.FailureWithMessage(tokenParseResult.Message);
+                    return ParseResult<IList<TokenDefinition>>.FailureWithMessage(tokenParseResult.Message);
                 }
             }
 
-            return ParseResult<IList<Token>>.Success(tokenList);
+            return ParseResult<IList<TokenDefinition>>.Success(tokenList);
         }
     }
 }

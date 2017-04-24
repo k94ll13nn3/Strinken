@@ -13,14 +13,14 @@ namespace Strinken.Engine
         /// <summary>
         /// Internal stack.
         /// </summary>
-        private readonly Stack<Token> tokenStack;
+        private readonly Stack<TokenDefinition> tokenStack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenStack"/> class.
         /// </summary>
         public TokenStack()
         {
-            tokenStack = new Stack<Token>();
+            tokenStack = new Stack<TokenDefinition>();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Strinken.Engine
         /// Pushes a token to the stack.
         /// </summary>
         /// <param name="token">The token to push.</param>
-        public void Push(Token token)
+        public void Push(TokenDefinition token)
         {
             tokenStack.Push(token);
         }
@@ -85,11 +85,11 @@ namespace Strinken.Engine
             if (tokenStack.Count > 0 && type == TokenType.None && tokenStack.Peek().Type == TokenType.None)
             {
                 var lastToken = tokenStack.Pop();
-                tokenStack.Push(new Token(lastToken.Data + data, TokenType.None, TokenSubtype.Base));
+                tokenStack.Push(new TokenDefinition(lastToken.Data + data, TokenType.None, TokenSubtype.Base));
             }
             else
             {
-                tokenStack.Push(new Token(data, type, subtype));
+                tokenStack.Push(new TokenDefinition(data, type, subtype));
             }
         }
 
