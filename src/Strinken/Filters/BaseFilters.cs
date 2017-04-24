@@ -74,19 +74,7 @@ namespace Strinken.Filters
             {
                 if (!InternalRegisteredFilters.ContainsKey(filter.Name))
                 {
-                    if (string.IsNullOrWhiteSpace(filter.Name))
-                    {
-                        throw new ArgumentException("A name cannot be empty.");
-                    }
-
-                    for (var i = 0; i < filter.Name.Length; i++)
-                    {
-                        if (filter.Name[i].IsInvalidTokenNameCharacter())
-                        {
-                            throw new ArgumentException($"{filter.Name[i]} is an invalid character for a name.");
-                        }
-                    }
-
+                    filter.Name.ThrowIfInvalidName();
                     InternalRegisteredFilters.Add(filter.Name, filter);
                 }
                 else

@@ -224,7 +224,7 @@ namespace Strinken.Parser
                 throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
             }
 
-            ThrowIfInvalidName(filter.Name);
+            filter.Name.ThrowIfInvalidName();
             filters.Add(filter.Name, filter);
         }
 
@@ -240,7 +240,7 @@ namespace Strinken.Parser
                 throw new ArgumentException($"{tag.Name} was already registered in the tag list.");
             }
 
-            ThrowIfInvalidName(tag.Name);
+            tag.Name.ThrowIfInvalidName();
             tags.Add(tag.Name, tag);
         }
 
@@ -256,7 +256,7 @@ namespace Strinken.Parser
                 throw new ArgumentException($"{parameterTag.Name} was already registered in the parameter tag list.");
             }
 
-            ThrowIfInvalidName(parameterTag.Name);
+            parameterTag.Name.ThrowIfInvalidName();
             parameterTags.Add(parameterTag.Name, parameterTag);
         }
 
@@ -283,27 +283,6 @@ namespace Strinken.Parser
             }
 
             return newParser;
-        }
-
-        /// <summary>
-        /// Validates a name and throws a <see cref="ArgumentException"/> if the name is invalid.
-        /// </summary>
-        /// <param name="name">The name to validate.</param>
-        /// <exception cref="ArgumentException">When the name is invalid.</exception>
-        private static void ThrowIfInvalidName(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("A name cannot be empty.");
-            }
-
-            for (var i = 0; i < name.Length; i++)
-            {
-                if (name[i].IsInvalidTokenNameCharacter())
-                {
-                    throw new ArgumentException($"{name[i]} is an invalid character for a name.");
-                }
-            }
         }
     }
 }
