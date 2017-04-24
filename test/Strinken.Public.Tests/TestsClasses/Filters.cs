@@ -10,7 +10,7 @@ namespace Strinken.Public.Tests.TestsClasses
 
         public string Usage => "";
 
-        public string Resolve(string value, string[] arguments) => value + string.Join("", arguments);
+        public string Resolve(string value, string[] arguments) => value + string.Concat(arguments);
 
         public bool Validate(string[] arguments) => arguments?.Length >= 1;
     }

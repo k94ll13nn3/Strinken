@@ -75,16 +75,14 @@ namespace Strinken.Public.Tests.Filters
 
         private class FilterGenerator : IFilter
         {
-            private readonly string data;
-
             public FilterGenerator(string data)
             {
-                this.data = data;
+                Name = data;
             }
 
-            public string Description => data;
+            public string Description => Name;
 
-            public string Name => data;
+            public string Name { get; }
 
             public string Usage => "";
 
