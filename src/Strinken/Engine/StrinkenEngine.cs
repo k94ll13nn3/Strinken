@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Strinken.Engine
 {
     /// <summary>
@@ -24,32 +26,34 @@ namespace Strinken.Engine
                 };
             }
 
-            var tokenStack = new TokenStack();
+            ParseResult<IEnumerable<TokenDefinition>> parsingResult;
             using (var cursor = new Cursor(input))
             {
-                var parsingResult = cursor.ParseString();
-                if (!parsingResult.Result)
-                {
-                    return new EngineResult
-                    {
-                        Success = false,
-                        Stack = null,
-                        ErrorMessage = parsingResult.Message
-                    };
-                }
+                parsingResult = cursor.ParseString();
+            }
 
-                foreach (var token in parsingResult.Value)
-                {
-                    tokenStack.Push(token);
-                }
-
+            if (!parsingResult)
+            {
                 return new EngineResult
                 {
-                    Success = true,
-                    Stack = tokenStack,
-                    ErrorMessage = null
+                    Success = false,
+                    Stack = null,
+                    ErrorMessage = parsingResult.Message
                 };
             }
+
+            var tokenStack = new TokenStack();
+            foreach (var token in parsingResult.Value)
+            {
+                tokenStack.Push(token);
+            }
+
+            return new EngineResult
+            {
+                Success = true,
+                Stack = tokenStack,
+                ErrorMessage = null
+            };
         }
     }
 }
