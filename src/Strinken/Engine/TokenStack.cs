@@ -1,5 +1,4 @@
-﻿// stylecop.header
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,15 +20,6 @@ namespace Strinken.Engine
         public TokenStack()
         {
             tokenStack = new Stack<TokenDefinition>();
-        }
-
-        /// <summary>
-        /// Adds a new verbatim token to the stack.
-        /// </summary>
-        /// <param name="data">The data of the token.</param>
-        public void PushVerbatim(string data)
-        {
-            InternalPush(data, TokenType.None, TokenSubtype.Base);
         }
 
         /// <summary>
@@ -71,26 +61,6 @@ namespace Strinken.Engine
             }
 
             return result.ToString();
-        }
-
-        /// <summary>
-        /// Pushes the provided data to the stack.
-        /// </summary>
-        /// <param name="data">The data of the token.</param>
-        /// <param name="type">The type of the token.</param>
-        /// <param name="subtype">The subtype of the token.</param>
-        private void InternalPush(string data, TokenType type, TokenSubtype subtype)
-        {
-            // If the top token is a verbatim token and the new token is also a verbatim token, their data are cumulated.
-            if (tokenStack.Count > 0 && type == TokenType.None && tokenStack.Peek().Type == TokenType.None)
-            {
-                var lastToken = tokenStack.Pop();
-                tokenStack.Push(new TokenDefinition(lastToken.Data + data, TokenType.None, TokenSubtype.Base));
-            }
-            else
-            {
-                tokenStack.Push(new TokenDefinition(data, type, subtype));
-            }
         }
 
         /// <summary>

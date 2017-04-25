@@ -1,5 +1,3 @@
-// stylecop.header
-
 namespace Strinken.Engine
 {
     /// <summary>
@@ -17,7 +15,7 @@ namespace Strinken.Engine
             if (string.IsNullOrWhiteSpace(input))
             {
                 var stack = new TokenStack();
-                stack.PushVerbatim(input);
+                stack.Push(new TokenDefinition(input, TokenType.None, TokenSubtype.Base));
                 return new EngineResult
                 {
                     Success = true,
