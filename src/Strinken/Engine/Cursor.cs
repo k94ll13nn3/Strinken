@@ -18,6 +18,48 @@ namespace Strinken.Engine
         /// </summary>
         private readonly StringReader reader;
 
+        private static readonly IEnumerable<Operator> Operators = new List<Operator>
+        {
+            new Operator
+            {
+                Symbol = '\0',
+                TokenType = TokenType.Tag,
+                Indicators = new List<Indicator>
+                {
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name },
+                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name }
+                }
+            },
+            new Operator
+            {
+                Symbol = '\0',
+                TokenType = TokenType.Filter,
+                Indicators = new List<Indicator>
+                {
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name }
+                }
+            },
+            new Operator
+            {
+                Symbol = '\0',
+                TokenType = TokenType.Argument,
+                Indicators = new List<Indicator>
+                {
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Full }
+                }
+            },
+            new Operator
+            {
+                Symbol = '=',
+                TokenType = TokenType.Argument,
+                Indicators = new List<Indicator>
+                {
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name },
+                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name }
+                }
+            }
+        };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Cursor"/> class.
         /// </summary>

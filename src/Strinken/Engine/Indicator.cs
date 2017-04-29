@@ -5,7 +5,14 @@
     /// </summary>
     internal class Indicator
     {
+        /// <summary>
+        /// Gets or sets the symbol linked to the indicator.
+        /// </summary>
         public char Symbol { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parsing method linked to the indicator.
+        /// </summary>
         public ParsingMethod ParsingMethod { get; set; }
     }
 }
