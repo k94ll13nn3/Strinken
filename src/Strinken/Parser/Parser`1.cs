@@ -92,7 +92,9 @@ namespace Strinken.Parser
                 var actions = new ActionDictionary
                 {
                     [TokenType.Tag, '\0', '\0'] = a => tags[a[0]].Resolve(value),
+                    [TokenType.Argument, '=', '\0'] = a => tags[a[0]].Resolve(value),
                     [TokenType.Tag, '\0', '!'] = a => parameterTags[a[0]].Resolve(),
+                    [TokenType.Argument, '=', '!'] = a => parameterTags[a[0]].Resolve(),
                     [TokenType.Filter, '\0', '\0'] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
                 };
 
@@ -127,7 +129,17 @@ namespace Strinken.Parser
                     tagList.Add(a[0]);
                     return string.Empty;
                 },
+                [TokenType.Argument, '=', '\0'] = a =>
+                {
+                    tagList.Add(a[0]);
+                    return string.Empty;
+                },
                 [TokenType.Tag, '\0', '!'] = a =>
+                {
+                    parameterTagList.Add(a[0]);
+                    return string.Empty;
+                },
+                [TokenType.Argument, '=', '!'] = a =>
                 {
                     parameterTagList.Add(a[0]);
                     return string.Empty;
@@ -205,7 +217,9 @@ namespace Strinken.Parser
             var actions = new ActionDictionary
             {
                 [TokenType.Tag, '\0', '\0'] = a => tags[a[0]].Resolve(value),
+                [TokenType.Argument, '=', '\0'] = a => tags[a[0]].Resolve(value),
                 [TokenType.Tag, '\0', '!'] = a => parameterTags[a[0]].Resolve(),
+                [TokenType.Argument, '=', '!'] = a => parameterTags[a[0]].Resolve(),
                 [TokenType.Filter, '\0', '\0'] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
             };
 
