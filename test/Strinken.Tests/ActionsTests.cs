@@ -15,7 +15,7 @@ namespace Strinken.Tests
             var tagSeen = new List<string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     tagSeen.Add(a[0]);
@@ -40,7 +40,7 @@ namespace Strinken.Tests
             var tagSeen = new List<string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     tagSeen.Add(a[0]);
@@ -106,7 +106,7 @@ namespace Strinken.Tests
             var filterSeen = new List<string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0]);
@@ -131,8 +131,8 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a => a[0],
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a => a[0],
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a[1]);
@@ -158,7 +158,7 @@ namespace Strinken.Tests
             var filterSeen = new List<string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0]);
@@ -184,7 +184,7 @@ namespace Strinken.Tests
             var filterSeen = new List<string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0]);
@@ -210,8 +210,8 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a => a[0],
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a => a[0],
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a[1]);
@@ -239,7 +239,7 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a.Skip(2).ToArray());
@@ -266,7 +266,7 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a.Skip(2).ToArray());
@@ -294,8 +294,8 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a => a[0].ToUpperInvariant(),
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a => a[0].ToUpperInvariant(),
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a.Skip(2).ToArray());
@@ -322,8 +322,8 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a => a[0].ToUpperInvariant(),
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a => a[0].ToUpperInvariant(),
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a.Skip(2).ToArray());
@@ -351,8 +351,8 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a => a[0].ToUpperInvariant(),
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a => a[0].ToUpperInvariant(),
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a[1]);
@@ -383,7 +383,7 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a[1]);
@@ -417,7 +417,7 @@ namespace Strinken.Tests
             var tagSeen = new List<string>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.ParameterTag] = a =>
+                [TokenType.Tag, '\0', '!'] = a =>
                 {
                     numberOfCall++;
                     tagSeen.Add(a[0]);
@@ -442,9 +442,9 @@ namespace Strinken.Tests
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a => a[0],
-                [TokenType.Tag, TokenSubtype.ParameterTag] = a => "KAPOUE",
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a => a[0],
+                [TokenType.Tag, '\0', '!'] = a => "KAPOUE",
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
                     filterSeen.Add(a[0], a.Skip(2).ToArray());

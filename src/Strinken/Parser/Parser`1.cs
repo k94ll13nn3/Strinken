@@ -91,9 +91,9 @@ namespace Strinken.Parser
             {
                 var actions = new ActionDictionary
                 {
-                    [TokenType.Tag, TokenSubtype.Base] = a => tags[a[0]].Resolve(value),
-                    [TokenType.Tag, TokenSubtype.ParameterTag] = a => parameterTags[a[0]].Resolve(),
-                    [TokenType.Filter, TokenSubtype.Base] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+                    [TokenType.Tag, '\0', '\0'] = a => tags[a[0]].Resolve(value),
+                    [TokenType.Tag, '\0', '!'] = a => parameterTags[a[0]].Resolve(),
+                    [TokenType.Filter, '\0', '\0'] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
                 };
 
                 return runResult.Stack.Resolve(actions);
@@ -122,17 +122,17 @@ namespace Strinken.Parser
 
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a =>
+                [TokenType.Tag, '\0', '\0'] = a =>
                 {
                     tagList.Add(a[0]);
                     return string.Empty;
                 },
-                [TokenType.Tag, TokenSubtype.ParameterTag] = a =>
+                [TokenType.Tag, '\0', '!'] = a =>
                 {
                     parameterTagList.Add(a[0]);
                     return string.Empty;
                 },
-                [TokenType.Filter, TokenSubtype.Base] = a =>
+                [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
                     return string.Empty;
@@ -204,9 +204,9 @@ namespace Strinken.Parser
 
             var actions = new ActionDictionary
             {
-                [TokenType.Tag, TokenSubtype.Base] = a => tags[a[0]].Resolve(value),
-                [TokenType.Tag, TokenSubtype.ParameterTag] = a => parameterTags[a[0]].Resolve(),
-                [TokenType.Filter, TokenSubtype.Base] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+                [TokenType.Tag, '\0', '\0'] = a => tags[a[0]].Resolve(value),
+                [TokenType.Tag, '\0', '!'] = a => parameterTags[a[0]].Resolve(),
+                [TokenType.Filter, '\0', '\0'] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
             };
 
             return compiledStack.Resolve(actions);

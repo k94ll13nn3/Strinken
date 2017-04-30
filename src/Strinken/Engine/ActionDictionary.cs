@@ -22,7 +22,7 @@ namespace Strinken.Engine
             items = new Dictionary<int, Func<string[], string>>
             {
                 // For a base argument, the base action is to return the first element of the arguments list.
-                [GetKey(TokenType.Argument, TokenSubtype.Base)] = a => a[0]
+                [GetKey(TokenType.Argument, '\0', '\0')] = a => a[0]
             };
         }
 
@@ -30,42 +30,45 @@ namespace Strinken.Engine
         /// Gets or sets the element with the specified key.
         /// </summary>
         /// <param name="type">The type part of the key of the element to get or set.</param>
-        /// <param name="subtype">The subtype part of the key  of the element to get or set.</param>
+        /// <param name="operatorSymbol">The operator symbol part of the key  of the element to get or set.</param>
+        /// <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
         /// <returns>The element with the specified key, or null if the key is not present.</returns>
-        public Func<string[], string> this[TokenType type, TokenSubtype subtype]
+        public Func<string[], string> this[TokenType type, char operatorSymbol, char indicatorSymbol]
         {
-            get { return Get(type, subtype); }
-            set { items[GetKey(type, subtype)] = value; }
+            get { return Get(type, operatorSymbol, indicatorSymbol); }
+            set { items[GetKey(type, operatorSymbol, indicatorSymbol)] = value; }
         }
 
         /// <summary>
         /// Gets a value in the <see cref="ActionDictionary"/>.
         /// </summary>
         /// <param name="type">The type part of the key of the element to get or set.</param>
-        /// <param name="subtype">The subtype part of the key  of the element to get or set.</param>
+        /// <param name="operatorSymbol">The operator symbol part of the key  of the element to get or set.</param>
+        /// <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
         /// <returns>The element with the specified key, or null if the key is not present.</returns>
-        private Func<string[], string> Get(TokenType type, TokenSubtype subtype)
+        private Func<string[], string> Get(TokenType type, char operatorSymbol, char indicatorSymbol)
         {
-            var key = GetKey(type, subtype);
+            var key = GetKey(type, operatorSymbol, indicatorSymbol);
             return items.ContainsKey(key) ? items[key] : null;
         }
 
         /// <summary>
-        /// Gets the key corresponding to the pair of <see cref="TokenType"/> and <see cref="TokenSubtype"/>.
+        /// Gets the key corresponding to a token propeties.
         /// </summary>
         /// <param name="type">The type part of the key of the element to get or set.</param>
-        /// <param name="subtype">The subtype part of the key  of the element to get or set.</param>
+        /// <param name="operatorSymbol">The operator symbol part of the key  of the element to get or set.</param>
+        /// <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
         /// <returns>The corresponding key.</returns>
-        private static int GetKey(TokenType type, TokenSubtype subtype)
+        private static int GetKey(TokenType type, char operatorSymbol, char indicatorSymbol)
         {
             switch (type)
             {
-                case TokenType.Tag when subtype == TokenSubtype.Base:
-                case TokenType.Argument when subtype == TokenSubtype.Tag:
+                case TokenType.Tag when operatorSymbol == '\0' && indicatorSymbol == '\0':
+                case TokenType.Argument when operatorSymbol == '=' && indicatorSymbol == '\0':
                     return 0x1;
 
-                case TokenType.Tag when subtype == TokenSubtype.ParameterTag:
-                case TokenType.Argument when subtype == TokenSubtype.ParameterTag:
+                case TokenType.Tag when operatorSymbol == '\0' && indicatorSymbol == '!':
+                case TokenType.Argument when operatorSymbol == '=' && indicatorSymbol == '!':
                     return 0x2;
 
                 case TokenType.Filter:
@@ -78,7 +81,7 @@ namespace Strinken.Engine
                     return 0x0;
             }
 
-            throw new ArgumentException($"({type}, {subtype}) is not a valid pair.");
+            throw new ArgumentException($"({type}, {operatorSymbol}, {indicatorSymbol}) is not a valid pair.");
         }
     }
 }
