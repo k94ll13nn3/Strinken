@@ -13,7 +13,7 @@
     <PackageId>Strinken</PackageId>
     <PackageTags>parametrized;string;parser;strinken</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/docs/input/assets/img/logo_64x64.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/k94ll13nn3/Strinken</PackageProjectUrl>
+    <PackageProjectUrl>https://k94ll13nn3.github.io/Strinken/</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/k94ll13nn3/Strinken</RepositoryUrl>
