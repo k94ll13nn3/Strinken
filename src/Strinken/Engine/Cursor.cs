@@ -18,48 +18,6 @@ namespace Strinken.Engine
         /// </summary>
         private readonly StringReader reader;
 
-        private static readonly IEnumerable<Operator> Operators = new List<Operator>
-        {
-            new Operator
-            {
-                Symbol = '\0',
-                TokenType = TokenType.Tag,
-                Indicators = new List<Indicator>
-                {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name },
-                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name }
-                }
-            },
-            new Operator
-            {
-                Symbol = '\0',
-                TokenType = TokenType.Filter,
-                Indicators = new List<Indicator>
-                {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name }
-                }
-            },
-            new Operator
-            {
-                Symbol = '\0',
-                TokenType = TokenType.Argument,
-                Indicators = new List<Indicator>
-                {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Full }
-                }
-            },
-            new Operator
-            {
-                Symbol = '=',
-                TokenType = TokenType.Argument,
-                Indicators = new List<Indicator>
-                {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name },
-                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name }
-                }
-            }
-        };
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Cursor"/> class.
         /// </summary>
@@ -136,14 +94,14 @@ namespace Strinken.Engine
                 updatedEnd.Add(end);
             }
 
-            var operatorDefined = Operators.FirstOrDefault(x => x.Symbol == CharValue && x.TokenType == tokenType);
+            var operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == CharValue && x.TokenType == tokenType);
             if (operatorDefined != null)
             {
                 Next();
             }
             else
             {
-                operatorDefined = Operators.Single(x => x.Symbol == '\0' && x.TokenType == tokenType);
+                operatorDefined = BaseOperators.RegisteredOperators.Single(x => x.Symbol == '\0' && x.TokenType == tokenType);
             }
 
             var indicatorDefined = operatorDefined.Indicators.FirstOrDefault(x => x.Symbol == CharValue);
