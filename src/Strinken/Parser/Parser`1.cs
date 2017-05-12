@@ -95,6 +95,7 @@ namespace Strinken.Parser
                     [TokenType.Argument, '='] = a => tags[a[0]].Resolve(value),
                     [TokenType.Tag, '\0', '!'] = a => parameterTags[a[0]].Resolve(),
                     [TokenType.Argument, '=', '!'] = a => parameterTags[a[0]].Resolve(),
+                    [TokenType.Argument] = a => a[0],
                     [TokenType.Filter] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
                 };
 
@@ -126,9 +127,6 @@ namespace Strinken.Parser
             {
                 [TokenType.Tag] = a =>
                 {
-                    // if tags contains a[0] then ok else error
-                    // if ok, returns tags(a[0]).Validate
-
                     tagList.Add(a[0]);
                     return string.Empty;
                 },
@@ -223,6 +221,7 @@ namespace Strinken.Parser
                 [TokenType.Argument, '='] = a => tags[a[0]].Resolve(value),
                 [TokenType.Tag, '\0', '!'] = a => parameterTags[a[0]].Resolve(),
                 [TokenType.Argument, '=', '!'] = a => parameterTags[a[0]].Resolve(),
+                [TokenType.Argument] = a => a[0],
                 [TokenType.Filter] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
             };
 

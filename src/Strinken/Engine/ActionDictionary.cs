@@ -19,11 +19,7 @@ namespace Strinken.Engine
         /// </summary>
         public ActionDictionary()
         {
-            items = new Dictionary<TokenProperties, Func<string[], string>>
-            {
-                // For a base argument, the base action is to return the first element of the arguments list.
-                [new TokenProperties(TokenType.Argument, '\0', '\0')] = a => a[0]
-            };
+            items = new Dictionary<TokenProperties, Func<string[], string>> ();
         }
 
         /// <summary>
