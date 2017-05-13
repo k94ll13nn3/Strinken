@@ -89,15 +89,7 @@ namespace Strinken.Parser
             var runResult = new StrinkenEngine().Run(input);
             if (runResult.Success)
             {
-                var actions = new ActionDictionary
-                {
-                    [TokenType.Tag] = a => tags[a[0]].Resolve(value),
-                    [TokenType.Argument, '='] = a => tags[a[0]].Resolve(value),
-                    [TokenType.Tag, '\0', '!'] = a => parameterTags[a[0]].Resolve(),
-                    [TokenType.Argument, '=', '!'] = a => parameterTags[a[0]].Resolve(),
-                    [TokenType.Argument] = a => a[0],
-                    [TokenType.Filter] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
-                };
+                var actions = GenerateActionDictionary(value);
 
                 return runResult.Stack.Resolve(actions);
             }
@@ -123,34 +115,43 @@ namespace Strinken.Parser
                 return new ValidationResult { Message = runResult.ErrorMessage, IsValid = false };
             }
 
-            var actions = new ActionDictionary
+            var actions = new ActionDictionary();
+            foreach (var op in BaseOperators.RegisteredOperators)
             {
-                [TokenType.Tag] = a =>
+                foreach (var ind in op.Indicators)
                 {
-                    tagList.Add(a[0]);
-                    return string.Empty;
-                },
-                [TokenType.Argument, '='] = a =>
-                {
-                    tagList.Add(a[0]);
-                    return string.Empty;
-                },
-                [TokenType.Tag, '\0', '!'] = a =>
-                {
-                    parameterTagList.Add(a[0]);
-                    return string.Empty;
-                },
-                [TokenType.Argument, '=', '!'] = a =>
-                {
-                    parameterTagList.Add(a[0]);
-                    return string.Empty;
-                },
-                [TokenType.Filter] = a =>
-                {
-                    filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
-                    return string.Empty;
+                    switch (ind.ResolutionMethod)
+                    {
+                        case ResolutionMethod.WithValue:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
+                            {
+                                tagList.Add(a[0]);
+                                return string.Empty;
+                            };
+                            break;
+
+                        case ResolutionMethod.WithoutValue:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
+                            {
+                                parameterTagList.Add(a[0]);
+                                return string.Empty;
+                            };
+                            break;
+
+                        case ResolutionMethod.WithArguments:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
+                            {
+                                filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
+                                return string.Empty;
+                            };
+                            break;
+
+                        case ResolutionMethod.Name:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = null;
+                            break;
+                    }
                 }
-            };
+            }
 
             runResult.Stack.Resolve(actions);
 
@@ -215,16 +216,7 @@ namespace Strinken.Parser
                 throw new InvalidOperationException("No string were compiled.");
             }
 
-            var actions = new ActionDictionary
-            {
-                [TokenType.Tag] = a => tags[a[0]].Resolve(value),
-                [TokenType.Argument, '='] = a => tags[a[0]].Resolve(value),
-                [TokenType.Tag, '\0', '!'] = a => parameterTags[a[0]].Resolve(),
-                [TokenType.Argument, '=', '!'] = a => parameterTags[a[0]].Resolve(),
-                [TokenType.Argument] = a => a[0],
-                [TokenType.Filter] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
-            };
-
+            var actions = GenerateActionDictionary(value);
             return compiledStack.Resolve(actions);
         }
 
@@ -299,6 +291,42 @@ namespace Strinken.Parser
             }
 
             return newParser;
+        }
+
+        /// <summary>
+        /// Generates the <see cref="ActionDictionary"/> used for string resolution.
+        /// </summary>
+        /// <param name="value">The value passed for resolution.</param>
+        /// <returns>An <see cref="ActionDictionary"/>.</returns>
+        private ActionDictionary GenerateActionDictionary(T value)
+        {
+            var actions = new ActionDictionary();
+            foreach (var op in BaseOperators.RegisteredOperators)
+            {
+                foreach (var ind in op.Indicators)
+                {
+                    switch (ind.ResolutionMethod)
+                    {
+                        case ResolutionMethod.WithValue:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => tags[a[0]].Resolve(value);
+                            break;
+
+                        case ResolutionMethod.WithoutValue:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => parameterTags[a[0]].Resolve();
+                            break;
+
+                        case ResolutionMethod.WithArguments:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray());
+                            break;
+
+                        case ResolutionMethod.Name:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => a[0];
+                            break;
+                    }
+                }
+            }
+
+            return actions;
         }
     }
 }

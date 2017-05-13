@@ -18,8 +18,8 @@ namespace Strinken.Engine
                 TokenType = TokenType.Tag,
                 Indicators = new List<Indicator>
                 {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name },
-                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name }
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithValue },
+                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithoutValue }
                 }
             },
             new Operator
@@ -28,7 +28,7 @@ namespace Strinken.Engine
                 TokenType = TokenType.Filter,
                 Indicators = new List<Indicator>
                 {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name }
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithArguments }
                 }
             },
             new Operator
@@ -37,7 +37,7 @@ namespace Strinken.Engine
                 TokenType = TokenType.Argument,
                 Indicators = new List<Indicator>
                 {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Full }
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Full, ResolutionMethod = ResolutionMethod.Name }
                 }
             },
             new Operator
@@ -46,8 +46,8 @@ namespace Strinken.Engine
                 TokenType = TokenType.Argument,
                 Indicators = new List<Indicator>
                 {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name },
-                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name }
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithValue },
+                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithoutValue }
                 }
             }
         };
