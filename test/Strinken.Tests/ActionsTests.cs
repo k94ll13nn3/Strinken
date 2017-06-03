@@ -245,7 +245,7 @@ namespace Strinken.Tests
                     filterSeen.Add(a[0], a.Skip(2).ToArray());
                     return a[0];
                 },
-                [TokenType.Argument] = a => a[0]
+                [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
             var engine = new StrinkenEngine();
@@ -273,7 +273,7 @@ namespace Strinken.Tests
                     filterSeen.Add(a[0], a.Skip(2).ToArray());
                     return a[0];
                 },
-                [TokenType.Argument] = a => a[0]
+                [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
             var engine = new StrinkenEngine();
@@ -333,7 +333,7 @@ namespace Strinken.Tests
                     filterSeen.Add(a[0], a.Skip(2).ToArray());
                     return a[0];
                 },
-                [TokenType.Argument] = a => a[0]
+                [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
             var engine = new StrinkenEngine();
@@ -364,7 +364,7 @@ namespace Strinken.Tests
                     filterSeen.Add(a[0], a[1]);
                     return a[0] + a[1] + string.Join("|", a.Skip(2));
                 },
-                [TokenType.Argument] = a => a[0]
+                [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
             var engine = new StrinkenEngine();
@@ -396,7 +396,7 @@ namespace Strinken.Tests
                     filterSeen.Add(a[0], a[1]);
                     return a[0] + a[1] + string.Join("|", a.Skip(2));
                 },
-                [TokenType.Argument] = a => a[0]
+                [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
             var engine = new StrinkenEngine();

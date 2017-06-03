@@ -23,29 +23,6 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Gets or sets the element with the specified <see cref="TokenType"/> (the rest is '\0').
-        /// </summary>
-        /// <param name="type">The type part of the key of the element to get or set.</param>
-        /// <returns>The element with the specified key, or null if the key is not present.</returns>
-        public Func<string[], string> this[TokenType type]
-        {
-            get { return Get(type, '\0', '\0'); }
-            set { items[new TokenProperties(type, '\0', '\0')] = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the element with the specified <see cref="TokenType"/> and operator symbol (the rest is '\0').
-        /// </summary>
-        /// <param name="type">The type part of the key of the element to get or set.</param>
-        /// <param name="operatorSymbol">The operator symbol part of the key  of the element to get or set.</param>
-        /// <returns>The element with the specified key, or null if the key is not present.</returns>
-        public Func<string[], string> this[TokenType type, char operatorSymbol]
-        {
-            get { return Get(type, operatorSymbol, '\0'); }
-            set { items[new TokenProperties(type, operatorSymbol, '\0')] = value; }
-        }
-
-        /// <summary>
         /// Gets or sets the element with the specified key.
         /// </summary>
         /// <param name="type">The type part of the key of the element to get or set.</param>

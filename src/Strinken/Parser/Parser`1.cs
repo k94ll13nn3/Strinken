@@ -89,7 +89,7 @@ namespace Strinken.Parser
             var runResult = new StrinkenEngine().Run(input);
             if (runResult.Success)
             {
-                var actions = GenerateActionDictionary(value);
+                var actions = GenerateActionDictionaryForResolution(value);
 
                 return runResult.Stack.Resolve(actions);
             }
@@ -216,7 +216,7 @@ namespace Strinken.Parser
                 throw new InvalidOperationException("No string were compiled.");
             }
 
-            var actions = GenerateActionDictionary(value);
+            var actions = GenerateActionDictionaryForResolution(value);
             return compiledStack.Resolve(actions);
         }
 
@@ -298,7 +298,7 @@ namespace Strinken.Parser
         /// </summary>
         /// <param name="value">The value passed for resolution.</param>
         /// <returns>An <see cref="ActionDictionary"/>.</returns>
-        private ActionDictionary GenerateActionDictionary(T value)
+        private ActionDictionary GenerateActionDictionaryForResolution(T value)
         {
             var actions = new ActionDictionary();
             foreach (var op in BaseOperators.RegisteredOperators)
