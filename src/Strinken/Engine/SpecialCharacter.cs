@@ -18,16 +18,6 @@ namespace Strinken.Engine
         public const int ArgumentSeparator = ',';
 
         /// <summary>
-        /// Separator that indicates the start of an argument tag.
-        /// </summary>
-        public const int ArgumentTagIndicator = '=';
-
-        /// <summary>
-        /// Separator that indicates the end of the string.
-        /// </summary>
-        public const int EndOfStringIndicator = -1;
-
-        /// <summary>
         /// Separator that separates filters.
         /// </summary>
         public const int FilterSeparator = ':';
@@ -41,10 +31,5 @@ namespace Strinken.Engine
         /// Separator that indicates the start of a token.
         /// </summary>
         public const int TokenStartIndicator = '{';
-
-        /// <summary>
-        /// Separator that indicates the start of a parameter tag.
-        /// </summary>
-        public const int ParameterTagIndicator = '!';
     }
 }

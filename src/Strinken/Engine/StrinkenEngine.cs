@@ -17,7 +17,7 @@ namespace Strinken.Engine
             if (string.IsNullOrWhiteSpace(input))
             {
                 var stack = new TokenStack();
-                stack.Push(new TokenDefinition(input, TokenType.None, TokenSubtype.Base));
+                stack.Push(new TokenDefinition(input, TokenType.None, '\0', '\0'));
                 return new EngineResult
                 {
                     Success = true,

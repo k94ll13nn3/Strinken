@@ -12,12 +12,14 @@ namespace Strinken.Engine
         /// </summary>
         /// <param name="data">The data related to the token.</param>
         /// <param name="type">The type of the token.</param>
-        /// <param name="subtype">The subtype of the token.</param>
-        public TokenDefinition(string data, TokenType type, TokenSubtype subtype)
+        /// <param name="operatorSymbol">The operator symbol of the token.</param>
+        /// <param name="indicatorSymbol">The indicator symbol of the token.</param>
+        public TokenDefinition(string data, TokenType type, char operatorSymbol, char indicatorSymbol)
         {
             Data = data;
             Type = type;
-            Subtype = subtype;
+            OperatorSymbol = operatorSymbol;
+            IndicatorSymbol = indicatorSymbol;
         }
 
         /// <summary>
@@ -31,8 +33,13 @@ namespace Strinken.Engine
         public TokenType Type { get; }
 
         /// <summary>
-        /// Gets the subtype of the token.
+        /// Gets the operator symbol of the token.
         /// </summary>
-        public TokenSubtype Subtype { get; }
+        public char OperatorSymbol { get; }
+
+        /// <summary>
+        /// Gets the indicator symbol of the token.
+        /// </summary>
+        public char IndicatorSymbol { get; }
     }
 }

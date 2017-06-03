@@ -80,43 +80,75 @@ namespace Strinken.Engine
         public bool PeekIsEnd() => Position != -1 && Peek() == -1;
 
         /// <summary>
+        /// Parses a string inside a token and returns the first name in it.
+        /// </summary>
+        /// <param name="ends">A list of valid ends.</param>
+        /// <param name="tokenType">A function indicating whether a character is valid.</param>
+        /// <returns>The result of the parsing.</returns>
+        public ParseResult<TokenDefinition> ParseName(ICollection<int> ends, TokenType tokenType)
+        {
+            var builder = new StringBuilder();
+            var updatedEnd = new List<int> { SpecialCharacter.TokenEndIndicator };
+            foreach (var end in ends ?? Enumerable.Empty<int>())
+            {
+                updatedEnd.Add(end);
+            }
+
+            var operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == CharValue && x.TokenType == tokenType);
+            if (operatorDefined != null)
+            {
+                Next();
+            }
+            else
+            {
+                operatorDefined = BaseOperators.RegisteredOperators.Single(x => x.Symbol == '\0' && x.TokenType == tokenType);
+            }
+
+            var indicatorDefined = operatorDefined.Indicators.FirstOrDefault(x => x.Symbol == CharValue);
+            if (indicatorDefined != null)
+            {
+                Next();
+            }
+            else
+            {
+                indicatorDefined = operatorDefined.Indicators.Single(x => x.Symbol == '\0');
+            }
+
+            while (true)
+            {
+                switch (Value)
+                {
+                    case int _ when updatedEnd.Contains(Value):
+                        var parsedName = builder.ToString();
+                        return !string.IsNullOrEmpty(parsedName) ?
+                            ParseResult<TokenDefinition>.Success(new TokenDefinition(parsedName, tokenType, operatorDefined.Symbol, indicatorDefined.Symbol)) :
+                            ParseResult<TokenDefinition>.FailureWithMessage(Errors.EmptyName);
+
+                    case int _ when HasEnded():
+                        return ParseResult<TokenDefinition>.FailureWithMessage(Errors.EndOfString);
+
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Name && CharValue.IsInvalidTokenNameCharacter():
+                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                }
+
+                builder.Append(CharValue);
+                Next();
+            }
+        }
+
+        /// <summary>
         /// Parses an argument.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
         public ParseResult<TokenDefinition> ParseArgument()
         {
-            var subtype = TokenSubtype.Base;
-            if (Value == SpecialCharacter.ArgumentTagIndicator)
+            var result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, TokenType.Argument);
+            if (result)
             {
-                // Consume ArgumentTagIndicator
-                Next();
-                var result = ParseTag(true);
-                if (result)
-                {
-                    if (result.Value.Subtype == TokenSubtype.Base)
-                    {
-                        subtype = TokenSubtype.Tag;
-                    }
-                    else if (result.Value.Subtype == TokenSubtype.ParameterTag)
-                    {
-                        subtype = TokenSubtype.ParameterTag;
-                    }
-
-                    return ParseResult<TokenDefinition>.Success(new TokenDefinition(result.Value.Data, TokenType.Argument, subtype));
-                }
-
-                return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyTag ? result.Message : Errors.EmptyArgument);
+                return result;
             }
-            else
-            {
-                var result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, c => true);
-                if (result)
-                {
-                    return ParseResult<TokenDefinition>.Success(new TokenDefinition(result.Value, TokenType.Argument, subtype));
-                }
 
-                return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyArgument);
-            }
+            return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyArgument);
         }
 
         /// <summary>
@@ -125,14 +157,28 @@ namespace Strinken.Engine
         /// <returns>The result of the parsing.</returns>
         public ParseResult<TokenDefinition> ParseFilter()
         {
-            var ends = new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator };
-            var result = ParseName(ends, c => !c.IsInvalidTokenNameCharacter());
+            var result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator }, TokenType.Filter);
             if (result)
             {
-                return ParseResult<TokenDefinition>.Success(new TokenDefinition(result.Value, TokenType.Filter, TokenSubtype.Base));
+                return result;
             }
 
             return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyFilter);
+        }
+
+        /// <summary>
+        /// Parses a tag.
+        /// </summary>
+        /// <returns>The result of the parsing.</returns>
+        public ParseResult<TokenDefinition> ParseTag()
+        {
+            var result = ParseName(new[] { SpecialCharacter.FilterSeparator }, TokenType.Tag);
+            if (result)
+            {
+                return result;
+            }
+
+            return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyTag);
         }
 
         /// <summary>
@@ -167,44 +213,6 @@ namespace Strinken.Engine
             }
 
             return ParseResult<IEnumerable<TokenDefinition>>.Success(tokenList);
-        }
-
-        /// <summary>
-        /// Parses a string inside a token and returns the first name in it.
-        /// </summary>
-        /// <param name="ends">A list of valid ends.</param>
-        /// <param name="isValidChar">A function indicating whether a character is valid.</param>
-        /// <returns>The result of the parsing.</returns>
-        public ParseResult<string> ParseName(ICollection<int> ends, Func<char, bool> isValidChar)
-        {
-            var builder = new StringBuilder();
-            var updatedEnd = new List<int> { SpecialCharacter.TokenEndIndicator };
-            foreach (var end in ends)
-            {
-                updatedEnd.Add(end);
-            }
-
-            while (true)
-            {
-                switch (Value)
-                {
-                    case int _ when updatedEnd.Contains(Value):
-                        var parsedName = builder.ToString();
-                        return !string.IsNullOrEmpty(parsedName) ? ParseResult<string>.Success(parsedName) : ParseResult<string>.FailureWithMessage(Errors.EmptyName);
-
-                    case int _ when HasEnded():
-                        return ParseResult<string>.FailureWithMessage(Errors.EndOfString);
-
-                    case int _ when !isValidChar?.Invoke(CharValue) ?? false:
-                        return ParseResult<string>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
-
-                    default:
-                        break;
-                }
-
-                builder.Append(CharValue);
-                Next();
-            }
         }
 
         /// <summary>
@@ -244,35 +252,6 @@ namespace Strinken.Engine
         }
 
         /// <summary>
-        /// Parses a tag.
-        /// </summary>
-        /// <param name="isArgument">A value indicating whether the tag is used as an argument.</param>
-        /// <returns>The result of the parsing.</returns>
-        public ParseResult<TokenDefinition> ParseTag(bool isArgument = false)
-        {
-            var subtype = TokenSubtype.Base;
-            if (Value == SpecialCharacter.ParameterTagIndicator)
-            {
-                subtype = TokenSubtype.ParameterTag;
-                Next();
-            }
-
-            var ends = new List<int> { SpecialCharacter.FilterSeparator };
-            if (isArgument)
-            {
-                ends.Add(SpecialCharacter.ArgumentSeparator);
-            }
-
-            var result = ParseName(ends, c => !c.IsInvalidTokenNameCharacter());
-            if (result)
-            {
-                return ParseResult<TokenDefinition>.Success(new TokenDefinition(result.Value, TokenType.Tag, subtype));
-            }
-
-            return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyTag);
-        }
-
-        /// <summary>
         /// Parses an outside string.
         /// </summary>
         /// <returns>The result of the parsing.</returns>
@@ -292,7 +271,7 @@ namespace Strinken.Engine
                     // Start of token or end of string
                     case SpecialCharacter.TokenStartIndicator:
                     case int _ when HasEnded():
-                        return ParseResult<TokenDefinition>.Success(new TokenDefinition(builder.ToString(), TokenType.None, TokenSubtype.Base));
+                        return ParseResult<TokenDefinition>.Success(new TokenDefinition(builder.ToString(), TokenType.None, '\0', '\0'));
 
                     case SpecialCharacter.TokenEndIndicator when PeekIsEnd():
                         return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacterAtStringEnd, CharValue));

@@ -78,7 +78,7 @@ namespace Strinken.Engine
                 switch (currentToken.Type)
                 {
                     case TokenType.Argument:
-                        arguments.Insert(0, actions?[TokenType.Argument, currentToken.Subtype]?.Invoke(new[] { currentToken.Data }));
+                        arguments.Insert(0, actions?[TokenType.Argument, currentToken.OperatorSymbol, currentToken.IndicatorSymbol]?.Invoke(new[] { currentToken.Data }));
                         break;
 
                     case TokenType.Filter:
@@ -89,10 +89,10 @@ namespace Strinken.Engine
                         concatenatedArguments[0] = currentToken.Data;
                         concatenatedArguments[1] = temporaryResult;
                         arguments.CopyTo(concatenatedArguments, 2);
-                        return actions?[TokenType.Filter, currentToken.Subtype]?.Invoke(concatenatedArguments);
+                        return actions?[TokenType.Filter, currentToken.OperatorSymbol, currentToken.IndicatorSymbol]?.Invoke(concatenatedArguments);
 
                     case TokenType.Tag:
-                        return actions?[TokenType.Tag, currentToken.Subtype]?.Invoke(new[] { currentToken.Data });
+                        return actions?[TokenType.Tag, currentToken.OperatorSymbol, currentToken.IndicatorSymbol]?.Invoke(new[] { currentToken.Data });
                 }
             }
 
