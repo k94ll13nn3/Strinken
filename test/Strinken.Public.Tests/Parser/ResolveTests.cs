@@ -74,5 +74,21 @@ namespace Strinken.Public.Tests.Parser
 
             act.ShouldThrow<FormatException>().WithMessage("Empty argument");
         }
+
+        [Fact]
+        public void Resolve_OneValueTag_ReturnsResolvedString()
+        {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            stringSolver.Resolve("The {@som3th!ng$} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The som3th!ng$ is in the kitchen.");
+        }
+
+        [Fact]
+        public void Resolve_OneValueTagWithFilter_ReturnsResolvedString()
+        {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            stringSolver.Resolve("{@som3th!ng$:Length}", new Data { Name = "Lorem" }).Should().Be("10");
+        }
     }
 }

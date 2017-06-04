@@ -24,6 +24,15 @@ namespace Strinken.Engine
             },
             new Operator
             {
+                Symbol = '@',
+                TokenType = TokenType.Tag,
+                Indicators = new List<Indicator>
+                {
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Full, ResolutionMethod = ResolutionMethod.Name },
+                }
+            },
+            new Operator
+            {
                 Symbol = '\0',
                 TokenType = TokenType.Filter,
                 Indicators = new List<Indicator>

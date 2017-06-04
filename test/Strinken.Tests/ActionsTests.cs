@@ -474,5 +474,30 @@ namespace Strinken.Tests
             filterSeen["belli"][0].Should().Be("KAPOUE");
             filterSeen["belli"][0].Should().NotBe("toto");
         }
+
+        [Fact]
+        public void Run_OneValueTagAndOneTag_ActionOnValueTagCalledOnce()
+        {
+            var numberOfCall = 0;
+            var valuesSeen = new List<string>();
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag, '@', '\0'] = a =>
+                {
+                    numberOfCall++;
+                    valuesSeen.Add(a[0]);
+                    return a[0];
+                }
+            };
+
+            var engine = new StrinkenEngine();
+            const string input = "{tag} {@som3t!me$}";
+            var result = engine.Run(input);
+            result.Stack.Resolve(actions);
+
+            numberOfCall.Should().Be(1);
+            valuesSeen.Count.Should().Be(1);
+            valuesSeen[0].Should().Be("som3t!me$");
+        }
     }
 }
