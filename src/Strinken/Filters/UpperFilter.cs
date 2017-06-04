@@ -6,21 +6,15 @@ namespace Strinken.Filters
     /// <summary>
     /// Filter that transform the input to uppercase.
     /// </summary>
-    internal class UpperFilter : IFilter
+    internal class UpperFilter : FilterWithoutArguments
     {
         /// <inheritdoc/>
-        public string Description => "Converts a string to uppercase.";
+        public override string Description => "Converts a string to uppercase.";
 
         /// <inheritdoc/>
-        public string Name => "Upper";
+        public override string Name => "Upper";
 
         /// <inheritdoc/>
-        public string Usage => "{tag:Upper}";
-
-        /// <inheritdoc/>
-        public string Resolve(string value, string[] arguments) => value.ToUpperInvariant();
-
-        /// <inheritdoc/>
-        public bool Validate(string[] arguments) => arguments == null || arguments.Length == 0;
+        public override string Resolve(string value) => value.ToUpperInvariant();
     }
 }
