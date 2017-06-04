@@ -25,10 +25,8 @@ namespace Strinken.Engine
         public Cursor(string input)
         {
             reader = new StringReader(input);
-            Position = -1;
-            Value = '\0';
-
-            Next();
+            Value = reader.Read();
+            Position = 0;
         }
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace Strinken.Engine
         /// <summary>
         /// Gets the current position of the cursor.
         /// </summary>
-        public int Position { get; private set; }
+        public uint Position { get; private set; }
 
         /// <summary>
         /// Gets the current value of the cursor.
@@ -56,7 +54,7 @@ namespace Strinken.Engine
         /// Indicates if the cursor has reached the end.
         /// </summary>
         /// <returns>A value indicating whether the cursor as reached the end.</returns>
-        public bool HasEnded() => Position != -1 && Value == -1;
+        public bool HasEnded() => Value == -1;
 
         /// <summary>
         /// Moves the cursor.
@@ -77,7 +75,7 @@ namespace Strinken.Engine
         /// Indicates if the next character is the end.
         /// </summary>
         /// <returns>A value indicating whether the next character is the end.</returns>
-        public bool PeekIsEnd() => Position != -1 && Peek() == -1;
+        public bool PeekIsEnd() => Peek() == -1;
 
         /// <summary>
         /// Parses a string inside a token and returns the first name in it.
