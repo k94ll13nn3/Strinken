@@ -33,6 +33,18 @@ namespace Strinken.Engine
             },
             new Operator
             {
+                Symbol = '#',
+                TokenType = TokenType.Tag,
+                Indicators = new List<Indicator>
+                {
+                    new Indicator{ Symbol = 'b', ParsingMethod = ParsingMethod.Binary, ResolutionMethod = ResolutionMethod.Name },
+                    new Indicator{ Symbol = 'o', ParsingMethod = ParsingMethod.Octal, ResolutionMethod = ResolutionMethod.Name },
+                    new Indicator{ Symbol = 'd', ParsingMethod = ParsingMethod.Decimal, ResolutionMethod = ResolutionMethod.Name },
+                    new Indicator{ Symbol = 'x', ParsingMethod = ParsingMethod.Hexadecimal, ResolutionMethod = ResolutionMethod.Name }
+                }
+            },
+            new Operator
+            {
                 Symbol = '\0',
                 TokenType = TokenType.Filter,
                 Indicators = new List<Indicator>
