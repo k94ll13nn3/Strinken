@@ -499,5 +499,105 @@ namespace Strinken.Tests
             valuesSeen.Count.Should().Be(1);
             valuesSeen[0].Should().Be("som3t!me$");
         }
+
+        [Fact]
+        public void Run_OneNumberAndBinaryTag_ActionOnValueTagCalledOnce()
+        {
+            var numberOfCall = 0;
+            var valuesSeen = new List<string>();
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag, '#', 'b'] = a =>
+                {
+                    numberOfCall++;
+                    valuesSeen.Add(a[0]);
+                    return a[0];
+                }
+            };
+
+            var engine = new StrinkenEngine();
+            const string input = "{#b11010011010101}";
+            var result = engine.Run(input);
+            result.Stack.Resolve(actions);
+
+            numberOfCall.Should().Be(1);
+            valuesSeen.Count.Should().Be(1);
+            valuesSeen[0].Should().Be("11010011010101");
+        }
+
+        [Fact]
+        public void Run_OneNumberAndOctalTag_ActionOnValueTagCalledOnce()
+        {
+            var numberOfCall = 0;
+            var valuesSeen = new List<string>();
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag, '#', 'o'] = a =>
+                {
+                    numberOfCall++;
+                    valuesSeen.Add(a[0]);
+                    return a[0];
+                }
+            };
+
+            var engine = new StrinkenEngine();
+            const string input = "{#o1463357}";
+            var result = engine.Run(input);
+            result.Stack.Resolve(actions);
+
+            numberOfCall.Should().Be(1);
+            valuesSeen.Count.Should().Be(1);
+            valuesSeen[0].Should().Be("1463357");
+        }
+
+        [Fact]
+        public void Run_OneNumberAndDecimalTag_ActionOnValueTagCalledOnce()
+        {
+            var numberOfCall = 0;
+            var valuesSeen = new List<string>();
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag, '#', 'd'] = a =>
+                {
+                    numberOfCall++;
+                    valuesSeen.Add(a[0]);
+                    return a[0];
+                }
+            };
+
+            var engine = new StrinkenEngine();
+            const string input = "{#d457901245}";
+            var result = engine.Run(input);
+            result.Stack.Resolve(actions);
+
+            numberOfCall.Should().Be(1);
+            valuesSeen.Count.Should().Be(1);
+            valuesSeen[0].Should().Be("457901245");
+        }
+
+        [Fact]
+        public void Run_OneNumberAndHexadecimalTag_ActionOnValueTagCalledOnce()
+        {
+            var numberOfCall = 0;
+            var valuesSeen = new List<string>();
+            var actions = new ActionDictionary
+            {
+                [TokenType.Tag, '#', 'x'] = a =>
+                {
+                    numberOfCall++;
+                    valuesSeen.Add(a[0]);
+                    return a[0];
+                }
+            };
+
+            var engine = new StrinkenEngine();
+            const string input = "{#x45bAe7845F}";
+            var result = engine.Run(input);
+            result.Stack.Resolve(actions);
+
+            numberOfCall.Should().Be(1);
+            valuesSeen.Count.Should().Be(1);
+            valuesSeen[0].Should().Be("45bAe7845F");
+        }
     }
 }

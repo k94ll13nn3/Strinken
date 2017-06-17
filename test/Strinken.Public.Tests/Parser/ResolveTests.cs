@@ -90,5 +90,37 @@ namespace Strinken.Public.Tests.Parser
 
             stringSolver.Resolve("{@som3th!ng$:Length}", new Data { Name = "Lorem" }).Should().Be("10");
         }
+
+        [Fact]
+        public void Resolve_OneNumberTagBinaryFormat_ReturnsResolvedString()
+        {
+            var stringSolver = new Parser<Data>();
+
+            stringSolver.Resolve("{#b1101100}", new Data { Name = "Lorem" }).Should().Be("1101100");
+        }
+
+        [Fact]
+        public void Resolve_OneNumberTagOctalFormat_ReturnsResolvedString()
+        {
+            var stringSolver = new Parser<Data>();
+
+            stringSolver.Resolve("{#o4012546}", new Data { Name = "Lorem" }).Should().Be("4012546");
+        }
+
+        [Fact]
+        public void Resolve_OneNumberTagDecimalFormat_ReturnsResolvedString()
+        {
+            var stringSolver = new Parser<Data>();
+
+            stringSolver.Resolve("{#d487902654}", new Data { Name = "Lorem" }).Should().Be("487902654");
+        }
+
+        [Fact]
+        public void Resolve_OneNumberTagHexadecimalFormat_ReturnsResolvedString()
+        {
+            var stringSolver = new Parser<Data>();
+
+            stringSolver.Resolve("{#x787AEEF454601BB}", new Data { Name = "Lorem" }).Should().Be("787AEEF454601BB");
+        }
     }
 }

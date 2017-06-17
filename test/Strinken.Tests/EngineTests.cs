@@ -280,5 +280,41 @@ namespace Strinken.Tests
             result.Success.Should().BeFalse();
             result.ErrorMessage.Should().Be($"Illegal '{illegalChar}' at position {position}");
         }
+
+        [Fact]
+        public void Run_NumberTagBinaryFormatInvalidCharacter_ReturnsFalse()
+        {
+            const string input = "lorem{#b100105}";
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal '5' at position 13");
+        }
+
+        [Fact]
+        public void Run_NumberTagOctalFormatInvalidCharacter_ReturnsFalse()
+        {
+            const string input = "lorem{#o1224563945}";
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal '9' at position 15");
+        }
+
+        [Fact]
+        public void Run_NumberTagDecimalFormatInvalidCharacter_ReturnsFalse()
+        {
+            const string input = "lorem{#d154A452}";
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal 'A' at position 11");
+        }
+
+        [Fact]
+        public void Run_NumberTagHexadecimalFormatInvalidCharacter_ReturnsFalse()
+        {
+            const string input = "lorem{#x45Aee1f45GH5}";
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be("Illegal 'G' at position 17");
+        }
     }
 }

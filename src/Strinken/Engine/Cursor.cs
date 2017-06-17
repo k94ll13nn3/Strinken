@@ -126,6 +126,10 @@ namespace Strinken.Engine
                         return ParseResult<TokenDefinition>.FailureWithMessage(Errors.EndOfString);
 
                     case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Name && CharValue.IsInvalidTokenNameCharacter():
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Binary && CharValue != '0' && CharValue != '1':
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Octal && (CharValue < '0' || CharValue > '7'):
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Decimal && (CharValue < '0' || CharValue > '9'):
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Hexadecimal && CharValue.IsInvalidHexadecimalCharacter():
                         return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
                 }
 
