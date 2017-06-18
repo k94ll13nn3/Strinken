@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 Thanks to [Keep a CHANGELOG](http://keepachangelog.com/) for the formating.
 
+## 3.2.0 (2017-06-18)
+
+### Added 
+
+- New tag : Value tag
+- New tags : Number tags
+- Add base class for filter without arguments.
+
+### Changed
+
+- New tokens registration and parsing mechanism.
+
+## PR/Issues
+
+ - [#43](https://github.com/k94ll13nn3/Strinken/issues/43) - Add an abtract filter class that does not allow arguments +enhancement
+ - [#42](https://github.com/k94ll13nn3/Strinken/issues/42) - Number tags
+ - [#41](https://github.com/k94ll13nn3/Strinken/issues/41) - Value tag
+ - [#40](https://github.com/k94ll13nn3/Strinken/pull/40) - Parsing and tokens registration improvements contributed by Kévin Gallienne ([k94ll13nn3](https://github.com/k94ll13nn3))
+
+Commits: e8d00955e9...89d5ee10e8
+
 ## 3.1.0 (2016-12-03)
 
 ### Added 
