@@ -31,3 +31,14 @@ content validation process of the parser.
 - `Resolve`: a method that takes two arguments 
     - a **string** corresponding to the value on which the filter is applied (a tag or the result of another filter).
     - a **string[]** corresponding to the arguments passed to the filter.
+
+## Filter without arguments
+
+It is possible to easily create filter that takes no arguments by inheriting the 
+[FilterWithoutArguments](/Strinken/api/Strinken.Filters/FilterWithoutArguments/) abstract class. This class has the following abstract members:
+- `Name`
+- `Description`
+- `Resolve`: a method that takes one argument
+    - a **string** corresponding to the value on which the filter is applied (a tag or the result of another filter).
+
+The `Usage` is automaticaly computed as *\{tag:**filterName**\}*.
