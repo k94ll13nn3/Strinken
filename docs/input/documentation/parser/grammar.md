@@ -37,9 +37,19 @@ They are composed of one or more character from this list:
 - Any Unicode letter (as defined [here](https://msdn.microsoft.com/fr-fr/library/yyxz6h5w(v=vs.110).aspx#Anchor_1))
 - A `_` or a `-`
 
-Additionally, a tag can start with a `!`, in this case, it is treated as a *parameter tag*.
+Additionally, a tag can start with:
+- a `!`, in this case, it is treated as a *parameter tag*.
+- a `#`, in this case, it is treated as a *number tag*, i.e. a tag that only allow some formats of numbers. It returns directly the value. 
+It is followed by a letter indicating the format:
+    - `b` indicates a binary number, only allowing 0 and 1 (ex: `#b1101100`).
+    - `o` indicates an octal number, only allowing digits from 0 to 7 (ex: `#o145701`).
+    - `d` indicates a decimal number, only allowing digits from 0 to 9 (ex: `#d9857109`).
+    - `x` indicates an hexadecimal number, only allowing digits from 0 to 9 and letters from a to f or A to F (ex: `#x125EFF12a`).
 
-`!` is not part of the tag name (in term of API), it is only an indicator.
+A tag can also start with `@`. In this case, there are no restrictions on characters except `}` (by global restriction)
+and `:` as it is considered as the start of a filter.
+
+`!`, `@`, `#b`, `#b`, `#b` and `#b` are not part of the tag name (in term of API), there are only indicators.
 
 # Filters
 
