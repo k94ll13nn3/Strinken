@@ -316,5 +316,16 @@ namespace Strinken.Tests
             result.Success.Should().BeFalse();
             result.ErrorMessage.Should().Be("Illegal 'G' at position 17");
         }
+
+        [Theory]
+        [InlineData("{@sfklgjfg=:ispum}")]
+        [InlineData("{@sdf,sfg:ispum}")]
+        [InlineData("{@!sfgf:ispum}")]
+        public void Run_ValueTag_ChecksCharacters(string input)
+        {
+            var result = new StrinkenEngine().Run(input);
+            result.Success.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
+        }
     }
 }
