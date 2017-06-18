@@ -25,7 +25,7 @@ Thanks to [Keep a CHANGELOG](http://keepachangelog.com/) for the formating.
 
 Commits: e8d00955e9...89d5ee10e8
 
-## 3.1.0 (2016-12-03)
+## 3.1.0 (2017-04-23)
 
 ### Added 
 
