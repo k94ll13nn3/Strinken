@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 Thanks to [Keep a CHANGELOG](http://keepachangelog.com/) for the formating.
 
+## 3.0.1 (2017-07-01)
+
+### Fixed 
+
+- Fix regression : arguments were no longer passed to the filter validation process.
+
 ## 3.2.0 (2017-06-18)
 
 ### Added 
@@ -14,7 +20,7 @@ Thanks to [Keep a CHANGELOG](http://keepachangelog.com/) for the formating.
 
 ### Changed
 
-- New tokens registration and parsing mechanism.
+- (Internal) New tokens registration and parsing mechanism.
 
 ## PR/Issues
 
