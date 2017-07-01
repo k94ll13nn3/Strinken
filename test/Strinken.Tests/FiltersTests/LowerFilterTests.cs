@@ -35,10 +35,17 @@ namespace Strinken.Tests.FiltersTests
         }
 
         [Fact]
-        public void Resolve__ReturnsResolvedString()
+        public void Resolve_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Resolve("The {DataName:Lower} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The lorem is in the kitchen.");
+        }
+
+        [Fact]
+        public void Validate_ReturnsTrue()
+        {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            stringSolver.Validate("The {DataName:Lower} is in the kitchen.").IsValid.Should().BeTrue();
         }
     }
 }

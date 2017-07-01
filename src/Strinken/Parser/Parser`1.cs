@@ -147,7 +147,7 @@ namespace Strinken.Parser
                             break;
 
                         case ResolutionMethod.Name:
-                            actions[op.TokenType, op.Symbol, ind.Symbol] = null;
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => a[0];
                             break;
                     }
                 }

@@ -50,11 +50,19 @@ namespace Strinken.Tests.FiltersTests
         }
 
         [Fact]
-        public void Resolve__ReturnsResolvedString()
+        public void Resolve_ReturnsResolvedString()
         {
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Resolve("The {DataName:Null+Ipsum} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Lorem is in the kitchen.");
             stringSolver.Resolve("The {DataName:Null+Ipsum} is in the kitchen.", new Data { Name = null }).Should().Be("The Ipsum is in the kitchen.");
+        }
+
+        [Fact]
+        public void Validate_ReturnsTrue()
+        {
+            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            stringSolver.Validate("The {DataName:Null+Ipsum} is in the kitchen.").IsValid.Should().BeTrue();
+            stringSolver.Validate("The {DataName:Null+Ipsum} is in the kitchen.").IsValid.Should().BeTrue();
         }
     }
 }
