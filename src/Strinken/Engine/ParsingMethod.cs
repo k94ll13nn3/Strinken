@@ -3,7 +3,7 @@
     /// <summary>
     /// Method of parsing.
     /// </summary>
-    public enum ParsingMethod
+    internal enum ParsingMethod
     {
         /// <summary>
         /// Parse string as a name (letter + '-' + '_').

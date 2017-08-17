@@ -3,7 +3,7 @@
     /// <summary>
     /// Method of resolution.
     /// </summary>
-    public enum ResolutionMethod
+    internal enum ResolutionMethod
     {
         /// <summary>
         /// array[a[0]].Resolve(value)
