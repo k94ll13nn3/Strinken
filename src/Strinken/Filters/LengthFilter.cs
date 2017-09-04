@@ -3,12 +3,12 @@
 namespace Strinken.Filters
 {
     /// <summary>
-    /// Filters that transforms a value into its length.
+    /// Transforms the input into its length.
     /// </summary>
     internal class LengthFilter : FilterWithoutArguments
     {
         /// <inheritdoc/>
-        public override string Description => "Transforms a value into its length.";
+        public override string Description => "Transforms the input into its length.";
 
         /// <inheritdoc/>
         public override string Name => "Length";

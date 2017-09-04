@@ -4,12 +4,12 @@ using Strinken.Parser;
 namespace Strinken.Filters
 {
     /// <summary>
-    /// Returns the specified argument if the input value is null.
+    /// Returns the specified argument if the input is null.
     /// </summary>
     internal class NullFilter : IFilter
     {
         /// <inheritdoc/>
-        public string Description => "Returns the specified argument if the input value is null.";
+        public string Description => "Returns the specified argument if the input is null.";
 
         /// <inheritdoc/>
         public string Name => "Null";

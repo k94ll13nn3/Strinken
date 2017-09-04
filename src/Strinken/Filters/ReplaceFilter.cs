@@ -4,12 +4,12 @@ using Strinken.Parser;
 namespace Strinken.Filters
 {
     /// <summary>
-    /// This filter takes some couples of arguments, and replace each occurrence of each first argument by the second.
+    /// Takes some couples of arguments, and replace each occurrence of each first argument by the second.
     /// </summary>
     internal class ReplaceFilter : IFilter
     {
         /// <inheritdoc/>
-        public string Description => "This filter takes pairs of arguments, and replace each occurrence of each first argument by the second.";
+        public string Description => "Takes some couples of arguments, and replace each occurrence of each first argument by the second.";
 
         /// <inheritdoc/>
         public string Name => "Replace";

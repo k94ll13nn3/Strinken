@@ -4,12 +4,12 @@ using Strinken.Parser;
 namespace Strinken.Filters
 {
     /// <summary>
-    /// Filter that transform the input to uppercase.
+    /// Transforms the input to uppercase.
     /// </summary>
     internal class UpperFilter : FilterWithoutArguments
     {
         /// <inheritdoc/>
-        public override string Description => "Converts a string to uppercase.";
+        public override string Description => "Transforms the input to uppercase.";
 
         /// <inheritdoc/>
         public override string Name => "Upper";

@@ -4,12 +4,12 @@ using Strinken.Parser;
 namespace Strinken.Filters
 {
     /// <summary>
-    /// Filter that transform the input to lowercase.
+    /// Transforms the input to lowercase.
     /// </summary>
     internal class LowerFilter : FilterWithoutArguments
     {
         /// <inheritdoc/>
-        public override string Description => "Converts a string to lowercase.";
+        public override string Description => "Transforms the input to lowercase.";
 
         /// <inheritdoc/>
         public override string Name => "Lower";

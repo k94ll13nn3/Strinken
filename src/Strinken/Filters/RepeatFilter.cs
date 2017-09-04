@@ -4,12 +4,12 @@ using Strinken.Parser;
 namespace Strinken.Filters
 {
     /// <summary>
-    /// Repeats a string as many times as specified.
+    /// Repeats the input as many times as specified.
     /// </summary>
     internal class ReapeatFilter : IFilter
     {
         /// <inheritdoc/>
-        public string Description => "Repeats a string as many times as specified.";
+        public string Description => "Repeats the input as many times as specified.";
 
         /// <inheritdoc/>
         public string Name => "Repeat";

@@ -4,12 +4,12 @@ using Strinken.Parser;
 namespace Strinken.Filters
 {
     /// <summary>
-    /// Formats a string with the leading zeros until reaching the specified length.
+    /// Formats the input with leading zeros until reaching the specified length.
     /// </summary>
     internal class LeadingZerosFilter : IFilter
     {
         /// <inheritdoc/>
-        public string Description => "Formats a string with the leading zeros until reaching the specified length.";
+        public string Description => "Formats the input with leading zeros until reaching the specified length.";
 
         /// <inheritdoc/>
         public string Name => "Zeros";

@@ -4,12 +4,12 @@ using Strinken.Parser;
 namespace Strinken.Filters
 {
     /// <summary>
-    /// Do an equality tests and render a value depending on the output of the test.
+    /// Does an equality test with the input and the specified value and renders a value depending on the output of the test.
     /// </summary>
     internal class IfEqualFilter : IFilter
     {
         /// <inheritdoc/>
-        public string Description => "Do an equality tests and render a value depending on the output of the test.";
+        public string Description => "Does an equality test with the input and the specified value and renders a value depending on the output of the test.";
 
         /// <inheritdoc/>
         public string Name => "IfEqual";
