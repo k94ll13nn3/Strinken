@@ -98,6 +98,18 @@ namespace Strinken.Parser
         }
 
         /// <summary>
+        /// Resolves the compiled string.
+        /// </summary>
+        /// <param name="compiledString">The compiled string to resolve.</param>
+        /// <param name="value">The value to pass to the tags.</param>
+        /// <returns>The resolved compiled string.</returns>
+        /// <exception cref="ArgumentException">The compiled string is invalid.</exception>
+        public string Resolve(CompiledString compiledString, T value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Validates an input.
         /// </summary>
         /// <param name="input">The input to validate.</param>
@@ -191,6 +203,7 @@ namespace Strinken.Parser
         /// </summary>
         /// <param name="input">The input to compile.</param>
         /// <exception cref="FormatException">The input has a wrong format.</exception>
+        [Obsolete("Use CompileString(string input).")]
         public void Compile(string input)
         {
             var runResult = new StrinkenEngine().Run(input);
@@ -204,11 +217,22 @@ namespace Strinken.Parser
         }
 
         /// <summary>
+        /// Compiles a string for a faster resolution time but without any modification allowed after.
+        /// </summary>
+        /// <param name="input">The input to compile.</param>
+        /// <exception cref="FormatException">The input has a wrong format.</exception>
+        public CompiledString CompileString(string input)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Resolves the input.
         /// </summary>
         /// <param name="value">The value to pass to the tags.</param>
         /// <returns>The resolved input.</returns>
         /// <exception cref="InvalidOperationException">No string were previously compiled.</exception>
+        [Obsolete("Use Resolve(CompiledString compiledString, T value).")]
         public string ResolveCompiledString(T value)
         {
             if (compiledStack == null)
