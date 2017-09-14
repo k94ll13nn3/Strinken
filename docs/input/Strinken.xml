@@ -627,7 +627,7 @@
         </member>
         <member name="T:Strinken.Filters.IfEqualFilter">
             <summary>
-            Do an equality tests and render a value depending on the output of the test.
+            Does an equality test with the input and the specified value and renders a value depending on the output of the test.
             </summary>
         </member>
         <member name="P:Strinken.Filters.IfEqualFilter.Description">
@@ -647,7 +647,7 @@
         </member>
         <member name="T:Strinken.Filters.LeadingZerosFilter">
             <summary>
-            Formats a string with the leading zeros until reaching the specified length.
+            Formats the input with leading zeros until reaching the specified length.
             </summary>
         </member>
         <member name="P:Strinken.Filters.LeadingZerosFilter.Description">
@@ -667,7 +667,7 @@
         </member>
         <member name="T:Strinken.Filters.LengthFilter">
             <summary>
-            Filters that transforms a value into its length.
+            Transforms the input into its length.
             </summary>
         </member>
         <member name="P:Strinken.Filters.LengthFilter.Description">
@@ -681,7 +681,7 @@
         </member>
         <member name="T:Strinken.Filters.LowerFilter">
             <summary>
-            Filter that transform the input to lowercase.
+            Transforms the input to lowercase.
             </summary>
         </member>
         <member name="P:Strinken.Filters.LowerFilter.Description">
@@ -695,7 +695,7 @@
         </member>
         <member name="T:Strinken.Filters.NullFilter">
             <summary>
-            Returns the specified argument if the input value is null.
+            Returns the specified argument if the input is null.
             </summary>
         </member>
         <member name="P:Strinken.Filters.NullFilter.Description">
@@ -715,7 +715,7 @@
         </member>
         <member name="T:Strinken.Filters.ReapeatFilter">
             <summary>
-            Repeats a string as many times as specified.
+            Repeats the input as many times as specified.
             </summary>
         </member>
         <member name="P:Strinken.Filters.ReapeatFilter.Description">
@@ -735,7 +735,7 @@
         </member>
         <member name="T:Strinken.Filters.ReplaceFilter">
             <summary>
-            This filter takes some couples of arguments, and replace each occurrence of each first argument by the second.
+            Takes some couples of arguments, and replace each occurrence of each first argument by the second.
             </summary>
         </member>
         <member name="P:Strinken.Filters.ReplaceFilter.Description">
@@ -755,7 +755,7 @@
         </member>
         <member name="T:Strinken.Filters.UpperFilter">
             <summary>
-            Filter that transform the input to uppercase.
+            Transforms the input to uppercase.
             </summary>
         </member>
         <member name="P:Strinken.Filters.UpperFilter.Description">
