@@ -5,7 +5,7 @@
 #tool GitVersion.CommandLine
 #tool OpenCover
 #tool GitReleaseNotes
-#tool coveralls.io
+#tool coveralls.io&version=1.3.4
 
 #addin Cake.Coveralls
 
