@@ -62,6 +62,7 @@
                         <ul class="nav navbar-nav">                            
                                     <li><a href="/Strinken/documentation">Documentation</a></li>
         <li class="active"><a href="/Strinken/api">API</a></li>
+    <li><a href="https://github.com/k94ll13nn3/Strinken"><i class="fa fa-github"></i> Source</a></li>
  
                         </ul>       
                     </div>
@@ -84,7 +85,53 @@
                 </section>
                 <section class="sidebar">                    
                     	
-		
+	    <script src="/Strinken/assets/js/lunr.min.js"></script>
+    <script src="/Strinken/assets/js/searchIndex.js"></script>
+    <div class="sidebar-form">
+        <div class="input-group">
+            <input type="text" name="search" id="search" class="form-control" placeholder="Search Types...">
+            <span class="input-group-btn">
+                <button class="btn btn-flat"><i class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </div>
+    <div id="search-results">
+    </div>
+    <script>
+        function runSearch(query){
+            $("#search-results").empty();			
+            if( query.length < 2 ){
+                return;
+            }			
+            var results = searchModule.search("*" + query + "*");
+            var listHtml = "<ul class='sidebar-menu'>";	
+            listHtml += "<li class='header'>Type Results</li>";	
+            if(results.length == 0 ){
+                listHtml += "<li>No results found</li>";
+            } else {					
+                for(var i = 0; i < results.length; ++i){
+                    var res = results[i];
+                    listHtml += "<li><a href='" + res.url + "'>" + htmlEscape(res.title) + "</a></li>";
+                }				
+            }
+            listHtml += "</ul>";				
+            $("#search-results").append(listHtml);
+        }
+
+        $(document).ready(function(){
+            $("#search").on('input propertychange paste', function() {
+                runSearch($("#search").val());
+            });
+        });
+
+        function htmlEscape(html) {
+            return document.createElement('div')
+                .appendChild(document.createTextNode(html))
+                .parentNode
+                .innerHTML;
+        }
+    </script>
+	
     <hr>
 
                     <ul class="sidebar-menu">
@@ -142,7 +189,7 @@
 								<dt>Base Types</dt>
 								<dd>
 									<ul class="list-unstyled">										
-											<li>object</li>								
+											<li>Object</li>								
 									</ul>
 								</dd>				
 							
@@ -152,7 +199,7 @@
 					<div class="col-md-6">
 						<div class="mermaid">
 							graph TD
-	Base0["object"]--&gt;Type
+	Base0["Object"]--&gt;Type
 	Type["ParserExtensions"]
 class Type type-node
 
@@ -187,7 +234,7 @@ class Type type-node
 						</thead>
 							<tbody><tr>
 								<td><a href="/Strinken/api/Strinken.Parser/ParserExtensions/1489D533">WithFilter<wbr>&lt;T&gt;<wbr><wbr>(Parser<wbr>&lt;T&gt;<wbr>, <wbr>IFilter)<wbr></a></td>
-								<td>Parser<wbr>&lt;T&gt;<wbr></td>
+								<td><a href="/Strinken/api/Strinken.Parser/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></td>
 								<td>
 									<div>
             Add a filter to the parser.
@@ -197,7 +244,7 @@ class Type type-node
 							</tr>
 							<tr>
 								<td><a href="/Strinken/api/Strinken.Parser/ParserExtensions/B64EE1CA">WithFilters<wbr>&lt;T&gt;<wbr><wbr>(Parser<wbr>&lt;T&gt;<wbr>, <wbr>IEnumerable<wbr>&lt;IFilter&gt;<wbr>)<wbr></a></td>
-								<td>Parser<wbr>&lt;T&gt;<wbr></td>
+								<td><a href="/Strinken/api/Strinken.Parser/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></td>
 								<td>
 									<div>
             Add filters to the parser.
@@ -207,7 +254,7 @@ class Type type-node
 							</tr>
 							<tr>
 								<td><a href="/Strinken/api/Strinken.Parser/ParserExtensions/FA8D3E5C">WithParameterTag<wbr>&lt;T&gt;<wbr><wbr>(Parser<wbr>&lt;T&gt;<wbr>, <wbr>IParameterTag)<wbr></a></td>
-								<td>Parser<wbr>&lt;T&gt;<wbr></td>
+								<td><a href="/Strinken/api/Strinken.Parser/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></td>
 								<td>
 									<div>
             Add a parameter tag to the parser.
@@ -217,7 +264,7 @@ class Type type-node
 							</tr>
 							<tr>
 								<td><a href="/Strinken/api/Strinken.Parser/ParserExtensions/6BC0A5C5">WithParameterTags<wbr>&lt;T&gt;<wbr><wbr>(Parser<wbr>&lt;T&gt;<wbr>, <wbr>IEnumerable<wbr>&lt;<wbr>I<wbr>Parameter<wbr>Tag&gt;<wbr>)<wbr></a></td>
-								<td>Parser<wbr>&lt;T&gt;<wbr></td>
+								<td><a href="/Strinken/api/Strinken.Parser/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></td>
 								<td>
 									<div>
             Add parameter tags to the parser.
@@ -227,7 +274,7 @@ class Type type-node
 							</tr>
 							<tr>
 								<td><a href="/Strinken/api/Strinken.Parser/ParserExtensions/0DCD6E9F">WithTag<wbr>&lt;T&gt;<wbr><wbr>(Parser<wbr>&lt;T&gt;<wbr>, <wbr>ITag<wbr>&lt;T&gt;<wbr>)<wbr></a></td>
-								<td>Parser<wbr>&lt;T&gt;<wbr></td>
+								<td><a href="/Strinken/api/Strinken.Parser/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></td>
 								<td>
 									<div>
             Add a tag to the parser.
@@ -237,7 +284,7 @@ class Type type-node
 							</tr>
 							<tr>
 								<td><a href="/Strinken/api/Strinken.Parser/ParserExtensions/43DEB2AC">WithTag<wbr>&lt;T&gt;<wbr><wbr>(Parser<wbr>&lt;T&gt;<wbr>, <wbr>string, <wbr>string, <wbr>Func<wbr>&lt;T, <wbr>string&gt;<wbr>)<wbr></a></td>
-								<td>Parser<wbr>&lt;T&gt;<wbr></td>
+								<td><a href="/Strinken/api/Strinken.Parser/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></td>
 								<td>
 									<div>
             Add a tag to the parser.
@@ -247,7 +294,7 @@ class Type type-node
 							</tr>
 							<tr>
 								<td><a href="/Strinken/api/Strinken.Parser/ParserExtensions/2637A67B">WithTags<wbr>&lt;T&gt;<wbr><wbr>(Parser<wbr>&lt;T&gt;<wbr>, <wbr>IEnumerable<wbr>&lt;ITag<wbr>&lt;T&gt;<wbr>&gt;<wbr>)<wbr></a></td>
-								<td>Parser<wbr>&lt;T&gt;<wbr></td>
+								<td><a href="/Strinken/api/Strinken.Parser/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></td>
 								<td>
 									<div>
             Add tags to the parser.
@@ -275,7 +322,7 @@ class Type type-node
         <div class="wrapper bottom-wrapper">
             <footer class="bottom-footer">
                 <p class="text-muted">
-    Strinken v3.2.0.0 - <a href="https://github.com/k94ll13nn3/Strinken"><i class="fa fa-github"></i> GitHub</a>
+    Strinken v3.3.0.0 - <a href="https://github.com/k94ll13nn3"><i class="fa fa-github"></i> k94ll13nn3</a>
     <br>
     Generated by <a href="http://wyam.io">Wyam</a>
 </p>
