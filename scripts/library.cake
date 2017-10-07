@@ -2,12 +2,12 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool GitVersion.CommandLine
-#tool OpenCover
-#tool GitReleaseNotes
+#tool GitVersion.CommandLine&version=3.6.5
+#tool OpenCover&version=4.6.519
+#tool GitReleaseNotes&version=0.7.0
 #tool coveralls.io&version=1.3.4
 
-#addin Cake.Coveralls
+#addin Cake.Coveralls&version=0.6.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
