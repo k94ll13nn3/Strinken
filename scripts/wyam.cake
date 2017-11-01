@@ -4,12 +4,12 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool Wyam&version=1.0.0
+#tool Wyam&version=1.1.0
 #tool KuduSync.NET&version=1.3.1
 
-#addin Cake.Wyam&version=1.0.0
-#addin Cake.Git&version=0.15.0
-#addin Cake.Kudu&version=0.4.0
+#addin Cake.Wyam&version=1.1.0
+#addin Cake.Git&version=0.16.1
+#addin Cake.Kudu&version=0.6.0
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION

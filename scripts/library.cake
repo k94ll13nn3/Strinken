@@ -5,9 +5,9 @@
 #tool GitVersion.CommandLine&version=3.6.5
 #tool OpenCover&version=4.6.519
 #tool GitReleaseNotes&version=0.7.0
-#tool coveralls.io&version=1.3.4
+#tool coveralls.io&version=1.4.2
 
-#addin Cake.Coveralls&version=0.6.0
+#addin Cake.Coveralls&version=0.7.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -63,9 +63,9 @@ Task("Set-Environment")
 
     var version = GitVersion();
     nugetVersion = version.NuGetVersion;
-    if(version.CommitsSinceVersionSource != "0")
+    if(version.CommitsSinceVersionSource.HasValue && version.CommitsSinceVersionSource.Value != 0)
     {
-        versionSuffix = "ci" + version.CommitsSinceVersionSource.PadLeft(4, '0');
+        versionSuffix = "ci" + version.CommitsSinceVersionSource?.ToString()?.PadLeft(4, '0');
     }    
 
     if (isOnAppVeyor)
