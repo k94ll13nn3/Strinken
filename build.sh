@@ -10,7 +10,7 @@
 # Define directories.
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TOOLS_DIR=$SCRIPT_DIR/tools
-CAKE_VERSION=0.18.0
+CAKE_VERSION=0.23.0
 CAKE_EXE=$TOOLS_DIR/Cake.CoreCLR/$CAKE_VERSION/Cake.dll
 
 # Define default arguments.
