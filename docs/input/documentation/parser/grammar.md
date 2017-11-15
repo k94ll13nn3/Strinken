@@ -8,10 +8,10 @@ Each series must be enclosed in curly braces (`{...}`) and inside, there tokens 
 
 - The first token must be a tag.
 - Then, it can be followed by one or more filters, each starting with a `:`.
-- For each filters, if it requires arguments, all the arguments must come before the next filter. To 
-start the argument list, put a `+` after the filter, and separate arguments with a `,`.
+- For each filters, if it requires arguments, all the arguments must come before the next filter. To start the argument list, put a `+` after the filter, and separate arguments with a `,`.
 
 Here are some examples:
+
 - `{tag}` (the most basic series)
 - `{tag:filter}`
 - `{tag:filter+arg}`
@@ -34,17 +34,17 @@ Here is the list of all the possibles tokens, in a syntax point of vue (for API 
 Tags are the most basic tokens, and are the start of any series of tokens.
 They are composed of one or more character from this list:
 
-- Any Unicode letter (as defined [here](https://msdn.microsoft.com/fr-fr/library/yyxz6h5w(v=vs.110).aspx#Anchor_1))
+- Any Unicode letter (as defined [here](https://docs.microsoft.com/fr-fr/dotnet/api/system.char.isletter))
 - A `_` or a `-`
 
 Additionally, a tag can start with:
+
 - a `!`, in this case, it is treated as a *parameter tag*.
-- a `#`, in this case, it is treated as a *number tag*, i.e. a tag that only allow some formats of numbers. It returns directly the value. 
-It is followed by a letter indicating the format:
-    - `b` indicates a binary number, only allowing 0 and 1 (ex: `#b1101100`).
-    - `o` indicates an octal number, only allowing digits from 0 to 7 (ex: `#o145701`).
-    - `d` indicates a decimal number, only allowing digits from 0 to 9 (ex: `#d9857109`).
-    - `x` indicates an hexadecimal number, only allowing digits from 0 to 9 and letters from a to f or A to F (ex: `#x125EFF12a`).
+- a `#`, in this case, it is treated as a *number tag*, i.e. a tag that only allow some formats of numbers. It returns directly the value. It is followed by a letter indicating the format:
+  - `b` indicates a binary number, only allowing 0 and 1 (ex: `#b1101100`).
+  - `o` indicates an octal number, only allowing digits from 0 to 7 (ex: `#o145701`).
+  - `d` indicates a decimal number, only allowing digits from 0 to 9 (ex: `#d9857109`).
+  - `x` indicates an hexadecimal number, only allowing digits from 0 to 9 and letters from a to f or A to F (ex: `#x125EFF12a`).
 
 A tag can also start with `@`. In this case, there are no restrictions on characters except `}` (by global restriction)
 and `:` as it is considered as the start of a filter.
@@ -56,7 +56,7 @@ and `:` as it is considered as the start of a filter.
 Filters are similar to tags in term of syntax, but they always start with a `:`.
 After that, they only allow these characters:
 
-- Any Unicode letter (as defined [here](https://msdn.microsoft.com/fr-fr/library/yyxz6h5w(v=vs.110).aspx#Anchor_1))
+- Any Unicode letter (as defined [here](https://docs.microsoft.com/fr-fr/dotnet/api/system.char.isletter))
 - A `_` or a `-`
 
 `:` is not part of the filter name (in term of API), it is only an indicator.
@@ -69,6 +69,7 @@ Arguments can only follow a filter, the argument list must start with a `+`, and
 ## Simple arguments
 
 Simple arguments have little restriction on what they can contain. They can contain any character except characters from this list:
+
 - `}` (by global restriction)
 - `,` as it is considered as a separation between arguments
 - `:` as it is considered as the start of a new filter
@@ -76,17 +77,4 @@ Simple arguments have little restriction on what they can contain. They can cont
 
 ## Tag arguments
 
-Tag arguments are tags that are passed as arguments to a filter. They have the same syntax as normal tags, but 
-must start with a `=`. 
-
-<!--```
-string ::= outside ( '{' token '}' outside )*
-outside ::= ([^}{] | '{{' | '}}')*
-token ::= tag (':' filter)*
-tag ::= '!'? name
-filter ::= name ('+' arguments)?
-arguments ::= argument  (',' argument )*
-argument ::= [^},]+ | argumentTag
-argumentTag ::= '=' tag
-name ::= [a-zA-Z_\-]+
-```-->
+Tag arguments are tags that are passed as arguments to a filter. They have the same syntax as normal tags, but must start with a `=`.
