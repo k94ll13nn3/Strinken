@@ -126,8 +126,7 @@ Each series must be enclosed in curly braces (<code>{...}</code>) and inside, th
 <ul>
 <li>The first token must be a tag.</li>
 <li>Then, it can be followed by one or more filters, each starting with a <code>:</code>.</li>
-<li>For each filters, if it requires arguments, all the arguments must come before the next filter. To
-start the argument list, put a <code>+</code> after the filter, and separate arguments with a <code>,</code>.</li>
+<li>For each filters, if it requires arguments, all the arguments must come before the next filter. To start the argument list, put a <code>+</code> after the filter, and separate arguments with a <code>,</code>.</li>
 </ul>
 <p>Here are some examples:</p>
 <ul>
@@ -149,14 +148,13 @@ as the end of a series of tokens.</p>
 <p>Tags are the most basic tokens, and are the start of any series of tokens.
 They are composed of one or more character from this list:</p>
 <ul>
-<li>Any Unicode letter (as defined <a href="https://msdn.microsoft.com/fr-fr/library/yyxz6h5w(v=vs.110).aspx#Anchor_1">here</a>)</li>
+<li>Any Unicode letter (as defined <a href="https://docs.microsoft.com/fr-fr/dotnet/api/system.char.isletter">here</a>)</li>
 <li>A <code>_</code> or a <code>-</code></li>
 </ul>
 <p>Additionally, a tag can start with:</p>
 <ul>
 <li>a <code>!</code>, in this case, it is treated as a <em>parameter tag</em>.</li>
-<li>a <code>#</code>, in this case, it is treated as a <em>number tag</em>, i.e. a tag that only allow some formats of numbers. It returns directly the value.
-It is followed by a letter indicating the format:
+<li>a <code>#</code>, in this case, it is treated as a <em>number tag</em>, i.e. a tag that only allow some formats of numbers. It returns directly the value. It is followed by a letter indicating the format:
 <ul>
 <li><code>b</code> indicates a binary number, only allowing 0 and 1 (ex: <code>#b1101100</code>).</li>
 <li><code>o</code> indicates an octal number, only allowing digits from 0 to 7 (ex: <code>#o145701</code>).</li>
@@ -172,7 +170,7 @@ and <code>:</code> as it is considered as the start of a filter.</p>
 <p>Filters are similar to tags in term of syntax, but they always start with a <code>:</code>.
 After that, they only allow these characters:</p>
 <ul>
-<li>Any Unicode letter (as defined <a href="https://msdn.microsoft.com/fr-fr/library/yyxz6h5w(v=vs.110).aspx#Anchor_1">here</a>)</li>
+<li>Any Unicode letter (as defined <a href="https://docs.microsoft.com/fr-fr/dotnet/api/system.char.isletter">here</a>)</li>
 <li>A <code>_</code> or a <code>-</code></li>
 </ul>
 <p><code>:</code> is not part of the filter name (in term of API), it is only an indicator.</p>
@@ -188,19 +186,7 @@ Arguments can only follow a filter, the argument list must start with a <code>+<
 <li><code>=</code> at the start, as it is the indication of a tag argument</li>
 </ul>
 <h2 id="tag-arguments">Tag arguments</h2>
-<p>Tag arguments are tags that are passed as arguments to a filter. They have the same syntax as normal tags, but
-must start with a <code>=</code>.</p>
-<!--```
-string ::= outside ( '{' token '}' outside )*
-outside ::= ([^}{] | '{{' | '}}')*
-token ::= tag (':' filter)*
-tag ::= '!'? name
-filter ::= name ('+' arguments)?
-arguments ::= argument  (',' argument )*
-argument ::= [^},]+ | argumentTag
-argumentTag ::= '=' tag
-name ::= [a-zA-Z_\-]+
-```-->
+<p>Tag arguments are tags that are passed as arguments to a filter. They have the same syntax as normal tags, but must start with a <code>=</code>.</p>
 
 	</section>
                 

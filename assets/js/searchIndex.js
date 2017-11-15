@@ -34,6 +34,22 @@ var searchModule = function() {
 
     a({
         id:0,
+        title:"ParserExtensions",
+        content:"ParserExtensions",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:1,
+        title:"BaseFilters",
+        content:"BaseFilters",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:2,
         title:"IToken",
         content:"IToken",
         description:'',
@@ -41,25 +57,9 @@ var searchModule = function() {
     });
 
     a({
-        id:1,
-        title:"ValidationResult",
-        content:"ValidationResult",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:2,
-        title:"FilterWithoutArguments",
-        content:"FilterWithoutArguments",
-        description:'',
-        tags:''
-    });
-
-    a({
         id:3,
-        title:"BaseFilters",
-        content:"BaseFilters",
+        title:"ITag",
+        content:"ITag",
         description:'',
         tags:''
     });
@@ -74,24 +74,24 @@ var searchModule = function() {
 
     a({
         id:5,
-        title:"ITag",
-        content:"ITag",
+        title:"ValidationResult",
+        content:"ValidationResult",
         description:'',
         tags:''
     });
 
     a({
         id:6,
-        title:"ParserExtensions",
-        content:"ParserExtensions",
+        title:"IParameterTag",
+        content:"IParameterTag",
         description:'',
         tags:''
     });
 
     a({
         id:7,
-        title:"IParameterTag",
-        content:"IParameterTag",
+        title:"FilterWithoutArguments",
+        content:"FilterWithoutArguments",
         description:'',
         tags:''
     });
@@ -105,20 +105,8 @@ var searchModule = function() {
     });
 
     y({
-        url:'/Strinken/api/Strinken.Parser/IToken',
-        title:"IToken",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Parser/ValidationResult',
-        title:"ValidationResult",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Filters/FilterWithoutArguments',
-        title:"FilterWithoutArguments",
+        url:'/Strinken/api/Strinken.Parser/ParserExtensions',
+        title:"ParserExtensions",
         description:""
     });
 
@@ -129,8 +117,8 @@ var searchModule = function() {
     });
 
     y({
-        url:'/Strinken/api/Strinken.Parser/IFilter',
-        title:"IFilter",
+        url:'/Strinken/api/Strinken.Parser/IToken',
+        title:"IToken",
         description:""
     });
 
@@ -141,14 +129,26 @@ var searchModule = function() {
     });
 
     y({
-        url:'/Strinken/api/Strinken.Parser/ParserExtensions',
-        title:"ParserExtensions",
+        url:'/Strinken/api/Strinken.Parser/IFilter',
+        title:"IFilter",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken.Parser/ValidationResult',
+        title:"ValidationResult",
         description:""
     });
 
     y({
         url:'/Strinken/api/Strinken.Parser/IParameterTag',
         title:"IParameterTag",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken.Filters/FilterWithoutArguments',
+        title:"FilterWithoutArguments",
         description:""
     });
 
