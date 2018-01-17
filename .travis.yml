@@ -1,12 +1,8 @@
 language: csharp
 
-matrix:
-  include:
-    - os: linux # Ubuntu 14.04
-      dist: trusty
-      sudo: required
-      mono: none
-      dotnet: 1.0.1
+mono: none
+
+dotnet: 1.1.7
 
 notifications:
   email: false
