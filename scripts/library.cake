@@ -2,7 +2,7 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool GitVersion.CommandLine&version=3.6.5
+#tool GitVersion.CommandLine&version=4.0.0-beta0012
 #tool OpenCover&version=4.6.519
 #tool GitReleaseNotes&version=0.7.0
 #tool coveralls.io&version=1.4.2
@@ -61,7 +61,11 @@ Task("Set-Environment")
     Information("Pull Request:        " + isPullRequest.ToString());
     Information("Running on AppVeyor: " + isOnAppVeyor.ToString());
 
-    var version = GitVersion();
+    var version = GitVersion(new GitVersionSettings 
+    {
+        UpdateAssemblyInfo = true, 
+        WorkingDirectory = solutionDir 
+    });
     nugetVersion = version.NuGetVersion;
     if(version.CommitsSinceVersionSource.HasValue && version.CommitsSinceVersionSource.Value != 0)
     {
