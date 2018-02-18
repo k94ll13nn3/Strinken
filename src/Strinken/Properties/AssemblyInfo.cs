@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Strinken.Tests")]
 [assembly: AssemblyCompany("k94ll13nn3")]
-[assembly: AssemblyCopyright("Copyright © k94ll13nn3")]
+[assembly: AssemblyCopyright("Copyright Â© k94ll13nn3")]
 [assembly: AssemblyProduct("Strinken")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
