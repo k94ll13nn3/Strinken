@@ -1,6 +1,4 @@
-﻿using Strinken.Parser;
-
-namespace Strinken.Filters
+﻿namespace Strinken
 {
     /// <summary>
     /// Base class for all filters that do not have arguments.

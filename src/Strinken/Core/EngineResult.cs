@@ -1,6 +1,4 @@
-// stylecop.header
-
-namespace Strinken.Engine
+namespace Strinken.Core
 {
     /// <summary>
     /// Results of the engine's run.

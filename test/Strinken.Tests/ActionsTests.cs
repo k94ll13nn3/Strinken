@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Strinken.Engine;
+using Strinken.Core;
 using Xunit;
 
 namespace Strinken.Tests

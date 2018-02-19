@@ -1,7 +1,4 @@
-// stylecop.header
-using Strinken.Parser;
-
-namespace Strinken.Filters
+namespace Strinken
 {
     /// <summary>
     /// Returns the specified argument if the input is null.

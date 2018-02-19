@@ -1,6 +1,6 @@
 ﻿// stylecop.header
 
-namespace Strinken.Parser
+namespace Strinken
 {
     /// <summary>
     /// Interface describing a tag.

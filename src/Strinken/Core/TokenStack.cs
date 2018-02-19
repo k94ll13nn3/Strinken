@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Strinken.Engine
+namespace Strinken.Core
 {
     /// <summary>
     /// Stack used by the engine to manage a list of tokens.

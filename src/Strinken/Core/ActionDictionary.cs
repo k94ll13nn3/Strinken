@@ -1,8 +1,7 @@
-﻿// stylecop.header
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Strinken.Engine
+namespace Strinken.Core
 {
     /// <summary>
     /// Action dictionary used by the token stack to resolve the string.

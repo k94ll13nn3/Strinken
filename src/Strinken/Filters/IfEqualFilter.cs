@@ -1,7 +1,4 @@
-// stylecop.header
-using Strinken.Parser;
-
-namespace Strinken.Filters
+namespace Strinken
 {
     /// <summary>
     /// Does an equality test with the input and the specified value and renders a value depending on the output of the test.

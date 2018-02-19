@@ -1,7 +1,4 @@
-﻿// stylecop.header
-using Strinken.Parser;
-
-namespace Strinken.Filters
+﻿namespace Strinken
 {
     /// <summary>
     /// Takes some couples of arguments, and replace each occurrence of each first argument by the second.

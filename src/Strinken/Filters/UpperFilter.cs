@@ -1,7 +1,4 @@
-﻿// stylecop.header
-using Strinken.Parser;
-
-namespace Strinken.Filters
+﻿namespace Strinken
 {
     /// <summary>
     /// Transforms the input to uppercase.

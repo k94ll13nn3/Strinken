@@ -1,6 +1,4 @@
-// stylecop.header
-
-namespace Strinken.Filters
+namespace Strinken
 {
     /// <summary>
     /// Transforms the input into its length.

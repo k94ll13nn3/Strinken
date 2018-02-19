@@ -1,8 +1,9 @@
 ﻿// stylecop.header
 using System;
 using System.Collections.Generic;
+using Strinken.Core;
 
-namespace Strinken.Parser
+namespace Strinken
 {
     /// <summary>
     /// Extensions for the <see cref="Parser{T}"/> class.

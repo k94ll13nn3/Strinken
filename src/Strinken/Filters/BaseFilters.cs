@@ -1,12 +1,10 @@
-﻿// stylecop.header
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Strinken.Common;
-using Strinken.Parser;
+using Strinken.Core;
 
-namespace Strinken.Filters
+namespace Strinken
 {
     /// <summary>
     /// Class that handles the base filters and (un)registration of base filters.

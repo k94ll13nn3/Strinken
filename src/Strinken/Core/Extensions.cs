@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Strinken.Common
+namespace Strinken.Core
 {
     /// <summary>
     /// Collection of common extensions methods.

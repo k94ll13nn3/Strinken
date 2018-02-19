@@ -1,5 +1,3 @@
-using Strinken.Parser;
-
 namespace Strinken.Tests.TestsClasses
 {
     public class DataNameTag : ITag<Data>

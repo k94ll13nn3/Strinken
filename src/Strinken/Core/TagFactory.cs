@@ -1,7 +1,6 @@
-// stylecop.header
 using System;
 
-namespace Strinken.Parser
+namespace Strinken.Core
 {
     /// <summary>
     /// Factory that creates tags.

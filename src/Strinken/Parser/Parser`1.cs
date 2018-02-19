@@ -3,11 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Strinken.Common;
-using Strinken.Engine;
-using Strinken.Filters;
+using Strinken.Core;
 
-namespace Strinken.Parser
+namespace Strinken
 {
     /// <summary>
     /// Strinken parser.

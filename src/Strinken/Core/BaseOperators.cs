@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Strinken.Engine
+namespace Strinken.Core
 {
     /// <summary>
     /// Class that handles the base operators.

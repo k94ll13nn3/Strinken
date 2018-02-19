@@ -1,6 +1,4 @@
-﻿// stylecop.header
-
-namespace Strinken.Engine
+﻿namespace Strinken.Core
 {
     /// <summary>
     /// Class that contains the different possible separators and indicators.

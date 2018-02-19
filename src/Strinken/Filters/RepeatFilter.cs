@@ -1,7 +1,6 @@
 ﻿using System.Linq;
-using Strinken.Parser;
 
-namespace Strinken.Filters
+namespace Strinken
 {
     /// <summary>
     /// Repeats the input as many times as specified.

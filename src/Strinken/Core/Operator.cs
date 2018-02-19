@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Strinken.Engine
+namespace Strinken.Core
 {
     /// <summary>
     /// An operator that defines a set of indicators.

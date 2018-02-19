@@ -1,4 +1,4 @@
-﻿namespace Strinken.Engine
+﻿namespace Strinken.Core
 {
     /// <summary>
     /// An indicator that follows an operator and defines a parsing method.

@@ -1,6 +1,4 @@
-﻿using Strinken.Parser;
-
-namespace Strinken.Public.Tests.TestsClasses
+﻿namespace Strinken.Public.Tests.TestsClasses
 {
     public class BlueParameterTag : IParameterTag
     {

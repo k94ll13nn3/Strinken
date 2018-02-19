@@ -1,7 +1,4 @@
-﻿// stylecop.header
-using System;
-
-namespace Strinken.Engine
+﻿namespace Strinken.Core
 {
     /// <summary>
     /// Base class for all parsing result.

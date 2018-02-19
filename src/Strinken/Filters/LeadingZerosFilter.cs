@@ -1,7 +1,4 @@
-// stylecop.header
-using Strinken.Parser;
-
-namespace Strinken.Filters
+namespace Strinken
 {
     /// <summary>
     /// Formats the input with leading zeros until reaching the specified length.

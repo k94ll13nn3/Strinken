@@ -1,12 +1,10 @@
-﻿// stylecop.header
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Strinken.Common;
 
-namespace Strinken.Engine
+namespace Strinken.Core
 {
     /// <summary>
     /// Cursor used to read a string.

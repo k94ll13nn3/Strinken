@@ -1,4 +1,4 @@
-﻿namespace Strinken.Engine
+﻿namespace Strinken.Core
 {
     /// <summary>
     /// Method of parsing.
