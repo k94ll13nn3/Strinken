@@ -71,7 +71,7 @@ namespace Strinken.Public.Tests.Parser
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             Action act = () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", new Data { Name = "Lorem" });
 
-            act.ShouldThrow<FormatException>().WithMessage("Empty argument");
+            act.Should().Throw<FormatException>().WithMessage("Empty argument");
         }
 
         [Fact]

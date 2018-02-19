@@ -44,7 +44,7 @@ namespace Strinken.Public.Tests.Filters
         {
             Action act = () => BaseFilters.Register(new EmptyNameFilter());
 
-            act.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
+            act.Should().Throw<ArgumentException>().WithMessage("A name cannot be empty.");
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Strinken.Public.Tests.Filters
         {
             Action act = () => BaseFilters.Register(new InvalidNameFilter());
 
-            act.ShouldThrow<ArgumentException>().WithMessage("! is an invalid character for a name.");
+            act.Should().Throw<ArgumentException>().WithMessage("! is an invalid character for a name.");
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Strinken.Public.Tests.Filters
         {
             Action act = () => BaseFilters.Register(new FilterGenerator("Length"));
 
-            act.ShouldThrow<ArgumentException>().WithMessage("Length was already registered in the filter list.");
+            act.Should().Throw<ArgumentException>().WithMessage("Length was already registered in the filter list.");
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Strinken.Public.Tests.Filters
         {
             Action act = () => BaseFilters.Register(null);
 
-            act.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "filter");
+            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "filter");
         }
 
         private class FilterGenerator : IFilter

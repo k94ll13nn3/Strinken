@@ -20,7 +20,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithTag(new DataNameTag());
 
-            act.ShouldThrow<ArgumentException>().WithMessage("DataName was already registered in the tag list.");
+            act.Should().Throw<ArgumentException>().WithMessage("DataName was already registered in the tag list.");
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new AppendFilter(), new AppendFilter() });
 
-            act.ShouldThrow<ArgumentException>().WithMessage("Append was already registered in the filter list.");
+            act.Should().Throw<ArgumentException>().WithMessage("Append was already registered in the filter list.");
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Action act = () => new Parser<Data>().WithParameterTags(new IParameterTag[] { new BlueParameterTag(), new BlueParameterTag() });
 
-            act.ShouldThrow<ArgumentException>().WithMessage("Blue was already registered in the parameter tag list.");
+            act.Should().Throw<ArgumentException>().WithMessage("Blue was already registered in the parameter tag list.");
         }
 
         [Fact]
@@ -45,8 +45,8 @@ namespace Strinken.Public.Tests.Parser
             Action actWithTagParameters = () => new Parser<string>().WithTag("", "", s => s);
             Action actWithTag = () => new Parser<string>().WithTag(new EmptyNameTag());
 
-            actWithTagParameters.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
-            actWithTag.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
+            actWithTagParameters.Should().Throw<ArgumentException>().WithMessage("A name cannot be empty.");
+            actWithTag.Should().Throw<ArgumentException>().WithMessage("A name cannot be empty.");
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Action act = () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new EmptyNameFilter());
 
-            act.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
+            act.Should().Throw<ArgumentException>().WithMessage("A name cannot be empty.");
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Action act = () => new Parser<string>().WithParameterTag(new EmptyNameParameterTag());
 
-            act.ShouldThrow<ArgumentException>().WithMessage("A name cannot be empty.");
+            act.Should().Throw<ArgumentException>().WithMessage("A name cannot be empty.");
         }
 
         [Fact]
@@ -71,8 +71,8 @@ namespace Strinken.Public.Tests.Parser
             Action actWithTagParameters = () => new Parser<string>().WithTag("st*r", "", s => s);
             Action actWithTag = () => new Parser<string>().WithTag(new InvalidNameTag());
 
-            actWithTagParameters.ShouldThrow<ArgumentException>().WithMessage("* is an invalid character for a name.");
-            actWithTag.ShouldThrow<ArgumentException>().WithMessage("$ is an invalid character for a name.");
+            actWithTagParameters.Should().Throw<ArgumentException>().WithMessage("* is an invalid character for a name.");
+            actWithTag.Should().Throw<ArgumentException>().WithMessage("$ is an invalid character for a name.");
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Action act = () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new InvalidNameFilter());
 
-            act.ShouldThrow<ArgumentException>().WithMessage("! is an invalid character for a name.");
+            act.Should().Throw<ArgumentException>().WithMessage("! is an invalid character for a name.");
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Action act = () => new Parser<string>().WithParameterTag(new InvalidNameParameterTag());
 
-            act.ShouldThrow<ArgumentException>().WithMessage("$ is an invalid character for a name.");
+            act.Should().Throw<ArgumentException>().WithMessage("$ is an invalid character for a name.");
         }
     }
 }

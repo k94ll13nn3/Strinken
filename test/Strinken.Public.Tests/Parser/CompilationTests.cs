@@ -35,7 +35,7 @@ namespace Strinken.Public.Tests.Parser
 
             Action act = () => stringSolver.ResolveCompiledString(new Data { Name = "Lorem" });
 
-            act.ShouldThrow<InvalidOperationException>().WithMessage("No string were compiled.");
+            act.Should().Throw<InvalidOperationException>().WithMessage("No string were compiled.");
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Strinken.Public.Tests.Parser
 
             Action act = () => stringSolver.Compile("The {DataName:Append+} is in the kitchen.");
 
-            act.ShouldThrow<FormatException>().WithMessage("Empty argument");
+            act.Should().Throw<FormatException>().WithMessage("Empty argument");
         }
     }
 }
