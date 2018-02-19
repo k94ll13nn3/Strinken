@@ -32,6 +32,18 @@ namespace Strinken.Engine
         }
 
         /// <summary>
+        /// Pushes the elements of the specified collection of tokens to the stack.
+        /// </summary>
+        /// <param name="tokens">The tokens to push.</param>
+        public void PushRange(IEnumerable<TokenDefinition> tokens)
+        {
+            foreach (var token in tokens)
+            {
+                tokenStack.Push(token);
+            }
+        }
+
+        /// <summary>
         /// Resolve the stack.
         /// </summary>
         /// <param name="actions">The list of different actions.</param>

@@ -81,11 +81,10 @@ namespace Strinken.Engine
         /// Parses a string inside a token and returns the first name in it.
         /// </summary>
         /// <param name="ends">A list of valid ends.</param>
-        /// <param name="tokenType">A function indicating whether a character is valid.</param>
+        /// <param name="tokenType">The type of the token to parse.</param>
         /// <returns>The result of the parsing.</returns>
         public ParseResult<TokenDefinition> ParseName(ICollection<int> ends, TokenType tokenType)
         {
-            var builder = new StringBuilder();
             var updatedEnd = new List<int> { SpecialCharacter.TokenEndIndicator };
             foreach (var end in ends ?? Enumerable.Empty<int>())
             {
@@ -112,30 +111,7 @@ namespace Strinken.Engine
                 indicatorDefined = operatorDefined.Indicators.Single(x => x.Symbol == '\0');
             }
 
-            while (true)
-            {
-                switch (Value)
-                {
-                    case int _ when updatedEnd.Contains(Value):
-                        var parsedName = builder.ToString();
-                        return !string.IsNullOrEmpty(parsedName) ?
-                            ParseResult<TokenDefinition>.Success(new TokenDefinition(parsedName, tokenType, operatorDefined.Symbol, indicatorDefined.Symbol)) :
-                            ParseResult<TokenDefinition>.FailureWithMessage(Errors.EmptyName);
-
-                    case int _ when HasEnded():
-                        return ParseResult<TokenDefinition>.FailureWithMessage(Errors.EndOfString);
-
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Name && CharValue.IsInvalidTokenNameCharacter():
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Binary && CharValue != '0' && CharValue != '1':
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Octal && (CharValue < '0' || CharValue > '7'):
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Decimal && (CharValue < '0' || CharValue > '9'):
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Hexadecimal && CharValue.IsInvalidHexadecimalCharacter():
-                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
-                }
-
-                builder.Append(CharValue);
-                Next();
-            }
+            return ParseNameInternal(tokenType, updatedEnd, operatorDefined, indicatorDefined);
         }
 
         /// <summary>
@@ -354,6 +330,43 @@ namespace Strinken.Engine
             }
 
             return ParseResult<IEnumerable<TokenDefinition>>.Success(tokenList);
+        }
+
+        /// <summary>
+        /// Parses a string inside a token and returns the first name in it.
+        /// </summary>
+        /// <param name="tokenType">The type of the token to parse.</param>
+        /// <param name="updatedEnd">A list of valid ends.</param>
+        /// <param name="operatorDefined">The operator defined.</param>
+        /// <param name="indicatorDefined">The indicator defined.</param>
+        /// <returns>The result of the parsing.</returns>
+        private ParseResult<TokenDefinition> ParseNameInternal(TokenType tokenType, List<int> updatedEnd, Operator operatorDefined, Indicator indicatorDefined)
+        {
+            var builder = new StringBuilder();
+            while (true)
+            {
+                switch (Value)
+                {
+                    case int _ when updatedEnd.Contains(Value):
+                        var parsedName = builder.ToString();
+                        return !string.IsNullOrEmpty(parsedName) ?
+                            ParseResult<TokenDefinition>.Success(new TokenDefinition(parsedName, tokenType, operatorDefined.Symbol, indicatorDefined.Symbol)) :
+                            ParseResult<TokenDefinition>.FailureWithMessage(Errors.EmptyName);
+
+                    case int _ when HasEnded():
+                        return ParseResult<TokenDefinition>.FailureWithMessage(Errors.EndOfString);
+
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Name && CharValue.IsInvalidTokenNameCharacter():
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Binary && CharValue != '0' && CharValue != '1':
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Octal && (CharValue < '0' || CharValue > '7'):
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Decimal && (CharValue < '0' || CharValue > '9'):
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Hexadecimal && CharValue.IsInvalidHexadecimalCharacter():
+                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                }
+
+                builder.Append(CharValue);
+                Next();
+            }
         }
     }
 }

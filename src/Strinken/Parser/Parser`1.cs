@@ -104,86 +104,20 @@ namespace Strinken.Parser
         /// <returns>A value indicating whether the input is valid.</returns>
         public ValidationResult Validate(string input)
         {
-            var tagList = new List<string>();
-            var parameterTagList = new List<string>();
-            var filterList = new List<Tuple<string, string[]>>();
-            var validator = new StrinkenEngine();
-
-            var runResult = validator.Run(input);
+            var runResult = new StrinkenEngine().Run(input);
             if (!runResult.Success)
             {
                 return new ValidationResult { Message = runResult.ErrorMessage, IsValid = false };
             }
 
-            var actions = new ActionDictionary();
-            foreach (var op in BaseOperators.RegisteredOperators)
-            {
-                foreach (var ind in op.Indicators)
-                {
-                    switch (ind.ResolutionMethod)
-                    {
-                        case ResolutionMethod.WithValue:
-                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
-                            {
-                                tagList.Add(a[0]);
-                                return string.Empty;
-                            };
-                            break;
-
-                        case ResolutionMethod.WithoutValue:
-                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
-                            {
-                                parameterTagList.Add(a[0]);
-                                return string.Empty;
-                            };
-                            break;
-
-                        case ResolutionMethod.WithArguments:
-                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
-                            {
-                                filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
-                                return string.Empty;
-                            };
-                            break;
-
-                        case ResolutionMethod.Name:
-                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => a[0];
-                            break;
-                    }
-                }
-            }
+            var tagList = new List<string>();
+            var parameterTagList = new List<string>();
+            var filterList = new List<Tuple<string, string[]>>();
+            var actions = GenerateActionDictionaryForValidation(tagList, parameterTagList, filterList);
 
             runResult.Stack.Resolve(actions);
 
-            // Find the first tag that was not registered in the parser.
-            var invalidParameter = tagList.Find(tagName => !tags.ContainsKey(tagName));
-            if (invalidParameter != null)
-            {
-                return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
-            }
-
-            // Find the first parameter tag that was not registered in the parser.
-            invalidParameter = parameterTagList.Find(parameterTagName => !parameterTags.ContainsKey(parameterTagName));
-            if (invalidParameter != null)
-            {
-                return new ValidationResult { Message = $"{invalidParameter} is not a valid parameter tag.", IsValid = false };
-            }
-
-            // Find the first filter that was not registered in the parser.
-            invalidParameter = filterList.Find(filter => !filters.ContainsKey(filter.Item1))?.Item1;
-            if (invalidParameter != null)
-            {
-                return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
-            }
-
-            // Find the first filter that has invalid arguments.
-            invalidParameter = filterList.Find(filter => !filters[filter.Item1].Validate(filter.Item2))?.Item1;
-            if (invalidParameter != null)
-            {
-                return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
-            }
-
-            return new ValidationResult { Message = null, IsValid = true };
+            return ValidateLists(tagList, parameterTagList, filterList);
         }
 
         /// <summary>
@@ -291,6 +225,96 @@ namespace Strinken.Parser
             }
 
             return newParser;
+        }
+
+        /// <summary>
+        /// Generates the <see cref="ActionDictionary"/> used for string validation.
+        /// </summary>
+        /// <param name="tagList">The tags to validate.</param>
+        /// <param name="parameterTagList">The parameter tags to validate.</param>
+        /// <param name="filterList">The filters to validate.</param>
+        /// <returns>An <see cref="ActionDictionary"/>.</returns>
+        private static ActionDictionary GenerateActionDictionaryForValidation(List<string> tagList, List<string> parameterTagList, List<Tuple<string, string[]>> filterList)
+        {
+            var actions = new ActionDictionary();
+            foreach (var op in BaseOperators.RegisteredOperators)
+            {
+                foreach (var ind in op.Indicators)
+                {
+                    switch (ind.ResolutionMethod)
+                    {
+                        case ResolutionMethod.WithValue:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
+                            {
+                                tagList.Add(a[0]);
+                                return string.Empty;
+                            };
+                            break;
+
+                        case ResolutionMethod.WithoutValue:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
+                            {
+                                parameterTagList.Add(a[0]);
+                                return string.Empty;
+                            };
+                            break;
+
+                        case ResolutionMethod.WithArguments:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
+                            {
+                                filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
+                                return string.Empty;
+                            };
+                            break;
+
+                        case ResolutionMethod.Name:
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => a[0];
+                            break;
+                    }
+                }
+            }
+
+            return actions;
+        }
+
+        /// <summary>
+        /// Validates lists of tags, parameter tags and filters.
+        /// </summary>
+        /// <param name="tagList">The tags to validate.</param>
+        /// <param name="parameterTagList">The parameter tags to validate.</param>
+        /// <param name="filterList">The filters to validate.</param>
+        /// <returns>A value indicating whether the input is valid.</returns>
+        private ValidationResult ValidateLists(List<string> tagList, List<string> parameterTagList, List<Tuple<string, string[]>> filterList)
+        {
+            // Find the first tag that was not registered in the parser.
+            var invalidParameter = tagList.Find(tagName => !tags.ContainsKey(tagName));
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
+            }
+
+            // Find the first parameter tag that was not registered in the parser.
+            invalidParameter = parameterTagList.Find(parameterTagName => !parameterTags.ContainsKey(parameterTagName));
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} is not a valid parameter tag.", IsValid = false };
+            }
+
+            // Find the first filter that was not registered in the parser.
+            invalidParameter = filterList.Find(filter => !filters.ContainsKey(filter.Item1))?.Item1;
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
+            }
+
+            // Find the first filter that has invalid arguments.
+            invalidParameter = filterList.Find(filter => !filters[filter.Item1].Validate(filter.Item2))?.Item1;
+            if (invalidParameter != null)
+            {
+                return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
+            }
+
+            return new ValidationResult { Message = null, IsValid = true };
         }
 
         /// <summary>

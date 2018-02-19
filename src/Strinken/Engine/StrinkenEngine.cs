@@ -14,46 +14,32 @@ namespace Strinken.Engine
         /// <returns>A <see cref="EngineResult"/> containing data about the run.</returns>
         public EngineResult Run(string input)
         {
+            EngineResult result;
             if (string.IsNullOrWhiteSpace(input))
             {
                 var stack = new TokenStack();
                 stack.Push(new TokenDefinition(input, TokenType.None, '\0', '\0'));
-                return new EngineResult
+                result = new EngineResult(true, stack, null);
+            }
+            else
+            {
+                using (var cursor = new Cursor(input))
                 {
-                    Success = true,
-                    Stack = stack,
-                    ErrorMessage = null
-                };
+                    ParseResult<IEnumerable<TokenDefinition>> parsingResult = cursor.ParseString();
+                    if (!parsingResult)
+                    {
+                        result = new EngineResult(false, null, parsingResult.Message);
+                    }
+                    else
+                    {
+                        var tokenStack = new TokenStack();
+                        tokenStack.PushRange(parsingResult.Value);
+                        result = new EngineResult(true, tokenStack, null);
+                    }
+                }
             }
 
-            ParseResult<IEnumerable<TokenDefinition>> parsingResult;
-            using (var cursor = new Cursor(input))
-            {
-                parsingResult = cursor.ParseString();
-            }
-
-            if (!parsingResult)
-            {
-                return new EngineResult
-                {
-                    Success = false,
-                    Stack = null,
-                    ErrorMessage = parsingResult.Message
-                };
-            }
-
-            var tokenStack = new TokenStack();
-            foreach (var token in parsingResult.Value)
-            {
-                tokenStack.Push(token);
-            }
-
-            return new EngineResult
-            {
-                Success = true,
-                Stack = tokenStack,
-                ErrorMessage = null
-            };
+            return result;
         }
     }
 }
