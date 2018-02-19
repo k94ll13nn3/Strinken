@@ -1,5 +1,0 @@
-exclude:
-- /build.sh
-component_depth: 3
-languages:
-- csharp
