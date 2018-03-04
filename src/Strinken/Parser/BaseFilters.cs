@@ -19,14 +19,8 @@ namespace Strinken
         /// <summary>
         /// The list of registered filters.
         /// </summary>
-        private static readonly IDictionary<string, IFilter> InternalRegisteredFilters;
-
-        /// <summary>
-        /// Initializes static members of the <see cref="BaseFilters"/> class.
-        /// </summary>
-        static BaseFilters()
-        {
-            var baseFilters = new List<IFilter>
+        private static readonly IDictionary<string, IFilter> InternalRegisteredFilters = 
+            new List<IFilter>
             {
                 new UpperFilter(),
                 new LengthFilter(),
@@ -36,10 +30,7 @@ namespace Strinken
                 new IfEqualFilter(),
                 new ReplaceFilter(),
                 new ReapeatFilter()
-            };
-
-            InternalRegisteredFilters = baseFilters.ToDictionary(x => x.Name, x => x);
-        }
+            }.ToDictionary(x => x.Name, x => x);
 
         /// <summary>
         /// Gets base filters shared by all parsers.

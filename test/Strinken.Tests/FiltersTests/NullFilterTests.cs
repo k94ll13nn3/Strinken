@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using Strinken.Tests.TestsClasses;
 using Xunit;
@@ -28,7 +29,7 @@ namespace Strinken.Tests.FiltersTests
             var filter = new NullFilter();
 
             filter.Validate(null).Should().BeFalse();
-            filter.Validate(new string[] { }).Should().BeFalse();
+            filter.Validate(Array.Empty<string>()).Should().BeFalse();
         }
 
         [Fact]
