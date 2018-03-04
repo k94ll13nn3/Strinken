@@ -18,9 +18,12 @@
         public string Resolve(string value, string[] arguments)
         {
             var newValue = value;
-            for (int i = 0; i < arguments.Length / 2; i++)
+            if (value != null)
             {
-                newValue = newValue.Replace(arguments[i * 2], arguments[(i * 2) + 1]);
+                for (int i = 0; i < arguments.Length / 2; i++)
+                {
+                    newValue = newValue.Replace(arguments[i * 2], arguments[(i * 2) + 1]);
+                }
             }
 
             return newValue;

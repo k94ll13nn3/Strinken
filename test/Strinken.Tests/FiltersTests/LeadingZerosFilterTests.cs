@@ -62,5 +62,12 @@ namespace Strinken.Tests.FiltersTests
             var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Validate("The {DataName:Length:Zeros+3} is in the kitchen.").IsValid.Should().BeTrue();
         }
+
+        [Fact]
+        public void Resolve_NullString_ReturnsResolvedString()
+        {
+            var stringSolver = new Parser<Data>().WithTag("Null", string.Empty, _ => null);
+            stringSolver.Resolve("The {Null:Zeros+3} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The 000 is in the kitchen.");
+        }
     }
 }

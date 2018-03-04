@@ -12,6 +12,6 @@
         public override string Name => "Upper";
 
         /// <inheritdoc/>
-        public override string Resolve(string value) => value.ToUpperInvariant();
+        public override string Resolve(string value) => value?.ToUpperInvariant();
     }
 }

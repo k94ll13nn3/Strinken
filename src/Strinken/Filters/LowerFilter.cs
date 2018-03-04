@@ -12,6 +12,6 @@ namespace Strinken
         public override string Name => "Lower";
 
         /// <inheritdoc/>
-        public override string Resolve(string value) => value.ToLowerInvariant();
+        public override string Resolve(string value) => value?.ToLowerInvariant();
     }
 }
