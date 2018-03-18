@@ -45,9 +45,7 @@ Additionally, a tag can start with:
   - `o` indicates an octal number, only allowing digits from 0 to 7 (ex: `#o145701`).
   - `d` indicates a decimal number, only allowing digits from 0 to 9 (ex: `#d9857109`).
   - `x` indicates an hexadecimal number, only allowing digits from 0 to 9 and letters from a to f or A to F (ex: `#x125EFF12a`).
-
-A tag can also start with `@`. In this case, there are no restrictions on characters except `}` (by global restriction)
-and `:` as it is considered as the start of a filter.
+- a `@`, in this case, there are no restrictions on characters except `}` (by global restriction) and `:` as it is considered as the start of a filter. It returns directly the value.
 
 `!`, `@`, `#b`, `#b`, `#b` and `#b` are not part of the tag name (in term of API), there are only indicators.
 
