@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #tool Wyam&version=1.3.0
-#tool KuduSync.NET&version=1.3.1
+#tool KuduSync.NET&version=1.4.0
 
 #addin Cake.Wyam&version=1.3.0
 #addin Cake.Git&version=0.16.1
