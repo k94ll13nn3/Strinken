@@ -84,7 +84,8 @@
 </div>
 
                 </section>
-                <section class="sidebar">                    
+                <section class="sidebar">    
+                                     
                     
 
                     <ul class="sidebar-menu">
@@ -108,6 +109,7 @@
                 </li>
 
                     </ul>
+                            
                 </section>                
             </aside>
             
@@ -162,9 +164,8 @@ They are composed of one or more character from this list:</p>
 <li><code>x</code> indicates an hexadecimal number, only allowing digits from 0 to 9 and letters from a to f or A to F (ex: <code>#x125EFF12a</code>).</li>
 </ul>
 </li>
+<li>a <code>@</code>, in this case, there are no restrictions on characters except <code>}</code> (by global restriction) and <code>:</code> as it is considered as the start of a filter. It returns directly the value.</li>
 </ul>
-<p>A tag can also start with <code>@</code>. In this case, there are no restrictions on characters except <code>}</code> (by global restriction)
-and <code>:</code> as it is considered as the start of a filter.</p>
 <p><code>!</code>, <code>@</code>, <code>#b</code>, <code>#b</code>, <code>#b</code> and <code>#b</code> are not part of the tag name (in term of API), there are only indicators.</p>
 <h1 id="filters">Filters</h1>
 <p>Filters are similar to tags in term of syntax, but they always start with a <code>:</code>.
