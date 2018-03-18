@@ -11,8 +11,8 @@ namespace Strinken.Public.Tests.Filters
         public void Validate_FilterRegistered_ReturnsTrue()
         {
             BaseFilters.Register(new FilterGenerator("ROne"));
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
-            var validationResult = stringSolver.Validate("The {DataName:ROne} is in the kitchen.");
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            ValidationResult validationResult = stringSolver.Validate("The {DataName:ROne} is in the kitchen.");
             validationResult.IsValid.Should().BeTrue();
 
             BaseFilters.Unregister("ROne");
@@ -21,9 +21,9 @@ namespace Strinken.Public.Tests.Filters
         [Fact]
         public void Validate_FilterRegisteredAfterValidation_ReturnsFalse()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             BaseFilters.Register(new FilterGenerator("RTwo"));
-            var validationResult = stringSolver.Validate("The {DataName:RTwo} is in the kitchen.");
+            ValidationResult validationResult = stringSolver.Validate("The {DataName:RTwo} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
 
             BaseFilters.Unregister("RTwo");
@@ -34,8 +34,8 @@ namespace Strinken.Public.Tests.Filters
         {
             BaseFilters.Register(new FilterGenerator("RThree"));
             BaseFilters.Unregister("RThree");
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
-            var validationResult = stringSolver.Validate("The {DataName:RThree} is in the kitchen.");
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            ValidationResult validationResult = stringSolver.Validate("The {DataName:RThree} is in the kitchen.");
             validationResult.IsValid.Should().BeFalse();
         }
 

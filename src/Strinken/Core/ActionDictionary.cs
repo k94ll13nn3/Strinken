@@ -18,7 +18,7 @@ namespace Strinken.Core
         /// </summary>
         public ActionDictionary()
         {
-            items = new Dictionary<TokenProperties, Func<string[], string>> ();
+            items = new Dictionary<TokenProperties, Func<string[], string>>();
         }
 
         /// <summary>
@@ -79,6 +79,30 @@ namespace Strinken.Core
             /// Gets the indicator symbol part of the key  of the element to get or set.
             /// </summary>
             public char IndicatorSymbol { get; }
+
+            /// <inheritdoc/>
+            public override bool Equals(object obj)
+            {
+                if (!(obj is TokenProperties))
+                {
+                    return false;
+                }
+
+                var properties = (TokenProperties)obj;
+                return TokenType == properties.TokenType &&
+                       OperatorSymbol == properties.OperatorSymbol &&
+                       IndicatorSymbol == properties.IndicatorSymbol;
+            }
+
+            /// <inheritdoc/>
+            public override int GetHashCode()
+            {
+                var hashCode = -658720343;
+                hashCode = hashCode * -1521134295 + TokenType.GetHashCode();
+                hashCode = hashCode * -1521134295 + OperatorSymbol.GetHashCode();
+                hashCode = hashCode * -1521134295 + IndicatorSymbol.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

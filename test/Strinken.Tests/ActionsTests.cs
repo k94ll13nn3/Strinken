@@ -23,9 +23,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum}tute";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -48,9 +47,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum}tute{belli}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(2);
@@ -62,9 +60,8 @@ namespace Strinken.Tests
         [Fact]
         public void Run_NoTokens_ActionOnCharactersReturnsString()
         {
-            var engine = new StrinkenEngine();
             const string input = "loremtute";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
 
             result.Stack.Resolve(new ActionDictionary()).Should().Be("loremtute");
         }
@@ -72,9 +69,8 @@ namespace Strinken.Tests
         [Fact]
         public void Run_StringWithTokens_ActionOnCharactersReturnsStringWithoutTokens()
         {
-            var engine = new StrinkenEngine();
             const string input = "lorem{ipsum}tu{ti}te";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
 
             result.Stack.Resolve(new ActionDictionary()).Should().Be("loremtute");
         }
@@ -82,9 +78,8 @@ namespace Strinken.Tests
         [Fact]
         public void Run_StringWithEscapedOpenBracket_ActionOnCharactersReturnsStringWithOneOpenBracket()
         {
-            var engine = new StrinkenEngine();
             const string input = "lorem{{te";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
 
             result.Stack.Resolve(new ActionDictionary()).Should().Be("lorem{te");
         }
@@ -92,9 +87,8 @@ namespace Strinken.Tests
         [Fact]
         public void Run_StringWithEscapedCloseBracket_ActionOnCharactersReturnsStringWithOneCloseBracket()
         {
-            var engine = new StrinkenEngine();
             const string input = "lorem}}te";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
 
             result.Stack.Resolve(new ActionDictionary()).Should().Be("lorem}te");
         }
@@ -114,9 +108,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -140,9 +133,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -166,9 +158,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli:tutti}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(2);
@@ -192,9 +183,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+arg:tutti}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(2);
@@ -219,9 +209,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli:patse}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(2);
@@ -248,9 +237,8 @@ namespace Strinken.Tests
                 [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+toto}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -276,9 +264,8 @@ namespace Strinken.Tests
                 [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+toto,titi}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -306,9 +293,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+=toto}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -336,9 +322,8 @@ namespace Strinken.Tests
                 [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+=toto,tata}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -367,9 +352,8 @@ namespace Strinken.Tests
                 [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ipsum:belli+tute:patse+paku,=malo:kuki}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             var parsedString = result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(3);
@@ -399,9 +383,8 @@ namespace Strinken.Tests
                 [TokenType.Argument, '\0', '\0'] = a => a[0]
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ipsum:patse+paku,=malo}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             var parsedString = result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -415,7 +398,7 @@ namespace Strinken.Tests
         public void Run_NoActions_ReturnsOutsideString()
         {
             const string input = "lorem{ipsum:patse+paku,=malo}aku";
-            new StrinkenEngine().Run(input).Stack.Resolve(null).Should().Be("loremaku");
+            StrinkenEngine.Run(input).Stack.Resolve(null).Should().Be("loremaku");
         }
 
         [Fact]
@@ -433,9 +416,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{!ispum}tute";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -462,9 +444,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "lorem{ispum:belli+=!toto}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -490,9 +471,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "{tag} {@som3t!me$}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -515,9 +495,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "{#b11010011010101}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -540,9 +519,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "{#o1463357}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -565,9 +543,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "{#d457901245}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
@@ -590,9 +567,8 @@ namespace Strinken.Tests
                 }
             };
 
-            var engine = new StrinkenEngine();
             const string input = "{#x45bAe7845F}";
-            var result = engine.Run(input);
+            EngineResult result = StrinkenEngine.Run(input);
             result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);

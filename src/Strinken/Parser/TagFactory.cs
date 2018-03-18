@@ -1,6 +1,6 @@
 using System;
 
-namespace Strinken.Core
+namespace Strinken
 {
     /// <summary>
     /// Factory that creates tags.

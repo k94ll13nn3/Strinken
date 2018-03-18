@@ -5,14 +5,14 @@ namespace Strinken.Core
     /// <summary>
     /// Core engine of Strinken.
     /// </summary>
-    internal class StrinkenEngine
+    internal static class StrinkenEngine
     {
         /// <summary>
         /// Run the engine on a string.
         /// </summary>
         /// <param name="input">The string to process.</param>
         /// <returns>A <see cref="EngineResult"/> containing data about the run.</returns>
-        public EngineResult Run(string input)
+        public static EngineResult Run(string input)
         {
             EngineResult result;
             if (string.IsNullOrWhiteSpace(input))

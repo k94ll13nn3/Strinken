@@ -37,7 +37,7 @@ namespace Strinken.Core
         /// <param name="tokens">The tokens to push.</param>
         public void PushRange(IEnumerable<TokenDefinition> tokens)
         {
-            foreach (var token in tokens)
+            foreach (TokenDefinition token in tokens)
             {
                 tokenStack.Push(token);
             }
@@ -58,11 +58,11 @@ namespace Strinken.Core
             var result = new StringBuilder();
             while (tokenStack.Count > 0)
             {
-                var nextToken = tokenStack.Peek();
+                TokenDefinition nextToken = tokenStack.Peek();
                 switch (nextToken.Type)
                 {
                     case TokenType.None:
-                        var currentToken = tokenStack.Pop();
+                        TokenDefinition currentToken = tokenStack.Pop();
                         result.Insert(0, currentToken.Data);
                         break;
 
@@ -86,7 +86,7 @@ namespace Strinken.Core
 
             while (tokenStack.Count > 0)
             {
-                var currentToken = tokenStack.Pop();
+                TokenDefinition currentToken = tokenStack.Pop();
                 switch (currentToken.Type)
                 {
                     case TokenType.Argument:

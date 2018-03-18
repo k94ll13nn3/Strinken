@@ -53,7 +53,7 @@ namespace Strinken
 
             if (!ignoreBaseFilters)
             {
-                foreach (var filter in BaseFilters.RegisteredFilters)
+                foreach (IFilter filter in BaseFilters.RegisteredFilters)
                 {
                     AddFilter(filter);
                 }
@@ -84,10 +84,10 @@ namespace Strinken
         /// <exception cref="FormatException">The input has a wrong format.</exception>
         public string Resolve(string input, T value)
         {
-            var runResult = new StrinkenEngine().Run(input);
+            EngineResult runResult = StrinkenEngine.Run(input);
             if (runResult.Success)
             {
-                var actions = GenerateActionDictionaryForResolution(value);
+                ActionDictionary actions = GenerateActionDictionaryForResolution(value);
 
                 return runResult.Stack.Resolve(actions);
             }
@@ -102,7 +102,7 @@ namespace Strinken
         /// <returns>A value indicating whether the input is valid.</returns>
         public ValidationResult Validate(string input)
         {
-            var runResult = new StrinkenEngine().Run(input);
+            EngineResult runResult = StrinkenEngine.Run(input);
             if (!runResult.Success)
             {
                 return new ValidationResult { Message = runResult.ErrorMessage, IsValid = false };
@@ -111,7 +111,7 @@ namespace Strinken
             var tagList = new List<string>();
             var parameterTagList = new List<string>();
             var filterList = new List<Tuple<string, string[]>>();
-            var actions = GenerateActionDictionaryForValidation(tagList, parameterTagList, filterList);
+            ActionDictionary actions = GenerateActionDictionaryForValidation(tagList, parameterTagList, filterList);
 
             runResult.Stack.Resolve(actions);
 
@@ -125,7 +125,7 @@ namespace Strinken
         /// <exception cref="FormatException">The input has a wrong format.</exception>
         public void Compile(string input)
         {
-            var runResult = new StrinkenEngine().Run(input);
+            EngineResult runResult = StrinkenEngine.Run(input);
             if (runResult.Success)
             {
                 compiledStack = runResult.Stack;
@@ -148,7 +148,7 @@ namespace Strinken
                 throw new InvalidOperationException("No string were compiled.");
             }
 
-            var actions = GenerateActionDictionaryForResolution(value);
+            ActionDictionary actions = GenerateActionDictionaryForResolution(value);
             return compiledStack.Resolve(actions);
         }
 
@@ -207,17 +207,17 @@ namespace Strinken
         internal Parser<T> DeepCopy()
         {
             var newParser = new Parser<T>(true);
-            foreach (var tag in tags.Values)
+            foreach (ITag<T> tag in tags.Values)
             {
                 newParser.AddTag(tag);
             }
 
-            foreach (var parameterTag in parameterTags.Values)
+            foreach (IParameterTag parameterTag in parameterTags.Values)
             {
                 newParser.AddParameterTag(parameterTag);
             }
 
-            foreach (var filter in filters.Values)
+            foreach (IFilter filter in filters.Values)
             {
                 newParser.AddFilter(filter);
             }
@@ -235,9 +235,9 @@ namespace Strinken
         private static ActionDictionary GenerateActionDictionaryForValidation(List<string> tagList, List<string> parameterTagList, List<Tuple<string, string[]>> filterList)
         {
             var actions = new ActionDictionary();
-            foreach (var op in BaseOperators.RegisteredOperators)
+            foreach (Operator op in BaseOperators.RegisteredOperators)
             {
-                foreach (var ind in op.Indicators)
+                foreach (Indicator ind in op.Indicators)
                 {
                     switch (ind.ResolutionMethod)
                     {
@@ -323,9 +323,9 @@ namespace Strinken
         private ActionDictionary GenerateActionDictionaryForResolution(T value)
         {
             var actions = new ActionDictionary();
-            foreach (var op in BaseOperators.RegisteredOperators)
+            foreach (Operator op in BaseOperators.RegisteredOperators)
             {
-                foreach (var ind in op.Indicators)
+                foreach (Indicator ind in op.Indicators)
                 {
                     switch (ind.ResolutionMethod)
                     {

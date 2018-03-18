@@ -12,7 +12,7 @@ namespace Strinken.Tests
             const string input = "some string !";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(input);
@@ -25,7 +25,7 @@ namespace Strinken.Tests
             const string input = "";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(input);
@@ -39,7 +39,7 @@ namespace Strinken.Tests
             const string expected = "";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(expected);
@@ -53,7 +53,7 @@ namespace Strinken.Tests
             const string expected = "Mustache : { !";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(expected);
@@ -67,7 +67,7 @@ namespace Strinken.Tests
             const string expected = "Mustache : {";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(expected);
@@ -81,7 +81,7 @@ namespace Strinken.Tests
             const string expected = "Mustache : } !";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(expected);
@@ -95,7 +95,7 @@ namespace Strinken.Tests
             const string expected = "Mustache : }";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(expected);
@@ -109,7 +109,7 @@ namespace Strinken.Tests
             const string expected = "Mustache : ";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(expected);
@@ -123,7 +123,7 @@ namespace Strinken.Tests
             const string expected = "Mustache : ";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeTrue();
                 parsedStringResult.Value.Data.Should().Be(expected);
@@ -136,7 +136,7 @@ namespace Strinken.Tests
             const string input = "Mustache : } !";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeFalse();
                 parsedStringResult.Message.Should().Be("Illegal '}' at position 11");
@@ -149,7 +149,7 @@ namespace Strinken.Tests
             const string input = "Mustache : }";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeFalse();
                 parsedStringResult.Message.Should().Be("Illegal '}' at the end of the string");
@@ -162,7 +162,7 @@ namespace Strinken.Tests
             const string input = "}Mustache";
             using (var cursor = new Cursor(input))
             {
-                var parsedStringResult = cursor.ParseOutsideString();
+                ParseResult<TokenDefinition> parsedStringResult = cursor.ParseOutsideString();
 
                 parsedStringResult.Result.Should().BeFalse();
                 parsedStringResult.Message.Should().Be("Illegal '}' at position 0");

@@ -51,7 +51,7 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Resolve_ReturnsResolvedString()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Resolve("The {DataName:IfEqual+Lorem,T,F} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The T is in the kitchen.");
             stringSolver.Resolve("The {DataName:IfEqual+Ipsum,T,F} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The F is in the kitchen.");
         }
@@ -59,7 +59,7 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Validate_ReturnsTrue()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Validate("The {DataName:IfEqual+Lorem,T,F} is in the kitchen.").IsValid.Should().BeTrue();
             stringSolver.Validate("The {DataName:IfEqual+Ipsum,T,F} is in the kitchen.").IsValid.Should().BeTrue();
         }

@@ -12,7 +12,7 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void Tags_Get_ReturnsReadOnlyCollection()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
             (stringSolver.Tags as List<ITag<Data>>).Should().BeNull();
             (stringSolver.Tags as ReadOnlyCollection<ITag<Data>>).Should().NotBeNull();
@@ -21,7 +21,7 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void Tags_Get_ReturnsOneTag()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
             stringSolver.Tags.Should().HaveCount(1);
             stringSolver.Tags.First().Name.Should().Be("DataName");
@@ -30,7 +30,7 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void Filters_Get_ReturnsReadOnlyCollection()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
             (stringSolver.Filters as List<IFilter>).Should().BeNull();
             (stringSolver.Filters as ReadOnlyCollection<IFilter>).Should().NotBeNull();
@@ -39,7 +39,7 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void Filters_GetWithoutBaseFilters_ReturnsOneFilter()
         {
-            var stringSolver = new Parser<Data>(true).WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            Parser<Data> stringSolver = new Parser<Data>(true).WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
             stringSolver.Filters.Should().HaveCount(1);
         }
@@ -47,7 +47,7 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void ParameterTags_Get_ReturnsReadOnlyCollection()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
             (stringSolver.ParameterTags as List<IParameterTag>).Should().BeNull();
             (stringSolver.ParameterTags as ReadOnlyCollection<IParameterTag>).Should().NotBeNull();
@@ -56,7 +56,7 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void ParameterTags_Get_ReturnsOneParameterTag()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
             stringSolver.ParameterTags.Should().HaveCount(1);
             stringSolver.ParameterTags.First().Name.Should().Be("Blue");

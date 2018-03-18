@@ -40,28 +40,28 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Resolve_ReturnsResolvedString()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Resolve("The {DataName:Replace+Lorem,Merol} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Merol is in the kitchen.");
         }
 
         [Fact]
         public void Validate_ReturnsTrue()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Validate("The {DataName:Replace+Lorem,Merol} is in the kitchen.").IsValid.Should().BeTrue();
         }
 
         [Fact]
         public void Resolve_NullString_ReturnsResolvedString()
         {
-            var stringSolver = new Parser<Data>().WithTag("Null", string.Empty, _ => null);
+            Parser<Data> stringSolver = new Parser<Data>().WithTag("Null", string.Empty, _ => null);
             stringSolver.Resolve("The {Null:Replace+Lorem,Merol} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The  is in the kitchen.");
         }
 
         [Fact]
         public void Resolve_OnlySpaceInput_ReturnsResolvedString()
         {
-            var stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Resolve("The {DataName:Replace+ ,r} is in the kitchen.", new Data { Name = "   " }).Should().Be("The rrr is in the kitchen.");
         }
     }

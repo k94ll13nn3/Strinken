@@ -10,7 +10,7 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void WithTag_OnTheFlyCreation_ReturnsResolvedString()
         {
-            var solver = new Parser<Data>().WithTag("OTF", "OTF", a => a.Name);
+            Parser<Data> solver = new Parser<Data>().WithTag("OTF", "OTF", a => a.Name);
 
             solver.Tags.Should().HaveCount(1);
             solver.Tags.First().Name.Should().Be("OTF");
@@ -20,8 +20,8 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void WithTag_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
-            var solver2 = solver.WithTag("TagBis", "TagBis", a => a.Name);
+            Parser<Data> solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
+            Parser<Data> solver2 = solver.WithTag("TagBis", "TagBis", a => a.Name);
 
             solver.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid.Should().BeFalse();
             solver2.Validate("The {TagBis} {Tag} is in the kitchen.").IsValid.Should().BeTrue();
@@ -30,8 +30,8 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void WithTags_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
-            var solver2 = solver.WithTags(new[] { new DataNameTag() });
+            Parser<Data> solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
+            Parser<Data> solver2 = solver.WithTags(new[] { new DataNameTag() });
 
             solver.Validate("The {DataName} {Tag} is in the kitchen.").IsValid.Should().BeFalse();
             solver2.Validate("The {DataName} {Tag} is in the kitchen.").IsValid.Should().BeTrue();
@@ -40,8 +40,8 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void WithFilter_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
-            var solver2 = solver.WithFilter(new AppendFilter());
+            Parser<Data> solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
+            Parser<Data> solver2 = solver.WithFilter(new AppendFilter());
 
             solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeFalse();
             solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeTrue();
@@ -50,8 +50,8 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void WithFilters_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
-            var solver2 = solver.WithFilters(new[] { new AppendFilter() });
+            Parser<Data> solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
+            Parser<Data> solver2 = solver.WithFilters(new[] { new AppendFilter() });
 
             solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeFalse();
             solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeTrue();
@@ -60,8 +60,8 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void WithParameterTag_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
-            var solver2 = solver.WithParameterTag(new BlueParameterTag());
+            Parser<Data> solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
+            Parser<Data> solver2 = solver.WithParameterTag(new BlueParameterTag());
 
             solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeFalse();
             solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeTrue();
@@ -70,8 +70,8 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void WithParameterTags_Called_DoesNotModifyCallingInstance()
         {
-            var solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
-            var solver2 = solver.WithParameterTags(new[] { new BlueParameterTag() });
+            Parser<Data> solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
+            Parser<Data> solver2 = solver.WithParameterTags(new[] { new BlueParameterTag() });
 
             solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeFalse();
             solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeTrue();

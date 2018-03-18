@@ -89,7 +89,7 @@ namespace Strinken.Core
                 updatedEnd.Add(end);
             }
 
-            var operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == CharValue && x.TokenType == tokenType);
+            Operator operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == CharValue && x.TokenType == tokenType);
             if (operatorDefined != null)
             {
                 Next();
@@ -99,7 +99,7 @@ namespace Strinken.Core
                 operatorDefined = BaseOperators.RegisteredOperators.Single(x => x.Symbol == '\0' && x.TokenType == tokenType);
             }
 
-            var indicatorDefined = operatorDefined.Indicators.FirstOrDefault(x => x.Symbol == CharValue);
+            Indicator indicatorDefined = operatorDefined.Indicators.FirstOrDefault(x => x.Symbol == CharValue);
             if (indicatorDefined != null)
             {
                 Next();
@@ -118,7 +118,7 @@ namespace Strinken.Core
         /// <returns>The result of the parsing.</returns>
         public ParseResult<TokenDefinition> ParseArgument()
         {
-            var result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, TokenType.Argument);
+            ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, TokenType.Argument);
             if (result)
             {
                 return result;
@@ -133,7 +133,7 @@ namespace Strinken.Core
         /// <returns>The result of the parsing.</returns>
         public ParseResult<TokenDefinition> ParseFilter()
         {
-            var result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator }, TokenType.Filter);
+            ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator }, TokenType.Filter);
             if (result)
             {
                 return result;
@@ -148,7 +148,7 @@ namespace Strinken.Core
         /// <returns>The result of the parsing.</returns>
         public ParseResult<TokenDefinition> ParseTag()
         {
-            var result = ParseName(new[] { SpecialCharacter.FilterSeparator }, TokenType.Tag);
+            ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator }, TokenType.Tag);
             if (result)
             {
                 return result;
@@ -164,7 +164,7 @@ namespace Strinken.Core
         public ParseResult<IEnumerable<TokenDefinition>> ParseFilterAndArguments()
         {
             var tokenList = new List<TokenDefinition>();
-            var filterParseResult = ParseFilter();
+            ParseResult<TokenDefinition> filterParseResult = ParseFilter();
             if (!filterParseResult)
             {
                 return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(filterParseResult.Message);
@@ -179,7 +179,7 @@ namespace Strinken.Core
                 }
 
                 Next();
-                var argumentParseResult = ParseArgument();
+                ParseResult<TokenDefinition> argumentParseResult = ParseArgument();
                 if (!argumentParseResult)
                 {
                     return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(argumentParseResult.Message);
@@ -198,7 +198,7 @@ namespace Strinken.Core
         public ParseResult<IEnumerable<TokenDefinition>> ParseToken()
         {
             var tokenList = new List<TokenDefinition>();
-            var tagParseResult = ParseTag();
+            ParseResult<TokenDefinition> tagParseResult = ParseTag();
             if (!tagParseResult)
             {
                 return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(tagParseResult.Message);
@@ -213,7 +213,7 @@ namespace Strinken.Core
                 }
 
                 Next();
-                var filterAndArgumentsParseResult = ParseFilterAndArguments();
+                ParseResult<IEnumerable<TokenDefinition>> filterAndArgumentsParseResult = ParseFilterAndArguments();
                 if (filterAndArgumentsParseResult)
                 {
                     tokenList.AddRange(filterAndArgumentsParseResult.Value ?? Enumerable.Empty<TokenDefinition>());
@@ -268,7 +268,7 @@ namespace Strinken.Core
         public ParseResult<IEnumerable<TokenDefinition>> ParseTokenAndOutsideString()
         {
             var tokenList = new List<TokenDefinition>();
-            var tokenParseResult = ParseToken();
+            ParseResult<IEnumerable<TokenDefinition>> tokenParseResult = ParseToken();
             if (!tokenParseResult)
             {
                 return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(tokenParseResult.Message);
@@ -281,7 +281,7 @@ namespace Strinken.Core
             }
 
             Next();
-            var outsideParseResult = ParseOutsideString();
+            ParseResult<TokenDefinition> outsideParseResult = ParseOutsideString();
             if (!outsideParseResult)
             {
                 return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(outsideParseResult.Message);
@@ -298,7 +298,7 @@ namespace Strinken.Core
         public ParseResult<IEnumerable<TokenDefinition>> ParseString()
         {
             var tokenList = new List<TokenDefinition>();
-            var outsideParseResult = ParseOutsideString();
+            ParseResult<TokenDefinition> outsideParseResult = ParseOutsideString();
             if (!outsideParseResult)
             {
                 return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(outsideParseResult.Message);
@@ -313,10 +313,10 @@ namespace Strinken.Core
                 }
 
                 Next();
-                var tokenParseResult = ParseTokenAndOutsideString();
+                ParseResult<IEnumerable<TokenDefinition>> tokenParseResult = ParseTokenAndOutsideString();
                 if (tokenParseResult)
                 {
-                    foreach (var token in tokenParseResult.Value)
+                    foreach (TokenDefinition token in tokenParseResult.Value)
                     {
                         tokenList.Add(token);
                     }
