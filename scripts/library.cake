@@ -7,7 +7,7 @@
 #tool GitReleaseNotes&version=0.7.0
 #tool coveralls.io&version=1.4.2
 
-#addin Cake.Coveralls&version=0.7.0
+#addin Cake.Coveralls&version=0.8.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
