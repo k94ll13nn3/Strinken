@@ -29,7 +29,7 @@ namespace Strinken
                 new NullFilter(),
                 new IfEqualFilter(),
                 new ReplaceFilter(),
-                new ReapeatFilter()
+                new RepeatFilter()
             }.ToDictionary(x => x.Name, x => x);
 
         /// <summary>

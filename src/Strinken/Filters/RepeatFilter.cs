@@ -5,7 +5,7 @@ namespace Strinken
     /// <summary>
     /// Repeats the input as many times as specified.
     /// </summary>
-    internal class ReapeatFilter : IFilter
+    internal class RepeatFilter : IFilter
     {
         /// <inheritdoc/>
         public string Description => "Repeats the input as many times as specified.";

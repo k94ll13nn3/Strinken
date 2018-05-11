@@ -5,12 +5,12 @@ using Xunit;
 
 namespace Strinken.Tests.FiltersTests
 {
-    public class ReapeatFilterTests
+    public class RepeatFilterTests
     {
         [Fact]
         public void Resolve_Data_ReturnsDataWithLeadingZeros()
         {
-            var filter = new ReapeatFilter();
+            var filter = new RepeatFilter();
 
             filter.Resolve("some string", new string[] { "4" }).Should().Be("some stringsome stringsome stringsome string");
             filter.Resolve("", new string[] { "4" }).Should().Be("");
@@ -20,7 +20,7 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Validate_NoArguments_ReturnsFalse()
         {
-            var filter = new ReapeatFilter();
+            var filter = new RepeatFilter();
 
             filter.Validate(null).Should().BeFalse();
             filter.Validate(Array.Empty<string>()).Should().BeFalse();
@@ -29,7 +29,7 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Validate_OneArgumentButNotInt_ReturnsFalse()
         {
-            var filter = new ReapeatFilter();
+            var filter = new RepeatFilter();
 
             filter.Validate(new string[] { "t" }).Should().BeFalse();
         }
@@ -37,7 +37,7 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Validate_MoreThanOneArgument_ReturnsFalse()
         {
-            var filter = new ReapeatFilter();
+            var filter = new RepeatFilter();
 
             filter.Validate(new string[] { "", "", "" }).Should().BeFalse();
         }
@@ -45,7 +45,7 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Validate_OneIntArgument_ReturnsTrue()
         {
-            var filter = new ReapeatFilter();
+            var filter = new RepeatFilter();
 
             filter.Validate(new string[] { "3" }).Should().BeTrue();
         }
