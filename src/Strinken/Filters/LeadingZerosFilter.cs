@@ -15,6 +15,9 @@ namespace Strinken
         public string Usage => "{tag:Zeros+numberOfLeadingZeros}";
 
         /// <inheritdoc/>
+        public string AlternativeName => null;
+
+        /// <inheritdoc/>
         public string Resolve(string value, string[] arguments) => (value ?? string.Empty).PadLeft(int.Parse(arguments[0]), '0');
 
         /// <inheritdoc/>

@@ -84,6 +84,8 @@ namespace Strinken.Public.Tests.Filters
 
             public string Usage => "";
 
+            public string AlternativeName => null;
+
             public string Resolve(string value, string[] arguments) => value;
 
             public bool Validate(string[] arguments) => true;

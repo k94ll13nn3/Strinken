@@ -12,7 +12,10 @@
         public abstract string Name { get; }
 
         /// <inheritdoc/>
-        public string Usage => $"{{tag:{Name}}}";
+        public abstract string AlternativeName { get; }
+
+        /// <inheritdoc/>
+        public string Usage => $"{{tag:{Name}}}{(!string.IsNullOrWhiteSpace(AlternativeName) ? $" or {{tag:{AlternativeName}}}" : string.Empty)}";
 
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments) => Resolve(value);

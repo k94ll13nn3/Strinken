@@ -13,6 +13,11 @@ namespace Strinken
         string Usage { get; }
 
         /// <summary>
+        /// Gets the alternative name of the filter.
+        /// </summary>
+        string AlternativeName { get; }
+
+        /// <summary>
         /// Resolves the filter.
         /// </summary>
         /// <param name="value">The value on which the filter is applied.</param>

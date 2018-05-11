@@ -12,7 +12,10 @@ namespace Strinken
         public string Name => "IfEqual";
 
         /// <inheritdoc/>
-        public string Usage => "{tag:IfEqual+value,valueIfTrue,valueIfFalse}";
+        public string Usage => "{tag:IfEqual+value,valueIfTrue,valueIfFalse} or {tag:?+value,valueIfTrue,valueIfFalse}";
+
+        /// <inheritdoc/>
+        public string AlternativeName => "?";
 
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments) => value == arguments[0] ? arguments[1] : arguments[2];

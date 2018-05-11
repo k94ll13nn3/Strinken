@@ -12,7 +12,10 @@ namespace Strinken
         public string Name => "Null";
 
         /// <inheritdoc/>
-        public string Usage => "{tag:Null+valueIfNull}";
+        public string Usage => "{tag:Null+valueIfNull} or {tag:??+valueIfNull}";
+
+        /// <inheritdoc/>
+        public string AlternativeName => "??";
 
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments) => value ?? arguments[0];

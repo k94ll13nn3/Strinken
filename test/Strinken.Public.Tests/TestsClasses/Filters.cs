@@ -8,6 +8,8 @@ namespace Strinken.Public.Tests.TestsClasses
 
         public string Usage => "";
 
+        public string AlternativeName => null;
+
         public string Resolve(string value, string[] arguments) => value + string.Concat(arguments);
 
         public bool Validate(string[] arguments) => arguments?.Length >= 1;
@@ -16,8 +18,12 @@ namespace Strinken.Public.Tests.TestsClasses
     public class EmptyNameFilter : IFilter
     {
         public string Description => string.Empty;
+
         public string Name => string.Empty;
+
         public string Usage => string.Empty;
+
+        public string AlternativeName => null;
 
         public string Resolve(string value, string[] arguments) => value;
 
@@ -27,8 +33,12 @@ namespace Strinken.Public.Tests.TestsClasses
     public class InvalidNameFilter : IFilter
     {
         public string Description => string.Empty;
+
         public string Name => "name!";
+
         public string Usage => string.Empty;
+
+        public string AlternativeName => null;
 
         public string Resolve(string value, string[] arguments) => value;
 
@@ -42,6 +52,8 @@ namespace Strinken.Public.Tests.TestsClasses
         public string Name => "Some";
 
         public string Usage => "";
+
+        public string AlternativeName => null;
 
         public string Resolve(string value, string[] arguments) => value;
 

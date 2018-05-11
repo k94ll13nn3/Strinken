@@ -14,7 +14,10 @@ namespace Strinken
         public string Name => "Repeat";
 
         /// <inheritdoc/>
-        public string Usage => "{tag:Repeat+numberOfTimes}";
+        public string Usage => "{tag:Repeat+numberOfTimes} or {tag:*+numberOfTimes}";
+
+        /// <inheritdoc/>
+        public string AlternativeName => "*";
 
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments) => string.Concat(Enumerable.Repeat(value, int.Parse(arguments[0])));
