@@ -32,6 +32,14 @@ namespace Strinken.Public.Tests.Parser
         }
 
         [Fact]
+        public void Constructor_TwoFilterWithSameAlternativeName_ThrowsArgumentException()
+        {
+            Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new SomeFilter(), new SomeFilter() });
+
+            act.Should().Throw<ArgumentException>().WithMessage("A filter already has \"!*\" as its alternative name.");
+        }
+
+        [Fact]
         public void Constructor_TwoParameterTagsWithSameName_ThrowsArgumentException()
         {
             Action act = () => new Parser<Data>().WithParameterTags(new IParameterTag[] { new BlueParameterTag(), new BlueParameterTag() });
@@ -81,6 +89,14 @@ namespace Strinken.Public.Tests.Parser
             Action act = () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new InvalidNameFilter());
 
             act.Should().Throw<ArgumentException>().WithMessage("! is an invalid character for a name.");
+        }
+
+        [Fact]
+        public void Constructor_FilterWithInvalidAlternativeName_ThrowsArgumentException()
+        {
+            Action act = () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new InvalidAlternativeNameFilter());
+
+            act.Should().Throw<ArgumentException>().WithMessage("n is an invalid character for an alternative name.");
         }
 
         [Fact]

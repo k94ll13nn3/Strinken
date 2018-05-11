@@ -87,6 +87,16 @@ namespace Strinken.Public.Tests.Parser
         }
 
         [Fact]
+        public void Validate_UnknownAlternativeNameForAFilter_ReturnsFalse()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            ValidationResult validationResult = stringSolver.Validate("The {DataName:!*$} is in the kitchen.");
+
+            validationResult.IsValid.Should().BeFalse();
+            validationResult.Message.Should().Be("!*$ is not the alternative name of a filter.");
+        }
+
+        [Fact]
         public void Validate_UnknownTag_ReturnsFalse()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());

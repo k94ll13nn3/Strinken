@@ -57,6 +57,14 @@ namespace Strinken.Tests.FiltersTests
         }
 
         [Fact]
+        public void Resolve_WithAlternativeName_ReturnsResolvedString()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            stringSolver.Resolve("The {DataName:?+Lorem,T,F} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The T is in the kitchen.");
+            stringSolver.Resolve("The {DataName:?+Ipsum,T,F} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The F is in the kitchen.");
+        }
+
+        [Fact]
         public void Validate_ReturnsTrue()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());

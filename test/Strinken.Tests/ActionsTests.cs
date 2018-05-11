@@ -575,5 +575,29 @@ namespace Strinken.Tests
             valuesSeen.Count.Should().Be(1);
             valuesSeen[0].Should().Be("45bAe7845F");
         }
+
+        [Fact]
+        public void Run_TagWithFilterWithAlternativeName_ActionOnFilterCalledOnce()
+        {
+            var numberOfCall = 0;
+            var filterSeen = new List<string>();
+            var actions = new ActionDictionary
+            {
+                [TokenType.Filter, '\0', '\0'] = a =>
+                {
+                    numberOfCall++;
+                    filterSeen.Add(a[0]);
+                    return a[0];
+                }
+            };
+
+            const string input = "lorem{ispum:??}";
+            EngineResult result = StrinkenEngine.Run(input);
+            result.Stack.Resolve(actions);
+
+            numberOfCall.Should().Be(1);
+            filterSeen.Count.Should().Be(1);
+            filterSeen[0].Should().Be("??");
+        }
     }
 }

@@ -58,6 +58,13 @@ namespace Strinken.Tests.FiltersTests
         }
 
         [Fact]
+        public void Resolve_WithAlternativeName_ReturnsResolvedString()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+            stringSolver.Resolve("The {DataName:*+3} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The LoremLoremLorem is in the kitchen.");
+        }
+
+        [Fact]
         public void Validate_ReturnsTrue()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());

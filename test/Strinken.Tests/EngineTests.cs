@@ -260,6 +260,33 @@ namespace Strinken.Tests
         }
 
         [Theory]
+        [InlineData("{ipsum:filt*er}", '*', 11)]
+        [InlineData("{ipsum:fi!}", '!', 9)]
+        [InlineData("{ipsum:?f}", '?', 7)]
+        [InlineData("{ipsum:!!µ}", 'µ', 9)]
+        public void Run_InvalidCharacterInFilterName_ReturnsFalse(string input, char illegalChar, int position)
+        {
+            EngineResult result = StrinkenEngine.Run(input);
+            result.Success.Should().BeFalse();
+            result.ErrorMessage.Should().Be($"Illegal '{illegalChar}' at position {position}");
+        }
+
+        [Theory]
+        [InlineData("{ipsum:test}")]
+        [InlineData("{ipsum:Fil1r}")]
+        [InlineData("{ipsum:Soe_fi}")]
+        [InlineData("{ipsum:%!*}")]
+        [InlineData("{ipsum:??}")]
+        [InlineData("{ipsum:?}")]
+        [InlineData("{ipsum:#!*$}")]
+        public void Run_ValidCharacterInFilterName_DoesNotThrow(string input)
+        {
+            EngineResult result = StrinkenEngine.Run(input);
+            result.Success.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
+        }
+
+        [Theory]
         [InlineData("{lorem:ispum+abc}")]
         [InlineData("{lorem:ispum+abc9}")]
         [InlineData("{lorem:ispum+abc-+}")]
