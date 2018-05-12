@@ -11,6 +11,11 @@
         Name,
 
         /// <summary>
+        /// Parse string as a name (letter + '-' + '_') or as a symbol (*, $, ?, !, &amp; or .).
+        /// </summary>
+        NameOrSymbol,
+
+        /// <summary>
         /// Parse all the string.
         /// </summary>
         Full,

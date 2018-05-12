@@ -340,6 +340,7 @@ namespace Strinken.Core
         /// <returns>The result of the parsing.</returns>
         private ParseResult<TokenDefinition> ParseNameInternal(TokenType tokenType, List<int> updatedEnd, Operator operatorDefined, Indicator indicatorDefined)
         {
+            bool? isSymbolContext = null;
             var builder = new StringBuilder();
             while (true)
             {
@@ -359,7 +360,17 @@ namespace Strinken.Core
                     case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Octal && (CharValue < '0' || CharValue > '7'):
                     case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Decimal && (CharValue < '0' || CharValue > '9'):
                     case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Hexadecimal && CharValue.IsInvalidHexadecimalCharacter():
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol
+                        && ((isSymbolContext == false && CharValue.IsInvalidTokenNameCharacter()) || (isSymbolContext == true && CharValue.IsInvalidAlternativeNameCharacter())):
                         return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !CharValue.IsInvalidTokenNameCharacter():
+                        isSymbolContext = false;
+                        break;
+
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !CharValue.IsInvalidAlternativeNameCharacter():
+                        isSymbolContext = true;
+                        break;
                 }
 
                 builder.Append(CharValue);

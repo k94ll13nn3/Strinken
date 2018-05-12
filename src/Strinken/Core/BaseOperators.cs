@@ -49,7 +49,7 @@ namespace Strinken.Core
                 TokenType = TokenType.Filter,
                 Indicators = new List<Indicator>
                 {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithArguments }
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.NameOrSymbol, ResolutionMethod = ResolutionMethod.WithArguments }
                 }
             },
             new Operator

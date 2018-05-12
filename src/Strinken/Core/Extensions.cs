@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Strinken.Core
 {
@@ -7,6 +8,8 @@ namespace Strinken.Core
     /// </summary>
     internal static class Extensions
     {
+        private static readonly List<char> ValidAlternativeNameCharacter = new List<char> { '*', '$', '?', '!', '&', '.', '#', '%' };
+
         /// <summary>
         /// Tests if a <see cref="char"/> is an invalid token name character i.e. not a-z, A-Z, 0-9, - or _.
         /// </summary>
@@ -19,7 +22,7 @@ namespace Strinken.Core
         /// </summary>
         /// <param name="c">The <see cref="char"/> to test.</param>
         /// <returns>A value indicating whether the <see cref="char"/> is an invalid alternative name character</returns>
-        public static bool IsInvalidAlternativeNameCharacter(this char c) => c != '*' && c != '$' && c != '?' && c != '!' && c != '&' && c != '.';
+        public static bool IsInvalidAlternativeNameCharacter(this char c) => !ValidAlternativeNameCharacter.Contains(c);
 
         /// <summary>
         /// Tests if a <see cref="char"/> is an invalid hexadecimal character i.e. not a-f, A-F or 0-9.

@@ -236,7 +236,6 @@ namespace Strinken.Tests
         [InlineData("lorem{isp+um:abc}", '+')]
         [InlineData("lorem{isp°um:abc}", '°')]
         [InlineData("lorem{isp um:abc}", ' ')]
-        [InlineData("lorem{is:!fil}", '!')]
         public void Run_InvalidCharacterInString_ReturnsFalse(string input, char illegalChar)
         {
             EngineResult result = StrinkenEngine.Run(input);
@@ -262,8 +261,8 @@ namespace Strinken.Tests
         [Theory]
         [InlineData("{ipsum:filt*er}", '*', 11)]
         [InlineData("{ipsum:fi!}", '!', 9)]
-        [InlineData("{ipsum:?f}", '?', 7)]
-        [InlineData("{ipsum:!!µ}", 'µ', 9)]
+        [InlineData("{ipsum:?f}", 'f', 8)]
+        [InlineData("{ipsum:!!^}", '^', 9)]
         public void Run_InvalidCharacterInFilterName_ReturnsFalse(string input, char illegalChar, int position)
         {
             EngineResult result = StrinkenEngine.Run(input);
@@ -273,7 +272,7 @@ namespace Strinken.Tests
 
         [Theory]
         [InlineData("{ipsum:test}")]
-        [InlineData("{ipsum:Fil1r}")]
+        [InlineData("{ipsum:Filr}")]
         [InlineData("{ipsum:Soe_fi}")]
         [InlineData("{ipsum:%!*}")]
         [InlineData("{ipsum:??}")]
