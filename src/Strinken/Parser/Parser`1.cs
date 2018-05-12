@@ -367,7 +367,18 @@ namespace Strinken
                             break;
 
                         case ResolutionMethod.WithArguments:
-                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => filters[a[0]].Resolve(a[1], a.Skip(2).ToArray());
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
+                            {
+                                if (filters.ContainsKey(a[0]))
+                                {
+                                    return filters[a[0]].Resolve(a[1], a.Skip(2).ToArray());
+                                }
+                                else
+                                {
+                                    return filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], a.Skip(2).ToArray());
+
+                                }
+                            };
                             break;
 
                         case ResolutionMethod.Name:
