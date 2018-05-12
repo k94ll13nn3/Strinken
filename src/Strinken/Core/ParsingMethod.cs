@@ -11,7 +11,7 @@
         Name,
 
         /// <summary>
-        /// Parse string as a name (letter + '-' + '_') or as a symbol (*, $, ?, !, &amp; or .).
+        /// Parse string as a name (letter + '-' + '_') or as a symbol (!%&amp;*+./&lt;=&gt;@^|~?$#).
         /// </summary>
         NameOrSymbol,
 

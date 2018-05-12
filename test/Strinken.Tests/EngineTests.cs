@@ -262,7 +262,7 @@ namespace Strinken.Tests
         [InlineData("{ipsum:filt*er}", '*', 11)]
         [InlineData("{ipsum:fi!}", '!', 9)]
         [InlineData("{ipsum:?f}", 'f', 8)]
-        [InlineData("{ipsum:!!^}", '^', 9)]
+        [InlineData("{ipsum:!!-}", '-', 9)]
         public void Run_InvalidCharacterInFilterName_ReturnsFalse(string input, char illegalChar, int position)
         {
             EngineResult result = StrinkenEngine.Run(input);
