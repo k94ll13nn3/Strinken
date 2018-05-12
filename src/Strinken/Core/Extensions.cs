@@ -15,6 +15,13 @@ namespace Strinken.Core
         public static bool IsInvalidTokenNameCharacter(this char c) => !char.IsLetter(c) && c != '-' && c != '_';
 
         /// <summary>
+        /// Tests if a <see cref="char"/> is an invalid alternative name character i.e. not *, $, ?, !, &amp; or ..
+        /// </summary>
+        /// <param name="c">The <see cref="char"/> to test.</param>
+        /// <returns>A value indicating whether the <see cref="char"/> is an invalid alternative name character</returns>
+        public static bool IsInvalidAlternativeNameCharacter(this char c) => c != '*' && c != '$' && c != '?' && c != '!' && c != '&' && c != '.';
+
+        /// <summary>
         /// Tests if a <see cref="char"/> is an invalid hexadecimal character i.e. not a-f, A-F or 0-9.
         /// </summary>
         /// <param name="c">The <see cref="char"/> to test.</param>
@@ -38,6 +45,27 @@ namespace Strinken.Core
                 if (name[i].IsInvalidTokenNameCharacter())
                 {
                     throw new ArgumentException($"{name[i]} is an invalid character for a name.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates an alternative name and throws a <see cref="ArgumentException"/> if the alternative name is invalid.
+        /// </summary>
+        /// <param name="alternativeName">The alternative name to validate.</param>
+        /// <exception cref="ArgumentException">When the alternative name is invalid.</exception>
+        public static void ThrowIfInvalidAlternativeName(this string alternativeName)
+        {
+            if (string.IsNullOrWhiteSpace(alternativeName))
+            {
+                return;
+            }
+
+            for (var i = 0; i < alternativeName.Length; i++)
+            {
+                if (alternativeName[i].IsInvalidAlternativeNameCharacter())
+                {
+                    throw new ArgumentException($"{alternativeName[i]} is an invalid character for an alternative name.");
                 }
             }
         }

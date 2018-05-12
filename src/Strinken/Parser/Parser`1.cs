@@ -165,6 +165,17 @@ namespace Strinken
             }
 
             filter.Name.ThrowIfInvalidName();
+
+            if (!string.IsNullOrWhiteSpace(filter.AlternativeName))
+            {
+                if (filters.Values.Select(x => x.AlternativeName).Contains(filter.AlternativeName))
+                {
+                    throw new ArgumentException($"A filter already has {filter.AlternativeName} as its alternative name.");
+                }
+
+                filter.AlternativeName.ThrowIfInvalidAlternativeName();
+            }
+
             filters.Add(filter.Name, filter);
         }
 

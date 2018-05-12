@@ -74,4 +74,19 @@ namespace Strinken.Public.Tests.TestsClasses
 
         public bool Validate(string[] arguments) => true;
     }
+
+    public class SomeBisFilter : IFilter
+    {
+        public string Description => "SomeBis";
+
+        public string Name => "SomeBis";
+
+        public string Usage => "";
+
+        public string AlternativeName => "!*";
+
+        public string Resolve(string value, string[] arguments) => value;
+
+        public bool Validate(string[] arguments) => true;
+    }
 }

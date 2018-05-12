@@ -34,9 +34,9 @@ namespace Strinken.Public.Tests.Parser
         [Fact]
         public void Constructor_TwoFilterWithSameAlternativeName_ThrowsArgumentException()
         {
-            Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new SomeFilter(), new SomeFilter() });
+            Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new SomeFilter(), new SomeBisFilter() });
 
-            act.Should().Throw<ArgumentException>().WithMessage("A filter already has \"!*\" as its alternative name.");
+            act.Should().Throw<ArgumentException>().WithMessage("A filter already has !* as its alternative name.");
         }
 
         [Fact]
