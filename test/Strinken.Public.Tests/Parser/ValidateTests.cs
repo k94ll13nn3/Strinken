@@ -17,6 +17,16 @@ namespace Strinken.Public.Tests.Parser
         }
 
         [Fact]
+        public void Validate_AllFiltersKnownWithAlternativeName_ReturnsTrue()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new SomeFilter()).WithParameterTag(new BlueParameterTag());
+            ValidationResult validationResult = stringSolver.Validate("The {DataName:!*} is in the kitchen.");
+
+            validationResult.IsValid.Should().BeTrue();
+            validationResult.Message.Should().BeNull();
+        }
+
+        [Fact]
         public void Validate_AllFiltersWithGoodArguments_ReturnsTrue()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -93,7 +103,7 @@ namespace Strinken.Public.Tests.Parser
             ValidationResult validationResult = stringSolver.Validate("The {DataName:!*$} is in the kitchen.");
 
             validationResult.IsValid.Should().BeFalse();
-            validationResult.Message.Should().Be("!*$ is not the alternative name of a filter.");
+            validationResult.Message.Should().Be("!*$ is not a valid filter.");
         }
 
         [Fact]

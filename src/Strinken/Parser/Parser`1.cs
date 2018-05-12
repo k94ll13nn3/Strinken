@@ -295,6 +295,8 @@ namespace Strinken
         /// <returns>A value indicating whether the input is valid.</returns>
         private ValidationResult ValidateLists(List<string> tagList, List<string> parameterTagList, List<Tuple<string, string[]>> filterList)
         {
+            bool isFilterWithAlternativeName = false;
+
             // Find the first tag that was not registered in the parser.
             var invalidParameter = tagList.Find(tagName => !tags.ContainsKey(tagName));
             if (invalidParameter != null)
@@ -313,14 +315,30 @@ namespace Strinken
             invalidParameter = filterList.Find(filter => !filters.ContainsKey(filter.Item1))?.Item1;
             if (invalidParameter != null)
             {
-                return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
+                isFilterWithAlternativeName = true;
+                invalidParameter = filterList.Find(filter => !filters.Values.Select(x => x.AlternativeName).Contains(filter.Item1))?.Item1;
+                if (invalidParameter != null)
+                {
+                    return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
+                }
             }
 
             // Find the first filter that has invalid arguments.
-            invalidParameter = filterList.Find(filter => !filters[filter.Item1].Validate(filter.Item2))?.Item1;
+            if (isFilterWithAlternativeName)
+            {
+                invalidParameter = filterList.Find(filter => !filters.Values.FirstOrDefault(x => x.AlternativeName == filter.Item1).Validate(filter.Item2))?.Item1;
+            }
+            else
+            {
+                invalidParameter = filterList.Find(filter => !filters[filter.Item1].Validate(filter.Item2))?.Item1;
+            }
+
             if (invalidParameter != null)
             {
-                return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
+                if (invalidParameter != null)
+                {
+                    return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
+                }
             }
 
             return new ValidationResult { Message = null, IsValid = true };
