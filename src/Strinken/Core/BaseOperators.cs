@@ -18,8 +18,8 @@ namespace Strinken.Core
                 TokenType = TokenType.Tag,
                 Indicators = new List<Indicator>
                 {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithValue },
-                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithoutValue }
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.Tag },
+                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.ParameterTag }
                 }
             },
             new Operator
@@ -49,7 +49,7 @@ namespace Strinken.Core
                 TokenType = TokenType.Filter,
                 Indicators = new List<Indicator>
                 {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.NameOrSymbol, ResolutionMethod = ResolutionMethod.WithArguments }
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.NameOrSymbol, ResolutionMethod = ResolutionMethod.Filter }
                 }
             },
             new Operator
@@ -67,8 +67,8 @@ namespace Strinken.Core
                 TokenType = TokenType.Argument,
                 Indicators = new List<Indicator>
                 {
-                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithValue },
-                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.WithoutValue }
+                    new Indicator{ Symbol = '\0', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.Tag },
+                    new Indicator{ Symbol = '!', ParsingMethod = ParsingMethod.Name, ResolutionMethod = ResolutionMethod.ParameterTag }
                 }
             }
         };

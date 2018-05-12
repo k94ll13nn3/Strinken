@@ -8,17 +8,17 @@
         /// <summary>
         /// array[a[0]].Resolve(value)
         /// </summary>
-        WithValue,
+        Tag,
 
         /// <summary>
         /// array[a[0]].Resolve().
         /// </summary>
-        WithoutValue,
+        ParameterTag,
 
         /// <summary>
         /// array[a[0]].Resolve(a[1], a.Skip(2).ToArray()).
         /// </summary>
-        WithArguments,
+        Filter,
 
         /// <summary>
         /// a[0].

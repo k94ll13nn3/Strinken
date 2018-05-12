@@ -252,7 +252,7 @@ namespace Strinken
                 {
                     switch (ind.ResolutionMethod)
                     {
-                        case ResolutionMethod.WithValue:
+                        case ResolutionMethod.Tag:
                             actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                             {
                                 tagList.Add(a[0]);
@@ -260,7 +260,7 @@ namespace Strinken
                             };
                             break;
 
-                        case ResolutionMethod.WithoutValue:
+                        case ResolutionMethod.ParameterTag:
                             actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                             {
                                 parameterTagList.Add(a[0]);
@@ -268,7 +268,7 @@ namespace Strinken
                             };
                             break;
 
-                        case ResolutionMethod.WithArguments:
+                        case ResolutionMethod.Filter:
                             actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                             {
                                 filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
@@ -358,15 +358,15 @@ namespace Strinken
                 {
                     switch (ind.ResolutionMethod)
                     {
-                        case ResolutionMethod.WithValue:
+                        case ResolutionMethod.Tag:
                             actions[op.TokenType, op.Symbol, ind.Symbol] = a => tags[a[0]].Resolve(value);
                             break;
 
-                        case ResolutionMethod.WithoutValue:
+                        case ResolutionMethod.ParameterTag:
                             actions[op.TokenType, op.Symbol, ind.Symbol] = a => parameterTags[a[0]].Resolve();
                             break;
 
-                        case ResolutionMethod.WithArguments:
+                        case ResolutionMethod.Filter:
                             actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                             {
                                 if (filters.ContainsKey(a[0]))
