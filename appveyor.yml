@@ -1,6 +1,6 @@
 environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
-  coveralls_token:
+  COVERALLS_TOKEN:
     secure: 9e+vrJ65VDmTcwWipInm3fmWWnG1cLYLsoQHnKkroGtLHTkUvTJ9w8KwD12W0u0w
 
 install:

@@ -157,7 +157,7 @@ Task("Upload-Coverage")
 {
     CoverallsIo(coverageDir + coverageResultPath, new CoverallsIoSettings
     {
-        RepoToken = EnvironmentVariable("coveralls_token")
+        RepoToken = EnvironmentVariable("COVERALLS_TOKEN")
     });
 });
 
