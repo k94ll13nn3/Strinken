@@ -7,45 +7,44 @@
 
 | Build server   | Platform     | Status                                                                                                                    |
 |----------------|--------------|---------------------------------------------------------------------------------------------------------------------------|
-| AppVeyor       | Windows      | [![AppVeyor](https://ci.appveyor.com/api/projects/status/038gqsusfw0srmst/branch/master?svg=true)](https://ci.appveyor.com/project/k94ll13nn3/strinken) |
-| Travis         | Linux        | [![Travis](https://travis-ci.org/k94ll13nn3/Strinken.svg?branch=master)](https://travis-ci.org/k94ll13nn3/Strinken) |
+| AppVeyor       | Windows/Linux      | [![AppVeyor](https://ci.appveyor.com/api/projects/status/038gqsusfw0srmst/branch/master?svg=true)](https://ci.appveyor.com/project/k94ll13nn3/strinken) |
 
 A parametrized string library ! ([Documentation](https://k94ll13nn3.github.io/Strinken/))
 
-# Installation
+## Installation
 
-## NuGet
+### NuGet
 
 - Grab the latest package on [NuGet](https://www.nuget.org/packages/Strinken/).
 - Install it via the Package Manager Console: `Install-Package Strinken`.
 
-## Manual downloads
+### Manual downloads
 
 - Get the latest release on [GitHub](https://github.com/k94ll13nn3/Strinken/releases/latest).
 - Get the latest CI build on [AppVeyor](https://ci.appveyor.com/project/k94ll13nn3/strinken/build/artifacts).
 
-# Basic example
+## Basic example
 
 1. Create a class that implements `ITag<T>` for the wanted type (a class Person with a Name property for example):
 
-``` csharp
-public class NameTag : ITag<Person>
-{
-    public string Description => "Returns the name of a Person.";
-    public string Name => "Name";
-    public string Resolve(Person value) => value.Name.ToString();
-}
-```
+    ``` csharp
+    public class NameTag : ITag<Person>
+    {
+        public string Description => "Returns the name of a Person.";
+        public string Name => "Name";
+        public string Resolve(Person value) => value.Name.ToString();
+    }
+    ```
 
 2. Create a `Parser<T>` with this tag:
 
-``` csharp
-var parser = new Parser<Person>().WithTag(new NameTag());
-```
+    ``` csharp
+    var parser = new Parser<Person>().WithTag(new NameTag());
+    ```
 
 3. Resolve a string with the parser:
 
-``` csharp
-var result = parser.Resolve("My name is {Name}.", new Person { Name = "James" });
-// will return "My name is James."
-```
+    ``` csharp
+    var result = parser.Resolve("My name is {Name}.", new Person { Name = "James" });
+    // will return "My name is James."
+    ```
