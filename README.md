@@ -8,6 +8,7 @@
 | Build server   | Platform     | Status                                                                                                                    |
 |----------------|--------------|---------------------------------------------------------------------------------------------------------------------------|
 | AppVeyor       | Windows/Linux      | [![AppVeyor](https://ci.appveyor.com/api/projects/status/038gqsusfw0srmst/branch/master?svg=true)](https://ci.appveyor.com/project/k94ll13nn3/strinken) |
+
 A parametrized string library ! ([Documentation](https://k94ll13nn3.github.io/Strinken/))
 
 ## Installation
