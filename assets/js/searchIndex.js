@@ -34,62 +34,6 @@ var searchModule = function() {
 
     a({
         id:0,
-        title:"ValidationResult",
-        content:"ValidationResult",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:1,
-        title:"IFilter",
-        content:"IFilter",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:2,
-        title:"BaseFilters",
-        content:"BaseFilters",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:3,
-        title:"ITag",
-        content:"ITag",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:4,
-        title:"FilterWithoutArguments",
-        content:"FilterWithoutArguments",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:5,
-        title:"IParameterTag",
-        content:"IParameterTag",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:6,
-        title:"ParserExtensions",
-        content:"ParserExtensions",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:7,
         title:"Parser",
         content:"Parser",
         description:'',
@@ -97,11 +41,85 @@ var searchModule = function() {
     });
 
     a({
-        id:8,
+        id:1,
+        title:"FilterWithoutArguments",
+        content:"FilterWithoutArguments",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:2,
+        title:"IFilter",
+        content:"IFilter",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:3,
+        title:"ValidationResult",
+        content:"ValidationResult",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:4,
         title:"IToken",
         content:"IToken",
         description:'',
         tags:''
+    });
+
+    a({
+        id:5,
+        title:"ParserExtensions",
+        content:"ParserExtensions",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:6,
+        title:"IParameterTag",
+        content:"IParameterTag",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:7,
+        title:"BaseFilters",
+        content:"BaseFilters",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:8,
+        title:"ITag",
+        content:"ITag",
+        description:'',
+        tags:''
+    });
+
+    y({
+        url:'/Strinken/api/Strinken.Parser/Parser_1',
+        title:"Parser<T>",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken.Filters/FilterWithoutArguments',
+        title:"FilterWithoutArguments",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken.Parser/IFilter',
+        title:"IFilter",
+        description:""
     });
 
     y({
@@ -111,8 +129,20 @@ var searchModule = function() {
     });
 
     y({
-        url:'/Strinken/api/Strinken.Parser/IFilter',
-        title:"IFilter",
+        url:'/Strinken/api/Strinken.Parser/IToken',
+        title:"IToken",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken.Parser/ParserExtensions',
+        title:"ParserExtensions",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken.Parser/IParameterTag',
+        title:"IParameterTag",
         description:""
     });
 
@@ -125,36 +155,6 @@ var searchModule = function() {
     y({
         url:'/Strinken/api/Strinken.Parser/ITag_1',
         title:"ITag<T>",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Filters/FilterWithoutArguments',
-        title:"FilterWithoutArguments",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Parser/IParameterTag',
-        title:"IParameterTag",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Parser/ParserExtensions',
-        title:"ParserExtensions",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Parser/Parser_1',
-        title:"Parser<T>",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Parser/IToken',
-        title:"IToken",
         description:""
     });
 
