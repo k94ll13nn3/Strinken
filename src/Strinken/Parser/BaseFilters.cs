@@ -19,7 +19,7 @@ namespace Strinken
         /// <summary>
         /// The list of registered filters.
         /// </summary>
-        private static readonly IDictionary<string, IFilter> InternalRegisteredFilters = 
+        private static readonly IDictionary<string, IFilter> InternalRegisteredFilters =
             new List<IFilter>
             {
                 new UpperFilter(),
@@ -64,6 +64,16 @@ namespace Strinken
                 if (!InternalRegisteredFilters.ContainsKey(filter.Name))
                 {
                     filter.Name.ThrowIfInvalidName();
+                    if (!string.IsNullOrWhiteSpace(filter.AlternativeName))
+                    {
+                        if (InternalRegisteredFilters.Values.Select(x => x.AlternativeName).Contains(filter.AlternativeName))
+                        {
+                            throw new ArgumentException($"A filter already has {filter.AlternativeName} as its alternative name.");
+                        }
+
+                        filter.AlternativeName.ThrowIfInvalidAlternativeName();
+                    }
+
                     InternalRegisteredFilters.Add(filter.Name, filter);
                 }
                 else

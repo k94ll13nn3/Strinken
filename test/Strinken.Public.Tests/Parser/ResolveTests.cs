@@ -129,5 +129,13 @@ namespace Strinken.Public.Tests.Parser
 
             stringSolver.Resolve("The {DataName:..+Ipsum} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The LoremIpsum is in the kitchen.");
         }
+
+        [Fact]
+        public void Resolve_OneTagAndOneBaseFilterUsedWithItsAlternativeName_ReturnsResolvedString()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
+
+            stringSolver.Resolve("The {DataName:??+Ipsum} is in the kitchen.", new Data { Name = null }).Should().Be("The Ipsum is in the kitchen.");
+        }
     }
 }

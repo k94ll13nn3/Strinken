@@ -71,6 +71,22 @@ namespace Strinken.Public.Tests.Filters
             act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "filter");
         }
 
+        [Fact]
+        public void Register_FilterWithAlternativeNameAlreadyRegistered_ThrowsArgumentException()
+        {
+            Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new SomeFilter(), new SomeBisFilter() });
+
+            act.Should().Throw<ArgumentException>().WithMessage("A filter already has !* as its alternative name.");
+        }
+
+        [Fact]
+        public void Register_FilterWithInvalidAlternativeName_ThrowsArgumentException()
+        {
+            Action act = () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new InvalidAlternativeNameFilter());
+
+            act.Should().Throw<ArgumentException>().WithMessage("n is an invalid character for an alternative name.");
+        }
+
         private class FilterGenerator : IFilter
         {
             public FilterGenerator(string data)
