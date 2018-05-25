@@ -57,6 +57,16 @@ namespace Strinken.Public.Tests.Parser
         }
 
         [Fact]
+        public void Validate_AllFiltersKnownWithNameAndAlternativeName_ReturnsTrue()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new SomeFilter()).WithParameterTag(new BlueParameterTag());
+            ValidationResult validationResult = stringSolver.Validate("The {DataName:!*:Null+Ok} is in the kitchen.");
+
+            validationResult.IsValid.Should().BeTrue();
+            validationResult.Message.Should().BeNull();
+        }
+
+        [Fact]
         public void Validate_FilterWithTooManyArguments_ReturnsFalse()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());

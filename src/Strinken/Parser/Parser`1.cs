@@ -284,49 +284,41 @@ namespace Strinken
         /// <returns>A value indicating whether the input is valid.</returns>
         private ValidationResult ValidateLists(List<string> tagList, List<string> parameterTagList, List<Tuple<string, string[]>> filterList)
         {
-            bool isFilterWithAlternativeName = false;
-
             // Find the first tag that was not registered in the parser.
-            var invalidParameter = tagList.Find(tagName => !tags.ContainsKey(tagName));
-            if (invalidParameter != null)
+            foreach (var tag in tagList)
             {
-                return new ValidationResult { Message = $"{invalidParameter} is not a valid tag.", IsValid = false };
+                if (!tags.ContainsKey(tag))
+                {
+                    return new ValidationResult { Message = $"{tag} is not a valid tag.", IsValid = false };
+                }
             }
 
             // Find the first parameter tag that was not registered in the parser.
-            invalidParameter = parameterTagList.Find(parameterTagName => !parameterTags.ContainsKey(parameterTagName));
-            if (invalidParameter != null)
+            foreach (var parameterTag in parameterTagList)
             {
-                return new ValidationResult { Message = $"{invalidParameter} is not a valid parameter tag.", IsValid = false };
+                if (!parameterTags.ContainsKey(parameterTag))
+                {
+                    return new ValidationResult { Message = $"{parameterTag} is not a valid parameter tag.", IsValid = false };
+                }
             }
 
             // Find the first filter that was not registered in the parser.
-            invalidParameter = filterList.Find(filter => !filters.ContainsKey(filter.Item1))?.Item1;
-            if (invalidParameter != null)
+            IEnumerable<string> alternativeNames = filters.Values.Select(x => x.AlternativeName).Where(x => !string.IsNullOrWhiteSpace(x));
+            foreach (var filter in filterList)
             {
-                isFilterWithAlternativeName = true;
-                invalidParameter = filterList.Find(filter => !filters.Values.Select(x => x.AlternativeName).Contains(filter.Item1))?.Item1;
-                if (invalidParameter != null)
+                if (!filters.ContainsKey(filter.Item1) && !alternativeNames.Contains(filter.Item1))
                 {
-                    return new ValidationResult { Message = $"{invalidParameter} is not a valid filter.", IsValid = false };
+                    return new ValidationResult { Message = $"{filter.Item1} is not a valid filter.", IsValid = false };
                 }
             }
 
             // Find the first filter that has invalid arguments.
-            if (isFilterWithAlternativeName)
+            foreach (var filter in filterList)
             {
-                invalidParameter = filterList.Find(filter => !filters.Values.FirstOrDefault(x => x.AlternativeName == filter.Item1).Validate(filter.Item2))?.Item1;
-            }
-            else
-            {
-                invalidParameter = filterList.Find(filter => !filters[filter.Item1].Validate(filter.Item2))?.Item1;
-            }
-
-            if (invalidParameter != null)
-            {
-                if (invalidParameter != null)
+                if ((filters.ContainsKey(filter.Item1) && !filters[filter.Item1].Validate(filter.Item2))
+                    || (!filters.ContainsKey(filter.Item1) && !filters.Values.FirstOrDefault(x => x.AlternativeName == filter.Item1).Validate(filter.Item2)))
                 {
-                    return new ValidationResult { Message = $"{invalidParameter} does not have valid arguments.", IsValid = false };
+                    return new ValidationResult { Message = $"{filter.Item1} does not have valid arguments.", IsValid = false };
                 }
             }
 
