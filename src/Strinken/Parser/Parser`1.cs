@@ -82,18 +82,7 @@ namespace Strinken
         /// <param name="value">The value to pass to the tags.</param>
         /// <returns>The resolved input.</returns>
         /// <exception cref="FormatException">The input has a wrong format.</exception>
-        public string Resolve(string input, T value)
-        {
-            EngineResult runResult = StrinkenEngine.Run(input);
-            if (runResult.Success)
-            {
-                ActionDictionary actions = GenerateActionDictionaryForResolution(value);
-
-                return runResult.Stack.Resolve(actions);
-            }
-
-            throw new FormatException(runResult.ErrorMessage);
-        }
+        public string Resolve(string input, T value) => Resolve(Compile(input), value);
 
         /// <summary>
         /// Resolves the compiled string.
