@@ -96,6 +96,40 @@ namespace Strinken
         }
 
         /// <summary>
+        /// Resolves the compiled string.
+        /// </summary>
+        /// <param name="compiledString">The compiled string to resolve.</param>
+        /// <param name="value">The value to pass to the tags.</param>
+        /// <returns>The resolved compiled string.</returns>
+        /// <exception cref="ArgumentNullException">The compiled string is null.</exception>
+        public string Resolve(CompiledString compiledString, T value)
+        {
+            if (compiledString == null)
+            {
+                throw new ArgumentNullException(nameof(compiledString));
+            }
+
+            ActionDictionary actions = GenerateActionDictionaryForResolution(value);
+            return compiledString.Stack.Resolve(actions);
+        }
+
+        /// <summary>
+        /// Compiles a string for a faster resolution time but without any modification allowed after.
+        /// </summary>
+        /// <param name="input">The input to compile.</param>
+        /// <exception cref="FormatException">The input has a wrong format.</exception>
+        public CompiledString Compile(string input)
+        {
+            EngineResult runResult = StrinkenEngine.Run(input);
+            if (runResult.Success)
+            {
+                return new CompiledString(runResult.Stack);
+            }
+
+            throw new FormatException(runResult.ErrorMessage);
+        }
+
+        /// <summary>
         /// Validates an input.
         /// </summary>
         /// <param name="input">The input to validate.</param>
@@ -116,40 +150,6 @@ namespace Strinken
             runResult.Stack.Resolve(actions);
 
             return ValidateLists(tagList, parameterTagList, filterList);
-        }
-
-        /// <summary>
-        /// Compiles a string for a faster resolution time but without any modification allowed after.
-        /// </summary>
-        /// <param name="input">The input to compile.</param>
-        /// <exception cref="FormatException">The input has a wrong format.</exception>
-        public void Compile(string input)
-        {
-            EngineResult runResult = StrinkenEngine.Run(input);
-            if (runResult.Success)
-            {
-                compiledStack = runResult.Stack;
-                return;
-            }
-
-            throw new FormatException(runResult.ErrorMessage);
-        }
-
-        /// <summary>
-        /// Resolves the input.
-        /// </summary>
-        /// <param name="value">The value to pass to the tags.</param>
-        /// <returns>The resolved input.</returns>
-        /// <exception cref="InvalidOperationException">No string were previously compiled.</exception>
-        public string ResolveCompiledString(T value)
-        {
-            if (compiledStack == null)
-            {
-                throw new InvalidOperationException("No string were compiled.");
-            }
-
-            ActionDictionary actions = GenerateActionDictionaryForResolution(value);
-            return compiledStack.Resolve(actions);
         }
 
         /// <summary>
@@ -376,7 +376,6 @@ namespace Strinken
                                 else
                                 {
                                     return filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], a.Skip(2).ToArray());
-
                                 }
                             };
                             break;
