@@ -11,7 +11,7 @@
         Name,
 
         /// <summary>
-        /// Parse string as a name (letter + '-' + '_') or as a symbol (!%&amp;*+./&lt;=&gt;@^|~?$#).
+        /// Parse string as a name (letter + '-' + '_') or as a symbol defined in <see cref="Extensions.ValidAlternativeNameCharacter"/>.
         /// </summary>
         NameOrSymbol,
 

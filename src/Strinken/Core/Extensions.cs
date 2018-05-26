@@ -8,7 +8,7 @@ namespace Strinken.Core
     /// </summary>
     internal static class Extensions
     {
-        private static readonly List<char> ValidAlternativeNameCharacter = new List<char>("!%&*+./<=>@^|~?$#".ToCharArray());
+        private static readonly List<char> ValidAlternativeNameCharacter = new List<char>("!%&*./<=>@^|~?$#".ToCharArray());
 
         /// <summary>
         /// Tests if a <see cref="char"/> is an invalid token name character i.e. not a-z, A-Z, 0-9, - or _.
@@ -18,7 +18,7 @@ namespace Strinken.Core
         public static bool IsInvalidTokenNameCharacter(this char c) => !char.IsLetter(c) && c != '-' && c != '_';
 
         /// <summary>
-        /// Tests if a <see cref="char"/> is an invalid alternative name character i.e. not in "!%&amp;*+./&lt;=&gt;@^|~?$#".
+        /// Tests if a <see cref="char"/> is an invalid alternative name character i.e. not in <see cref="ValidAlternativeNameCharacter"/>.
         /// </summary>
         /// <param name="c">The <see cref="char"/> to test.</param>
         /// <returns>A value indicating whether the <see cref="char"/> is an invalid alternative name character</returns>
