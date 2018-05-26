@@ -15,7 +15,7 @@
 // PREPARATION
 //////////////////////////////////////////////////////////////////////
 
-var accessToken = EnvironmentVariable("WYAM_PUBLISH_TOKEN");
+var accessToken = EnvironmentVariable("GITHUB_TOKEN");
 var deployRemote = @"https://github.com/k94ll13nn3/Strinken.git";
 var deployBranch = "gh-pages";
 var sourceCommit = GitLogTip("./");
