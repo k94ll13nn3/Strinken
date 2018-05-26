@@ -21,7 +21,7 @@ A parametrized string library ! ([Documentation](https://k94ll13nn3.github.io/St
 ### Manual downloads
 
 - Get the latest release on [GitHub](https://github.com/k94ll13nn3/Strinken/releases/latest).
-- Get the latest CI build on [AppVeyor](https://ci.appveyor.com/project/k94ll13nn3/strinken/build/artifacts).
+- Get the latest CI build on [AppVeyor](https://ci.appveyor.com/project/k94ll13nn3/strinken) (Visual Studio 2017 image).
 
 ## Basic example
 
