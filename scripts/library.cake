@@ -72,6 +72,9 @@ Task("Set-Environment")
         versionSuffix = "ci" + version.CommitsSinceVersionSource?.ToString()?.PadLeft(4, '0');
     }    
 
+    Information("AssembyVersion       " + version.AssemblySemVer);
+    Information("FileVersion          " + version.AssemblySemFileVer);
+    Information("InformationalVersion " + version.InformationalVersion);
     if (isOnAppVeyor)
     {
         Information("Build version:       " + nugetVersion + " (" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")");
@@ -140,7 +143,7 @@ Task("Nuget-Pack")
 });
 
 Task("Generate-Release-Notes")
-    .WithCriteria(false)
+    .ContinueOnError()
     .IsDependentOn("Nuget-Pack")
     .Does(() =>
 {
