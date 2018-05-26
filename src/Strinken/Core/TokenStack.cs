@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Strinken.Core
@@ -12,7 +13,7 @@ namespace Strinken.Core
         /// <summary>
         /// Internal stack.
         /// </summary>
-        private readonly Stack<TokenDefinition> tokenStack;
+        private Stack<TokenDefinition> tokenStack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenStack"/> class.
@@ -55,6 +56,8 @@ namespace Strinken.Core
                 return tokenStack.Peek().Data;
             }
 
+            // The stack is copied in order to be able to be reused because it will be emptied.
+            var copiedStack = new Stack<TokenDefinition>(tokenStack.Reverse());
             var result = new StringBuilder();
             while (tokenStack.Count > 0)
             {
@@ -72,6 +75,7 @@ namespace Strinken.Core
                 }
             }
 
+            tokenStack = copiedStack;
             return result.ToString();
         }
 
