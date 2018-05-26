@@ -76,7 +76,7 @@ namespace Strinken.Public.Tests.Parser
         {
             var stringSolver = new Parser<Data>();
 
-            Action act = () => stringSolver.Resolve((CompiledString)null, new Data[] { });
+            Action act = () => stringSolver.Resolve((CompiledString)null, Array.Empty<Data>());
 
             act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "compiledString"); ;
         }

@@ -29,11 +29,6 @@ namespace Strinken
         private readonly IDictionary<string, IParameterTag> parameterTags;
 
         /// <summary>
-        /// Stack used when a string is compiled.
-        /// </summary>
-        private TokenStack compiledStack;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Parser{T}"/> class.
         /// </summary>
         public Parser()

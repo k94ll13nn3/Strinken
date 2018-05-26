@@ -170,7 +170,7 @@ namespace Strinken.Public.Tests.Parser
         public void Resolve_InvalidStringWithValues_ThrowsFormatException()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
-            Action act = () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", new Data[] { });
+            Action act = () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", Array.Empty<Data>());
 
             act.Should().Throw<FormatException>().WithMessage("Empty argument");
         }
