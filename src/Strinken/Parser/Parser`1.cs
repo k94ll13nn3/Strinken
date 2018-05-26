@@ -103,6 +103,62 @@ namespace Strinken
         }
 
         /// <summary>
+        /// Resolves the input.
+        /// </summary>
+        /// <param name="input">The input to resolve.</param>
+        /// <param name="values">The values to pass to the tags.</param>
+        /// <returns>The resolved inputs.</returns>
+        /// <exception cref="FormatException">The input has a wrong format.</exception>
+        /// <exception cref="ArgumentNullException">Values is null.</exception>
+        public IEnumerable<string> Resolve(string input, IEnumerable<T> values)
+        {
+            if (values == null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            CompiledString compiledString = Compile(input);
+            return ResolveInternal();
+            IEnumerable<string> ResolveInternal()
+            {
+                foreach (T value in values)
+                {
+                    yield return Resolve(compiledString, value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Resolves the compiled string.
+        /// </summary>
+        /// <param name="compiledString">The compiled string to resolve.</param>
+        /// <param name="values">The values to pass to the tags.</param>
+        /// <returns>The resolved compiled strings.</returns>
+        /// <exception cref="ArgumentNullException">The compiled string is null.</exception>
+        /// <exception cref="ArgumentNullException">Values is null.</exception>
+        public IEnumerable<string> Resolve(CompiledString compiledString, IEnumerable<T> values)
+        {
+            if (values == null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            if (compiledString == null)
+            {
+                throw new ArgumentNullException(nameof(compiledString));
+            }
+
+            return ResolveInternal();
+            IEnumerable<string> ResolveInternal()
+            {
+                foreach (T value in values)
+                {
+                    yield return Resolve(compiledString, value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Compiles a string for a faster resolution time but without any modification allowed after.
         /// </summary>
         /// <param name="input">The input to compile.</param>

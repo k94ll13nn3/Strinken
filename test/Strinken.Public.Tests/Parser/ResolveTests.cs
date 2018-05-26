@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Strinken.Public.Tests.TestsClasses;
 using Xunit;
@@ -144,6 +145,34 @@ namespace Strinken.Public.Tests.Parser
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
 
             stringSolver.Resolve("The {DataName:??+Ipsum:Repeat+2} is in the kitchen.", new Data { Name = null }).Should().Be("The IpsumIpsum is in the kitchen.");
+        }
+
+        [Fact]
+        public void Resolve_Values_ReturnsResolvedStrings()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+
+            var expected = new[] { "The 5 is in the kitchen.", "The 5 is in the kitchen.", "The 7 is in the kitchen." };
+            var data = new[] { new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" } };
+            stringSolver.Resolve("The {DataName:Length} is in the kitchen.", data).Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void Resolve_ValidStringWithNullValues_ThrowsArgumentNullException()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            Action act = () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", (IEnumerable<Data>)null);
+
+            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "values"); ;
+        }
+
+        [Fact]
+        public void Resolve_InvalidStringWithValues_ThrowsFormatException()
+        {
+            Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
+            Action act = () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", new Data[] { });
+
+            act.Should().Throw<FormatException>().WithMessage("Empty argument");
         }
     }
 }
