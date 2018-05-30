@@ -162,7 +162,8 @@ Task("Generate-Release-Notes")
     };
 
     var releases = await client.Repository.Release.GetAll(owner, project);
-    var issues = (await client.Issue.GetAllForRepository(owner, project, new RepositoryIssueRequest { State = ItemStateFilter.Closed })).Where(x => x.PullRequest == null);
+    var issues = (await client.Issue.GetAllForRepository(owner, project, new RepositoryIssueRequest { State = ItemStateFilter.Closed }))
+        .Where(x => x.PullRequest == null && !x.Labels.Select(l => l.Name).Intersect(new[] { "duplicate", "invalid", "wontfix", "internal" }).Any());
     var pullRequests = (await client.PullRequest.GetAllForRepository(owner, project, new PullRequestRequest { State = ItemStateFilter.Closed })).Where(x => x.Merged);
     var links = releases.Zip(releases.Skip(1), (a, b) => $"[{a.Name}]: https://github.com/{owner}/{project}/compare/{b.TagName}...{a.TagName}").ToList();
 
@@ -172,10 +173,16 @@ Task("Generate-Release-Notes")
     builder.AppendLine("The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)");
     builder.AppendLine("and this project adheres to[Semantic Versioning](http://semver.org/spec/v2.0.0.html).").AppendLine();
 
+    releases = releases.Append(new Release(null, null, null, null, 0, null, null, "Unreleased", null, false, false, DateTime.Now, DateTime.Now, null, null, null, null))
+        .OrderByDescending(x => x.PublishedAt)
+        .ToList();
     for (int i = 0; i < releases.Count - 1; i++)
     {
         builder.AppendLine(FormatRelease(releases[i])).AppendLine();
-        builder.AppendLine(releases[i].Body).AppendLine();
+        if (!string.IsNullOrWhiteSpace(releases[i].Body))
+        {
+            builder.AppendLine(releases[i].Body).AppendLine();
+        }
 
         var issuesForRelease = issues.Where(x => x.ClosedAt <= releases[i].PublishedAt && x.ClosedAt > releases[i + 1].PublishedAt).Select(FormatIssue);
         if (issuesForRelease.Any())
@@ -191,14 +198,14 @@ Task("Generate-Release-Notes")
         }
     }
 
-    builder.AppendLine($"## {releases.Last().Name} - {releases.Last().CreatedAt.ToString("yyyy'-'MM'-'dd")}").AppendLine();
+    builder.AppendLine($"## {releases.Last().Name} - {releases.Last().PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}").AppendLine();
     builder.AppendLine(releases.Last().Body).AppendLine();
 
     builder.Append(string.Join($"{Environment.NewLine}", links));
 
     FileWriteText(publishDir + releaseNotesPath, builder.ToString());
 
-    string FormatRelease(Release release) => $"## [{release.Name}] - {release.PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}";
+    string FormatRelease(Release release) => release.Name == "Unreleased" ? $"## {release.Name}" : $"## [{release.Name}] - {release.PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}";
     string FormatIssue(Issue issue) => $"- [#{issue.Number}](https://github.com/{owner}/{project}/issues/{issue.Number}): {issue.Title}";
     string FormatPullRequest(PullRequest pullRequest) => $"- [#{pullRequest.Number}](https://github.com/{owner}/{project}/pull/{pullRequest.Number}): {pullRequest.Title} (by [{pullRequest.User.Login}](https://github.com/{pullRequest.User.Login}))";
 });
