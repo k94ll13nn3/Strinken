@@ -162,9 +162,14 @@ Task("Generate-Release-Notes")
     };
 
     var releases = await client.Repository.Release.GetAll(owner, project);
-    var issues = (await client.Issue.GetAllForRepository(owner, project, new RepositoryIssueRequest { State = ItemStateFilter.Closed }))
-        .Where(x => x.PullRequest == null && !x.Labels.Select(l => l.Name).Intersect(new[] { "duplicate", "invalid", "wontfix", "internal" }).Any());
-    var pullRequests = (await client.PullRequest.GetAllForRepository(owner, project, new PullRequestRequest { State = ItemStateFilter.Closed })).Where(x => x.Merged);
+    var allIssues = await client.Issue.GetAllForRepository(owner, project, new RepositoryIssueRequest { State = ItemStateFilter.Closed });
+    var excludedLabels = new[] { "duplicate", "invalid", "wontfix", "internal" };
+    var issues = allIssues.Where(x => x.PullRequest == null && !x.Labels.Select(l => l.Name).Intersect(excludedLabels).Any());
+    var pullRequestsLabels = allIssues
+        .Where(x => x.PullRequest != null)
+        .ToDictionary(x => x.Number, x => x.Labels.Select(l => l.Name));
+    var pullRequests = (await client.PullRequest.GetAllForRepository(owner, project, new PullRequestRequest { State = ItemStateFilter.Closed }))
+        .Where(x => x.Merged && !pullRequestsLabels[x.Number].Intersect(excludedLabels).Any());
     var links = releases.Zip(releases.Skip(1), (a, b) => $"[{a.Name}]: https://github.com/{owner}/{project}/compare/{b.TagName}...{a.TagName}").ToList();
 
     var builder = new StringBuilder();
