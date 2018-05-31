@@ -44,8 +44,8 @@ NoGutter: true
 	<hr />
     @{
         string usage = Context.GetLink("documentation/parser/usage/");    
-        string parserAPI = Context.GetLink("api") + "/Strinken.Parser/Parser_1/";    
-        string tagAPI = Context.GetLink("api") + "/Strinken.Parser/ITag_1//";    
+        string parserAPI = Context.GetLink("api") + "/Strinken/Parser_1/";    
+        string tagAPI = Context.GetLink("api") + "/Strinken/ITag_1//";    
 
         <p><b>1.</b> Create a class that implements <strong><a href="@tagAPI">ITag&lt;T&gt;</a></strong> for the wanted type (a class Person with a Name property for example): 
         <pre lang="csharp"><code class="cs">public class NameTag : ITag&lt;Person&gt;

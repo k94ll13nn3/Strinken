@@ -3,7 +3,7 @@ Description: Base filters available for each parser.
 EditFilePath: documentation/parser/filters.cshtml
 Order: 3
 ---
-@using Strinken.Parser
+@using Strinken
 
 Base filters are filters that are injected into a new parser during its creation.
 
@@ -41,7 +41,7 @@ Here is the list of all base filters that are defined in <strong>Strinken.dll</s
 
 <h1 id="fitlers-modification">Base filters modification</h1>
 
-The <a href="@Context.GetLink("api/Strinken.Filters/BaseFilters/")">BaseFilters</a> class provide two 
+The <a href="@Context.GetLink("api/Strinken/BaseFilters/")">BaseFilters</a> class provide two 
 methods for interacting with base filters : 
 <ul>
     <li><code>Register</code>: Adds a new parser to the list of base filter.</li> 
@@ -57,5 +57,5 @@ or remove a filter from the base filters after the parser creation, the parser w
 <h1 id="ignoring-filters">Ignoring base filters</h1>
 
 If you don't want to have the base filters injected into your parser, you can use the constructor overload of
-<a href="@Context.GetLink("api/Strinken.Parser/Parser_1/")">Parser&lt;T&gt;</a> that takes a <strong>bool</strong>
+<a href="@Context.GetLink("api/Strinken/Parser_1/")">Parser&lt;T&gt;</a> that takes a <strong>bool</strong>
 and pass <strong>false</strong>.
