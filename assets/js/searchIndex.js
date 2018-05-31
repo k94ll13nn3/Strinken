@@ -34,54 +34,6 @@ var searchModule = function() {
 
     a({
         id:0,
-        title:"Parser",
-        content:"Parser",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:1,
-        title:"FilterWithoutArguments",
-        content:"FilterWithoutArguments",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:2,
-        title:"IFilter",
-        content:"IFilter",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:3,
-        title:"ValidationResult",
-        content:"ValidationResult",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:4,
-        title:"IToken",
-        content:"IToken",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:5,
-        title:"ParserExtensions",
-        content:"ParserExtensions",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:6,
         title:"IParameterTag",
         content:"IParameterTag",
         description:'',
@@ -89,7 +41,7 @@ var searchModule = function() {
     });
 
     a({
-        id:7,
+        id:1,
         title:"BaseFilters",
         content:"BaseFilters",
         description:'',
@@ -97,64 +49,126 @@ var searchModule = function() {
     });
 
     a({
-        id:8,
+        id:2,
+        title:"Parser",
+        content:"Parser",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:3,
         title:"ITag",
         content:"ITag",
         description:'',
         tags:''
     });
 
-    y({
-        url:'/Strinken/api/Strinken.Parser/Parser_1',
-        title:"Parser<T>",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Filters/FilterWithoutArguments',
-        title:"FilterWithoutArguments",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken.Parser/IFilter',
+    a({
+        id:4,
         title:"IFilter",
-        description:""
+        content:"IFilter",
+        description:'',
+        tags:''
     });
 
-    y({
-        url:'/Strinken/api/Strinken.Parser/ValidationResult',
+    a({
+        id:5,
         title:"ValidationResult",
-        description:""
+        content:"ValidationResult",
+        description:'',
+        tags:''
     });
 
-    y({
-        url:'/Strinken/api/Strinken.Parser/IToken',
+    a({
+        id:6,
+        title:"FilterWithoutArguments",
+        content:"FilterWithoutArguments",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:7,
+        title:"CompiledString",
+        content:"CompiledString",
+        description:'',
+        tags:''
+    });
+
+    a({
+        id:8,
         title:"IToken",
-        description:""
+        content:"IToken",
+        description:'',
+        tags:''
     });
 
-    y({
-        url:'/Strinken/api/Strinken.Parser/ParserExtensions',
+    a({
+        id:9,
         title:"ParserExtensions",
-        description:""
+        content:"ParserExtensions",
+        description:'',
+        tags:''
     });
 
     y({
-        url:'/Strinken/api/Strinken.Parser/IParameterTag',
+        url:'/Strinken/api/Strinken/IParameterTag',
         title:"IParameterTag",
         description:""
     });
 
     y({
-        url:'/Strinken/api/Strinken.Filters/BaseFilters',
+        url:'/Strinken/api/Strinken/BaseFilters',
         title:"BaseFilters",
         description:""
     });
 
     y({
-        url:'/Strinken/api/Strinken.Parser/ITag_1',
+        url:'/Strinken/api/Strinken/Parser_1',
+        title:"Parser<T>",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken/ITag_1',
         title:"ITag<T>",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken/IFilter',
+        title:"IFilter",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken/ValidationResult',
+        title:"ValidationResult",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken/FilterWithoutArguments',
+        title:"FilterWithoutArguments",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken/CompiledString',
+        title:"CompiledString",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken/IToken',
+        title:"IToken",
+        description:""
+    });
+
+    y({
+        url:'/Strinken/api/Strinken/ParserExtensions',
+        title:"ParserExtensions",
         description:""
     });
 

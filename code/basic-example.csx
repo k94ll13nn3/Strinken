@@ -1,6 +1,6 @@
-// #r ".\Strinken.dll"
+//#r "..\Strinken.dll"
 
-using Strinken.Parser;
+using Strinken;
 
 public class Person
 {
