@@ -36,6 +36,7 @@ public class TrimFilter : IFilter
 {
     public string Description => "Trims a string.";
     public string Name => "Trim";
+    public string AlternativeName => null;
     public string Usage => "{tag:Trim}";
     public string Resolve(string value, string[] arguments) => value.Trim();
     public bool Validate(string[] arguments) => arguments == null || arguments.Length == 0;

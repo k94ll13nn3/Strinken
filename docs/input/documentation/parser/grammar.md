@@ -54,8 +54,11 @@ Additionally, a tag can start with:
 Filters are similar to tags in term of syntax, but they always start with a `:`.
 After that, they only allow these characters:
 
-- Any Unicode letter (as defined [here](https://docs.microsoft.com/fr-fr/dotnet/api/system.char.isletter))
-- A `_` or a `-`
+- For the name of the filter:
+  - Any Unicode letter (as defined [here](https://docs.microsoft.com/fr-fr/dotnet/api/system.char.isletter))
+  - A `_` or a `-`
+- For the alternative name of the filter:
+  - `!`, `%`, `&`, `*`, `.`, `/`, `<`, `=`, `>`, `@`, `^`, `|`, `~`, `?`, `$` or `#`
 
 `:` is not part of the filter name (in term of API), it is only an indicator.
 
