@@ -28,7 +28,14 @@ Here is the list of all base filters that are defined in <strong>Strinken.dll</s
                     foreach (var filter in p.Filters.OrderBy(x => x.Name))
                     {
                         <tr>
-                            <td><strong>@filter.Name</strong></td>
+                            @if (string.IsNullOrWhiteSpace(filter.AlternativeName))
+                            {
+                                <td><strong>@filter.Name</strong></td>
+                            }
+                            else
+                            {
+                                <td><strong>@filter.Name</strong> or <strong>@filter.AlternativeName</td>
+                            }       
                             <td>@filter.Description</td>
                             <td><code>@filter.Usage</code></td>
                         </tr>
