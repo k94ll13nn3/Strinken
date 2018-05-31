@@ -2,7 +2,7 @@ Description: How to use Strinken
 Order: 1
 ---
 
-The usage of Strinken is generally split into two parts: defining the tokens that will be available to a 
+The usage of Strinken is generally split into two parts: defining the tokens that will be available to a
 parser and the creation of that parser.
 
 # Token creation
@@ -53,13 +53,14 @@ var parser = new Parser<ExampleClass>();
 ## Adding tokens
 
 There is three methods that can be used to add tokens to a parser:
+
 - `AddTag`
 - `AddParameterTag`
 - `AddFilter`
 
 Each method takes an instance of the corresponding token, and returns void (the addition is done to the caller).
 
-It is also possible to use one of the extension methods defined on the Parser class. Each 
+It is also possible to use one of the extension methods defined on the Parser class. Each
 of these extension methods returns a new Parser (so they can be chained) and does not modify the
 caller.
 
@@ -85,12 +86,13 @@ You can either pass an existing parameter tag or a list of existing parameter ta
 # String parsing
 
 The string parsing in Strinken is split into three parts:
+
 - The validation of the format of the string
 - The validation of the content of the string (find if there is unknown tokens)
 - The resolution of the string
 
 Each of these part must parse the entire string in order to find errors or resolve each tokens. For that reason,
-the validation of the content **is only done** by the validation process, the resolution does not verify that 
+the validation of the content **is only done** by the validation process, the resolution does not verify that
 all the tokens are known. The validation of the format is done by each process.
 
 ## String validation
@@ -109,7 +111,9 @@ parser.Validate("My name is {Example:Trim+arg}.")
 
 ## String resolution
 
-The resolution of a string is done by passing to the `Resolve` method an instance of the class for 
+### Classic resolution
+
+The resolution of a string is done by passing to the `Resolve` method an instance of the class for
 which the parser is designed.
 
 ``` csharp
@@ -117,19 +121,21 @@ var result = parser.Resolve("My name is {Example:Lower}.", new ExampleClass { Na
 // returns "My name is lorem."
 ```
 
-A string can be compiled into the parser in order to have a faster resolution time. Only the last 
-compiled string can be used for the resolution. Like the `Resolve` method, the compilation does not 
-verify the content of the string.
+The resolution can also be done in bulk using the overload of `Resolve` that takes an `IEnumerable<T>` as values.
 
-Compilation of a string:
+### Input compilation
+
+An input can be compiled into a `CompiledString` in order to have a faster resolution time:
 
 ``` csharp
-parser.Compile("My name is {Example:Lower}.")
+var compiledString = parser.Compile("My name is {Example:Lower}.")
 ```
 
-Resolution of a compiled string:
+The resulting `CompiledString` can then be passed to the `Resolve` method:
 
 ``` csharp
-var result = parser.ResolveCompiledString(new ExampleClass { Name = "Lorem" })
+var result = parser.Resolve(compiledString, new ExampleClass { Name = "Lorem" })
 // returns "My name is lorem."
 ```
+
+Like the `Resolve` method that takes a `string` as input, bulk resolution is available with a `CompiledString`.
