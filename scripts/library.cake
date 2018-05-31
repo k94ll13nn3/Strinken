@@ -176,7 +176,7 @@ Task("Generate-Release-Notes")
     builder.AppendLine("# Changelog").AppendLine();
     builder.AppendLine("All notable changes to this project will be documented in this file.").AppendLine();
     builder.AppendLine("The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)");
-    builder.AppendLine("and this project adheres to[Semantic Versioning](http://semver.org/spec/v2.0.0.html).").AppendLine();
+    builder.AppendLine("and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).").AppendLine();
 
     releases = releases.Append(new Release(null, null, null, null, 0, null, null, "Unreleased", null, false, false, DateTime.Now, DateTime.Now, null, null, null, null))
         .OrderByDescending(x => x.PublishedAt)
