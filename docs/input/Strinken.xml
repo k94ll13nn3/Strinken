@@ -4,48 +4,22 @@
         <name>Strinken</name>
     </assembly>
     <members>
-        <member name="T:Strinken.Common.Extensions">
-            <summary>
-            Collection of common extensions methods.
-            </summary>
-        </member>
-        <member name="M:Strinken.Common.Extensions.IsInvalidTokenNameCharacter(System.Char)">
-            <summary>
-            Tests if a <see cref="T:System.Char"/> is an invalid token name character i.e. not a-z, A-Z, 0-9, - or _.
-            </summary>
-            <param name="c">The <see cref="T:System.Char"/> to test.</param>
-            <returns>A value indicating whether the <see cref="T:System.Char"/> is an invalid token name character</returns>
-        </member>
-        <member name="M:Strinken.Common.Extensions.IsInvalidHexadecimalCharacter(System.Char)">
-            <summary>
-            Tests if a <see cref="T:System.Char"/> is an invalid hexadecimal character i.e. not a-f, A-F or 0-9.
-            </summary>
-            <param name="c">The <see cref="T:System.Char"/> to test.</param>
-            <returns>A value indicating whether the <see cref="T:System.Char"/> is an invalid hexadecimal character</returns>
-        </member>
-        <member name="M:Strinken.Common.Extensions.ThrowIfInvalidName(System.String)">
-            <summary>
-            Validates a name and throws a <see cref="T:System.ArgumentException"/> if the name is invalid.
-            </summary>
-            <param name="name">The name to validate.</param>
-            <exception cref="T:System.ArgumentException">When the name is invalid.</exception>
-        </member>
-        <member name="T:Strinken.Engine.ActionDictionary">
+        <member name="T:Strinken.Core.ActionDictionary">
             <summary>
             Action dictionary used by the token stack to resolve the string.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ActionDictionary.items">
+        <member name="F:Strinken.Core.ActionDictionary.items">
             <summary>
             Internal dictionary containing the list of actions and the related token propeties.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.ActionDictionary.#ctor">
+        <member name="M:Strinken.Core.ActionDictionary.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Engine.ActionDictionary"/> class.
+            Initializes a new instance of the <see cref="T:Strinken.Core.ActionDictionary"/> class.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.ActionDictionary.Item(Strinken.Engine.TokenType,System.Char,System.Char)">
+        <member name="P:Strinken.Core.ActionDictionary.Item(Strinken.Core.TokenType,System.Char,System.Char)">
             <summary>
             Gets or sets the element with the specified key.
             </summary>
@@ -54,537 +28,773 @@
             <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
             <returns>The element with the specified key, or null if the key is not present.</returns>
         </member>
-        <member name="M:Strinken.Engine.ActionDictionary.Get(Strinken.Engine.TokenType,System.Char,System.Char)">
+        <member name="M:Strinken.Core.ActionDictionary.Get(Strinken.Core.TokenType,System.Char,System.Char)">
             <summary>
-            Gets a value in the <see cref="T:Strinken.Engine.ActionDictionary"/>.
+            Gets a value in the <see cref="T:Strinken.Core.ActionDictionary"/>.
             </summary>
             <param name="type">Ttype part of the key of the element to get or set.</param>
             <param name="operatorSymbol">The operator symbol part of the key  of the element to get or set.</param>
             <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
             <returns>The element with the specified key, or null if the key is not present.</returns>
         </member>
-        <member name="T:Strinken.Engine.ActionDictionary.TokenProperties">
+        <member name="T:Strinken.Core.ActionDictionary.TokenProperties">
             <summary>
             Represents a key in the action dictionary.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.ActionDictionary.TokenProperties.#ctor(Strinken.Engine.TokenType,System.Char,System.Char)">
+        <member name="M:Strinken.Core.ActionDictionary.TokenProperties.#ctor(Strinken.Core.TokenType,System.Char,System.Char)">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Engine.ActionDictionary.TokenProperties"/> class.
+            Initializes a new instance of the <see cref="T:Strinken.Core.ActionDictionary.TokenProperties"/> class.
             </summary>
             <param name="type">Ttype part of the key of the element to get or set.</param>
             <param name="operatorSymbol">The operator symbol part of the key  of the element to get or set.</param>
             <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
         </member>
-        <member name="P:Strinken.Engine.ActionDictionary.TokenProperties.TokenType">
+        <member name="P:Strinken.Core.ActionDictionary.TokenProperties.TokenType">
             <summary>
             Gets the type part of the key of the element to get or set.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.ActionDictionary.TokenProperties.OperatorSymbol">
+        <member name="P:Strinken.Core.ActionDictionary.TokenProperties.OperatorSymbol">
             <summary>
             Gets the operator symbol part of the key  of the element to get or set.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.ActionDictionary.TokenProperties.IndicatorSymbol">
+        <member name="P:Strinken.Core.ActionDictionary.TokenProperties.IndicatorSymbol">
             <summary>
             Gets the indicator symbol part of the key  of the element to get or set.
             </summary>
         </member>
-        <member name="T:Strinken.Engine.BaseOperators">
+        <member name="M:Strinken.Core.ActionDictionary.TokenProperties.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.Core.ActionDictionary.TokenProperties.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.Core.BaseOperators">
             <summary>
             Class that handles the base operators.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.BaseOperators.RegisteredOperators">
+        <member name="P:Strinken.Core.BaseOperators.RegisteredOperators">
             <summary>
             Gets base operators shared by all parsers.
             </summary>
         </member>
-        <member name="T:Strinken.Engine.Cursor">
+        <member name="T:Strinken.Core.Cursor">
             <summary>
             Cursor used to read a string.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.Cursor.reader">
+        <member name="F:Strinken.Core.Cursor.reader">
             <summary>
             The reader used to read the string.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.Cursor.#ctor(System.String)">
+        <member name="M:Strinken.Core.Cursor.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Engine.Cursor"/> class.
+            Initializes a new instance of the <see cref="T:Strinken.Core.Cursor"/> class.
             </summary>
             <param name="input">The string to read.</param>
         </member>
-        <member name="P:Strinken.Engine.Cursor.CharValue">
+        <member name="P:Strinken.Core.Cursor.CharValue">
             <summary>
             Gets the current value of the cursor as a <see cref="T:System.Char"/>.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.Cursor.Position">
+        <member name="P:Strinken.Core.Cursor.Position">
             <summary>
             Gets the current position of the cursor.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.Cursor.Value">
+        <member name="P:Strinken.Core.Cursor.Value">
             <summary>
             Gets the current value of the cursor.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.Cursor.Dispose">
+        <member name="M:Strinken.Core.Cursor.Dispose">
             <inheritdoc/>
         </member>
-        <member name="M:Strinken.Engine.Cursor.HasEnded">
+        <member name="M:Strinken.Core.Cursor.HasEnded">
             <summary>
             Indicates if the cursor has reached the end.
             </summary>
             <returns>A value indicating whether the cursor as reached the end.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.Next">
+        <member name="M:Strinken.Core.Cursor.Next">
             <summary>
             Moves the cursor.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.Cursor.Peek">
+        <member name="M:Strinken.Core.Cursor.Peek">
             <summary>
             Peeks the next character of the cursor.
             </summary>
             <returns>The next character of the cursor.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.PeekIsEnd">
+        <member name="M:Strinken.Core.Cursor.PeekIsEnd">
             <summary>
             Indicates if the next character is the end.
             </summary>
             <returns>A value indicating whether the next character is the end.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseName(System.Collections.Generic.ICollection{System.Int32},Strinken.Engine.TokenType)">
+        <member name="M:Strinken.Core.Cursor.ParseName(System.Collections.Generic.ICollection{System.Int32},Strinken.Core.TokenType)">
             <summary>
             Parses a string inside a token and returns the first name in it.
             </summary>
             <param name="ends">A list of valid ends.</param>
-            <param name="tokenType">A function indicating whether a character is valid.</param>
+            <param name="tokenType">The type of the token to parse.</param>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseArgument">
+        <member name="M:Strinken.Core.Cursor.ParseArgument">
             <summary>
             Parses an argument.
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseFilter">
+        <member name="M:Strinken.Core.Cursor.ParseFilter">
             <summary>
             Parses a filter.
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseTag">
+        <member name="M:Strinken.Core.Cursor.ParseTag">
             <summary>
             Parses a tag.
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseFilterAndArguments">
+        <member name="M:Strinken.Core.Cursor.ParseFilterAndArguments">
             <summary>
             Parses a filter and its possible arguments.
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseToken">
+        <member name="M:Strinken.Core.Cursor.ParseToken">
             <summary>
             Parses a token.
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseOutsideString">
+        <member name="M:Strinken.Core.Cursor.ParseOutsideString">
             <summary>
             Parses an outside string.
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseTokenAndOutsideString">
+        <member name="M:Strinken.Core.Cursor.ParseTokenAndOutsideString">
             <summary>
             Parses a token and the following outside string.
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="M:Strinken.Engine.Cursor.ParseString">
+        <member name="M:Strinken.Core.Cursor.ParseString">
             <summary>
             Parses a string.
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
-        <member name="T:Strinken.Engine.EngineResult">
+        <member name="M:Strinken.Core.Cursor.ParseNameInternal(Strinken.Core.TokenType,System.Collections.Generic.List{System.Int32},Strinken.Core.Operator,Strinken.Core.Indicator)">
+            <summary>
+            Parses a string inside a token and returns the first name in it.
+            </summary>
+            <param name="tokenType">The type of the token to parse.</param>
+            <param name="updatedEnd">A list of valid ends.</param>
+            <param name="operatorDefined">The operator defined.</param>
+            <param name="indicatorDefined">The indicator defined.</param>
+            <returns>The result of the parsing.</returns>
+        </member>
+        <member name="T:Strinken.Core.EngineResult">
             <summary>
             Results of the engine's run.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.EngineResult.Success">
+        <member name="M:Strinken.Core.EngineResult.#ctor(System.Boolean,Strinken.Core.TokenStack,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Strinken.Core.EngineResult"/> class.
+            </summary>
+            <param name="success">A value indicating whether the parsing was successful.</param>
+            <param name="stack">The parsed stack.</param>
+            <param name="errorMessage">The message associated to the parsing.</param>
+        </member>
+        <member name="P:Strinken.Core.EngineResult.Success">
             <summary>
             Gets or sets a value indicating whether the engine's run succeed.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.EngineResult.Stack">
+        <member name="P:Strinken.Core.EngineResult.Stack">
             <summary>
             Gets or sets the resulting stack created after the run in case of success.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.EngineResult.ErrorMessage">
+        <member name="P:Strinken.Core.EngineResult.ErrorMessage">
             <summary>
             Gets or sets an error message describing the failure in case of failure.
             </summary>
         </member>
-        <member name="T:Strinken.Engine.Errors">
+        <member name="T:Strinken.Core.Errors">
             <summary>
             Class that contains error messages.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.Errors.EndOfString">
+        <member name="F:Strinken.Core.Errors.EndOfString">
             <summary>
             Error: End of string reached while inside a token
             </summary>
         </member>
-        <member name="F:Strinken.Engine.Errors.EmptyArgument">
+        <member name="F:Strinken.Core.Errors.EmptyArgument">
             <summary>
             Error: Empty argument
             </summary>
         </member>
-        <member name="F:Strinken.Engine.Errors.EmptyFilter">
+        <member name="F:Strinken.Core.Errors.EmptyFilter">
             <summary>
             Error: Empty filter
             </summary>
         </member>
-        <member name="F:Strinken.Engine.Errors.EmptyTag">
+        <member name="F:Strinken.Core.Errors.EmptyTag">
             <summary>
             Error: Empty tag
             </summary>
         </member>
-        <member name="F:Strinken.Engine.Errors.EmptyName">
+        <member name="F:Strinken.Core.Errors.EmptyName">
             <summary>
             Error: Empty name
             </summary>
         </member>
-        <member name="F:Strinken.Engine.Errors.IllegalCharacter">
+        <member name="F:Strinken.Core.Errors.IllegalCharacter">
             <summary>
             Error: Illegal '{0}' at position {1}
             </summary>
         </member>
-        <member name="F:Strinken.Engine.Errors.IllegalCharacterAtStringEnd">
+        <member name="F:Strinken.Core.Errors.IllegalCharacterAtStringEnd">
             <summary>
             Error: Illegal '{0}' at the end of the string
             </summary>
         </member>
-        <member name="T:Strinken.Engine.Indicator">
+        <member name="T:Strinken.Core.Extensions">
+            <summary>
+            Collection of common extensions methods.
+            </summary>
+        </member>
+        <member name="M:Strinken.Core.Extensions.IsInvalidTokenNameCharacter(System.Char)">
+            <summary>
+            Tests if a <see cref="T:System.Char"/> is an invalid token name character i.e. not a-z, A-Z, 0-9, - or _.
+            </summary>
+            <param name="c">The <see cref="T:System.Char"/> to test.</param>
+            <returns>A value indicating whether the <see cref="T:System.Char"/> is an invalid token name character</returns>
+        </member>
+        <member name="M:Strinken.Core.Extensions.IsInvalidAlternativeNameCharacter(System.Char)">
+            <summary>
+            Tests if a <see cref="T:System.Char"/> is an invalid alternative name character i.e. not in <see cref="F:Strinken.Core.Extensions.ValidAlternativeNameCharacter"/>.
+            </summary>
+            <param name="c">The <see cref="T:System.Char"/> to test.</param>
+            <returns>A value indicating whether the <see cref="T:System.Char"/> is an invalid alternative name character</returns>
+        </member>
+        <member name="M:Strinken.Core.Extensions.IsInvalidHexadecimalCharacter(System.Char)">
+            <summary>
+            Tests if a <see cref="T:System.Char"/> is an invalid hexadecimal character i.e. not a-f, A-F or 0-9.
+            </summary>
+            <param name="c">The <see cref="T:System.Char"/> to test.</param>
+            <returns>A value indicating whether the <see cref="T:System.Char"/> is an invalid hexadecimal character</returns>
+        </member>
+        <member name="M:Strinken.Core.Extensions.ThrowIfInvalidName(System.String)">
+            <summary>
+            Validates a name and throws a <see cref="T:System.ArgumentException"/> if the name is invalid.
+            </summary>
+            <param name="name">The name to validate.</param>
+            <exception cref="T:System.ArgumentException">When the name is invalid.</exception>
+        </member>
+        <member name="M:Strinken.Core.Extensions.ThrowIfInvalidAlternativeName(System.String)">
+            <summary>
+            Validates an alternative name and throws a <see cref="T:System.ArgumentException"/> if the alternative name is invalid.
+            </summary>
+            <param name="alternativeName">The alternative name to validate.</param>
+            <exception cref="T:System.ArgumentException">When the alternative name is invalid.</exception>
+        </member>
+        <member name="T:Strinken.Core.Indicator">
             <summary>
             An indicator that follows an operator and defines a parsing method.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.Indicator.Symbol">
+        <member name="P:Strinken.Core.Indicator.Symbol">
             <summary>
             Gets or sets the symbol linked to the indicator.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.Indicator.ParsingMethod">
+        <member name="P:Strinken.Core.Indicator.ParsingMethod">
             <summary>
             Gets or sets the parsing method linked to the indicator.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.Indicator.ResolutionMethod">
+        <member name="P:Strinken.Core.Indicator.ResolutionMethod">
             <summary>
             Gets or sets the resolution method linked to the indicator.
             </summary>
         </member>
-        <member name="T:Strinken.Engine.Operator">
+        <member name="T:Strinken.Core.Operator">
             <summary>
             An operator that defines a set of indicators.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.Operator.Indicators">
+        <member name="P:Strinken.Core.Operator.Indicators">
             <summary>
             Gets or sets the set of indicators defines by the operator.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.Operator.Symbol">
+        <member name="P:Strinken.Core.Operator.Symbol">
             <summary>
             Gets or sets the symbol linked to the operator.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.Operator.TokenType">
+        <member name="P:Strinken.Core.Operator.TokenType">
             <summary>
             Gets or sets the type of token on which the operator is used.
             </summary>
         </member>
-        <member name="T:Strinken.Engine.ParseResult`1">
+        <member name="T:Strinken.Core.ParseResult`1">
             <summary>
             Base class for all parsing result.
             </summary>
             <typeparam name="T">The type of the parsed data.</typeparam>
         </member>
-        <member name="M:Strinken.Engine.ParseResult`1.#ctor(System.Boolean,`0,System.String)">
+        <member name="M:Strinken.Core.ParseResult`1.#ctor(System.Boolean,`0,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Engine.ParseResult`1"/> class.
+            Initializes a new instance of the <see cref="T:Strinken.Core.ParseResult`1"/> class.
             </summary>
             <param name="result">A value indicating whether the parsing was successful.</param>
             <param name="value">The parsed value.</param>
             <param name="message">The message associated to the parsing.</param>
         </member>
-        <member name="P:Strinken.Engine.ParseResult`1.Result">
+        <member name="P:Strinken.Core.ParseResult`1.Result">
             <summary>
             Gets a value indicating whether the parsing was successful.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.ParseResult`1.Value">
+        <member name="P:Strinken.Core.ParseResult`1.Value">
             <summary>
             Gets the parsed value.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.ParseResult`1.Message">
+        <member name="P:Strinken.Core.ParseResult`1.Message">
             <summary>
             Gets the message associated to the parsing.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.ParseResult`1.Success(`0)">
+        <member name="M:Strinken.Core.ParseResult`1.Success(`0)">
             <summary>
             Creates a new successful result.
             </summary>
             <param name="value">The parsed value.</param>
             <returns>The result.</returns>
         </member>
-        <member name="M:Strinken.Engine.ParseResult`1.FailureWithMessage(System.String)">
+        <member name="M:Strinken.Core.ParseResult`1.FailureWithMessage(System.String)">
             <summary>
             Creates a new failure result.
             </summary>
             <param name="message">The message associated to the parsing.</param>
             <returns>The result.</returns>
         </member>
-        <member name="M:Strinken.Engine.ParseResult`1.op_Implicit(Strinken.Engine.ParseResult{`0})~System.Boolean">
+        <member name="M:Strinken.Core.ParseResult`1.op_Implicit(Strinken.Core.ParseResult{`0})~System.Boolean">
             <summary>
-            Defines an implicit conversion of a <see cref="T:Strinken.Engine.ParseResult`1"/> to a <see cref="T:System.Boolean"/>.
+            Defines an implicit conversion of a <see cref="T:Strinken.Core.ParseResult`1"/> to a <see cref="T:System.Boolean"/>.
             </summary>
             <param name="parseResult">The value to convert.</param>
         </member>
-        <member name="T:Strinken.Engine.ParsingMethod">
+        <member name="T:Strinken.Core.ParsingMethod">
             <summary>
             Method of parsing.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ParsingMethod.Name">
+        <member name="F:Strinken.Core.ParsingMethod.Name">
             <summary>
             Parse string as a name (letter + '-' + '_').
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ParsingMethod.Full">
+        <member name="F:Strinken.Core.ParsingMethod.NameOrSymbol">
+            <summary>
+            Parse string as a name (letter + '-' + '_') or as a symbol defined in <see cref="F:Strinken.Core.Extensions.ValidAlternativeNameCharacter"/>.
+            </summary>
+        </member>
+        <member name="F:Strinken.Core.ParsingMethod.Full">
             <summary>
             Parse all the string.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ParsingMethod.Binary">
+        <member name="F:Strinken.Core.ParsingMethod.Binary">
             <summary>
             Parse a binary number (0 or 1).
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ParsingMethod.Octal">
+        <member name="F:Strinken.Core.ParsingMethod.Octal">
             <summary>
             Parse an octal number (0 to 7).
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ParsingMethod.Decimal">
+        <member name="F:Strinken.Core.ParsingMethod.Decimal">
             <summary>
             Parse a decimal number (0 to 9).
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ParsingMethod.Hexadecimal">
+        <member name="F:Strinken.Core.ParsingMethod.Hexadecimal">
             <summary>
             Parse an hexadecimal number [0-9a-fA-F].
             </summary>
         </member>
-        <member name="T:Strinken.Engine.ResolutionMethod">
+        <member name="T:Strinken.Core.ResolutionMethod">
             <summary>
             Method of resolution.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ResolutionMethod.WithValue">
+        <member name="F:Strinken.Core.ResolutionMethod.Tag">
             <summary>
             array[a[0]].Resolve(value)
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ResolutionMethod.WithoutValue">
+        <member name="F:Strinken.Core.ResolutionMethod.ParameterTag">
             <summary>
             array[a[0]].Resolve().
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ResolutionMethod.WithArguments">
+        <member name="F:Strinken.Core.ResolutionMethod.Filter">
             <summary>
             array[a[0]].Resolve(a[1], a.Skip(2).ToArray()).
             </summary>
         </member>
-        <member name="F:Strinken.Engine.ResolutionMethod.Name">
+        <member name="F:Strinken.Core.ResolutionMethod.Name">
             <summary>
             a[0].
             </summary>
         </member>
-        <member name="T:Strinken.Engine.SpecialCharacter">
+        <member name="T:Strinken.Core.SpecialCharacter">
             <summary>
             Class that contains the different possible separators and indicators.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.SpecialCharacter.ArgumentIndicator">
+        <member name="F:Strinken.Core.SpecialCharacter.ArgumentIndicator">
             <summary>
             Separator that indicates the start of an argument list.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.SpecialCharacter.ArgumentSeparator">
+        <member name="F:Strinken.Core.SpecialCharacter.ArgumentSeparator">
             <summary>
             Separator that separates arguments.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.SpecialCharacter.FilterSeparator">
+        <member name="F:Strinken.Core.SpecialCharacter.FilterSeparator">
             <summary>
             Separator that separates filters.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.SpecialCharacter.TokenEndIndicator">
+        <member name="F:Strinken.Core.SpecialCharacter.TokenEndIndicator">
             <summary>
             Separator that indicates the end of a token.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.SpecialCharacter.TokenStartIndicator">
+        <member name="F:Strinken.Core.SpecialCharacter.TokenStartIndicator">
             <summary>
             Separator that indicates the start of a token.
             </summary>
         </member>
-        <member name="T:Strinken.Engine.StrinkenEngine">
+        <member name="T:Strinken.Core.StrinkenEngine">
             <summary>
             Core engine of Strinken.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.StrinkenEngine.Run(System.String)">
+        <member name="M:Strinken.Core.StrinkenEngine.Run(System.String)">
             <summary>
             Run the engine on a string.
             </summary>
             <param name="input">The string to process.</param>
-            <returns>A <see cref="T:Strinken.Engine.EngineResult"/> containing data about the run.</returns>
+            <returns>A <see cref="T:Strinken.Core.EngineResult"/> containing data about the run.</returns>
         </member>
-        <member name="T:Strinken.Engine.TokenDefinition">
+        <member name="T:Strinken.Core.TokenDefinition">
             <summary>
             An element in the stack.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.TokenDefinition.#ctor(System.String,Strinken.Engine.TokenType,System.Char,System.Char)">
+        <member name="M:Strinken.Core.TokenDefinition.#ctor(System.String,Strinken.Core.TokenType,System.Char,System.Char)">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Engine.TokenDefinition"/> class.
+            Initializes a new instance of the <see cref="T:Strinken.Core.TokenDefinition"/> class.
             </summary>
             <param name="data">The data related to the token.</param>
             <param name="type">The type of the token.</param>
             <param name="operatorSymbol">The operator symbol of the token.</param>
             <param name="indicatorSymbol">The indicator symbol of the token.</param>
         </member>
-        <member name="P:Strinken.Engine.TokenDefinition.Data">
+        <member name="P:Strinken.Core.TokenDefinition.Data">
             <summary>
             Gets the data related to the token (value or name).
             </summary>
         </member>
-        <member name="P:Strinken.Engine.TokenDefinition.Type">
+        <member name="P:Strinken.Core.TokenDefinition.Type">
             <summary>
             Gets the type of the token.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.TokenDefinition.OperatorSymbol">
+        <member name="P:Strinken.Core.TokenDefinition.OperatorSymbol">
             <summary>
             Gets the operator symbol of the token.
             </summary>
         </member>
-        <member name="P:Strinken.Engine.TokenDefinition.IndicatorSymbol">
+        <member name="P:Strinken.Core.TokenDefinition.IndicatorSymbol">
             <summary>
             Gets the indicator symbol of the token.
             </summary>
         </member>
-        <member name="T:Strinken.Engine.TokenStack">
+        <member name="T:Strinken.Core.TokenStack">
             <summary>
             Stack used by the engine to manage a list of tokens.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.TokenStack.tokenStack">
+        <member name="F:Strinken.Core.TokenStack.tokenStack">
             <summary>
             Internal stack.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.TokenStack.#ctor">
+        <member name="M:Strinken.Core.TokenStack.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Engine.TokenStack"/> class.
+            Initializes a new instance of the <see cref="T:Strinken.Core.TokenStack"/> class.
             </summary>
         </member>
-        <member name="M:Strinken.Engine.TokenStack.Push(Strinken.Engine.TokenDefinition)">
+        <member name="M:Strinken.Core.TokenStack.Push(Strinken.Core.TokenDefinition)">
             <summary>
             Pushes a token to the stack.
             </summary>
             <param name="token">The token to push.</param>
         </member>
-        <member name="M:Strinken.Engine.TokenStack.Resolve(Strinken.Engine.ActionDictionary)">
+        <member name="M:Strinken.Core.TokenStack.PushRange(System.Collections.Generic.IEnumerable{Strinken.Core.TokenDefinition})">
+            <summary>
+            Pushes the elements of the specified collection of tokens to the stack.
+            </summary>
+            <param name="tokens">The tokens to push.</param>
+        </member>
+        <member name="M:Strinken.Core.TokenStack.Resolve(Strinken.Core.ActionDictionary)">
             <summary>
             Resolve the stack.
             </summary>
             <param name="actions">The list of different actions.</param>
             <returns>The result of the resolution of the stack.</returns>
         </member>
-        <member name="M:Strinken.Engine.TokenStack.ResolveTagOrFilter(Strinken.Engine.ActionDictionary)">
+        <member name="M:Strinken.Core.TokenStack.ResolveTagOrFilter(Strinken.Core.ActionDictionary)">
             <summary>
             Resolve a tag or a filter.
             </summary>
             <param name="actions">The list of different actions.</param>
             <returns>The result of the resolution of the tag or the filter.</returns>
         </member>
-        <member name="T:Strinken.Engine.TokenType">
+        <member name="T:Strinken.Core.TokenType">
             <summary>
             Type of a token.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.TokenType.Argument">
+        <member name="F:Strinken.Core.TokenType.Argument">
             <summary>
             The token is an argument.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.TokenType.Tag">
+        <member name="F:Strinken.Core.TokenType.Tag">
             <summary>
             The token is a tag.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.TokenType.Filter">
+        <member name="F:Strinken.Core.TokenType.Filter">
             <summary>
             The token is a filter.
             </summary>
         </member>
-        <member name="F:Strinken.Engine.TokenType.None">
+        <member name="F:Strinken.Core.TokenType.None">
             <summary>
             The token is a string that will be rendered without modifications.
             </summary>
         </member>
-        <member name="T:Strinken.Filters.BaseFilters">
+        <member name="T:Strinken.IfEqualFilter">
+            <summary>
+            Does an equality test with the input and the specified value and renders a value depending on the output of the test.
+            </summary>
+        </member>
+        <member name="P:Strinken.IfEqualFilter.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.IfEqualFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.IfEqualFilter.Usage">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.IfEqualFilter.AlternativeName">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.IfEqualFilter.Resolve(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.IfEqualFilter.Validate(System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.LeadingZerosFilter">
+            <summary>
+            Formats the input with leading zeros until reaching the specified length.
+            </summary>
+        </member>
+        <member name="P:Strinken.LeadingZerosFilter.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.LeadingZerosFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.LeadingZerosFilter.Usage">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.LeadingZerosFilter.AlternativeName">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.LeadingZerosFilter.Resolve(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.LeadingZerosFilter.Validate(System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.LengthFilter">
+            <summary>
+            Transforms the input into its length.
+            </summary>
+        </member>
+        <member name="P:Strinken.LengthFilter.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.LengthFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.LengthFilter.AlternativeName">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.LengthFilter.Resolve(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.LowerFilter">
+            <summary>
+            Transforms the input to lowercase.
+            </summary>
+        </member>
+        <member name="P:Strinken.LowerFilter.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.LowerFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.LowerFilter.AlternativeName">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.LowerFilter.Resolve(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.NullFilter">
+            <summary>
+            Returns the specified argument if the input is null.
+            </summary>
+        </member>
+        <member name="P:Strinken.NullFilter.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.NullFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.NullFilter.Usage">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.NullFilter.AlternativeName">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.NullFilter.Resolve(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.NullFilter.Validate(System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.RepeatFilter">
+            <summary>
+            Repeats the input as many times as specified.
+            </summary>
+        </member>
+        <member name="P:Strinken.RepeatFilter.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.RepeatFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.RepeatFilter.Usage">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.RepeatFilter.AlternativeName">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.RepeatFilter.Resolve(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.RepeatFilter.Validate(System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.ReplaceFilter">
+            <summary>
+            Takes some couples of arguments, and replace each occurrence of each first argument by the second.
+            </summary>
+        </member>
+        <member name="P:Strinken.ReplaceFilter.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.ReplaceFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.ReplaceFilter.Usage">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.ReplaceFilter.AlternativeName">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.ReplaceFilter.Resolve(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.ReplaceFilter.Validate(System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.UpperFilter">
+            <summary>
+            Transforms the input to uppercase.
+            </summary>
+        </member>
+        <member name="P:Strinken.UpperFilter.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.UpperFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.UpperFilter.AlternativeName">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.UpperFilter.Resolve(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Strinken.BaseFilters">
             <summary>
             Class that handles the base filters and (un)registration of base filters.
             </summary>
         </member>
-        <member name="F:Strinken.Filters.BaseFilters.Lock">
+        <member name="F:Strinken.BaseFilters.Lock">
             <summary>
             Lock object for operations on the filters list.
             </summary>
         </member>
-        <member name="F:Strinken.Filters.BaseFilters.InternalRegisteredFilters">
+        <member name="F:Strinken.BaseFilters.InternalRegisteredFilters">
             <summary>
             The list of registered filters.
             </summary>
         </member>
-        <member name="M:Strinken.Filters.BaseFilters.#cctor">
-            <summary>
-            Initializes static members of the <see cref="T:Strinken.Filters.BaseFilters"/> class.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.BaseFilters.RegisteredFilters">
+        <member name="P:Strinken.BaseFilters.RegisteredFilters">
             <summary>
             Gets base filters shared by all parsers.
             </summary>
         </member>
-        <member name="M:Strinken.Filters.BaseFilters.Register(Strinken.Parser.IFilter)">
+        <member name="M:Strinken.BaseFilters.Register(Strinken.IFilter)">
             <summary>
             Registers a filter that will be used as a base filter for all parser built after.
             </summary>
@@ -592,192 +802,74 @@
             <exception cref="T:System.ArgumentNullException">The filter is null.</exception>
             <exception cref="T:System.ArgumentException">The filter name is invalid or already present.</exception>
         </member>
-        <member name="M:Strinken.Filters.BaseFilters.Unregister(System.String)">
+        <member name="M:Strinken.BaseFilters.Unregister(System.String)">
             <summary>
             Unregisters a filter from the base filters.
             </summary>
             <param name="filterName">The name of the filter to unregister.</param>
         </member>
-        <member name="T:Strinken.Filters.FilterWithoutArguments">
+        <member name="T:Strinken.CompiledString">
+            <summary>
+            A compiled string for fast resolution.
+            </summary>
+        </member>
+        <member name="M:Strinken.CompiledString.#ctor(Strinken.Core.TokenStack)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Strinken.CompiledString"/> class with the specified <see cref="T:Strinken.Core.TokenStack"/>.
+            </summary>
+            <param name="stack">The compiled stack.</param>
+        </member>
+        <member name="P:Strinken.CompiledString.Stack">
+            <summary>
+            The compiled stack.
+            </summary>
+        </member>
+        <member name="T:Strinken.FilterWithoutArguments">
             <summary>
             Base class for all filters that do not have arguments.
             </summary>
         </member>
-        <member name="P:Strinken.Filters.FilterWithoutArguments.Description">
+        <member name="P:Strinken.FilterWithoutArguments.Description">
             <inheritdoc/>
         </member>
-        <member name="P:Strinken.Filters.FilterWithoutArguments.Name">
+        <member name="P:Strinken.FilterWithoutArguments.Name">
             <inheritdoc/>
         </member>
-        <member name="P:Strinken.Filters.FilterWithoutArguments.Usage">
+        <member name="P:Strinken.FilterWithoutArguments.AlternativeName">
             <inheritdoc/>
         </member>
-        <member name="M:Strinken.Filters.FilterWithoutArguments.Resolve(System.String,System.String[])">
+        <member name="P:Strinken.FilterWithoutArguments.Usage">
             <inheritdoc/>
         </member>
-        <member name="M:Strinken.Filters.FilterWithoutArguments.Resolve(System.String)">
+        <member name="M:Strinken.FilterWithoutArguments.Resolve(System.String,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.FilterWithoutArguments.Resolve(System.String)">
             <summary>
             Resolves the filter.
             </summary>
             <param name="value">The value on which the filter is applied.</param>
             <returns>The resulting value.</returns>
         </member>
-        <member name="M:Strinken.Filters.FilterWithoutArguments.Validate(System.String[])">
+        <member name="M:Strinken.FilterWithoutArguments.Validate(System.String[])">
             <inheritdoc/>
         </member>
-        <member name="T:Strinken.Filters.IfEqualFilter">
-            <summary>
-            Does an equality test with the input and the specified value and renders a value depending on the output of the test.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.IfEqualFilter.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.IfEqualFilter.Name">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.IfEqualFilter.Usage">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.IfEqualFilter.Resolve(System.String,System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.IfEqualFilter.Validate(System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="T:Strinken.Filters.LeadingZerosFilter">
-            <summary>
-            Formats the input with leading zeros until reaching the specified length.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.LeadingZerosFilter.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.LeadingZerosFilter.Name">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.LeadingZerosFilter.Usage">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.LeadingZerosFilter.Resolve(System.String,System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.LeadingZerosFilter.Validate(System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="T:Strinken.Filters.LengthFilter">
-            <summary>
-            Transforms the input into its length.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.LengthFilter.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.LengthFilter.Name">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.LengthFilter.Resolve(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="T:Strinken.Filters.LowerFilter">
-            <summary>
-            Transforms the input to lowercase.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.LowerFilter.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.LowerFilter.Name">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.LowerFilter.Resolve(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="T:Strinken.Filters.NullFilter">
-            <summary>
-            Returns the specified argument if the input is null.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.NullFilter.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.NullFilter.Name">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.NullFilter.Usage">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.NullFilter.Resolve(System.String,System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.NullFilter.Validate(System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="T:Strinken.Filters.ReapeatFilter">
-            <summary>
-            Repeats the input as many times as specified.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.ReapeatFilter.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.ReapeatFilter.Name">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.ReapeatFilter.Usage">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.ReapeatFilter.Resolve(System.String,System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.ReapeatFilter.Validate(System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="T:Strinken.Filters.ReplaceFilter">
-            <summary>
-            Takes some couples of arguments, and replace each occurrence of each first argument by the second.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.ReplaceFilter.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.ReplaceFilter.Name">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.ReplaceFilter.Usage">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.ReplaceFilter.Resolve(System.String,System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.ReplaceFilter.Validate(System.String[])">
-            <inheritdoc/>
-        </member>
-        <member name="T:Strinken.Filters.UpperFilter">
-            <summary>
-            Transforms the input to uppercase.
-            </summary>
-        </member>
-        <member name="P:Strinken.Filters.UpperFilter.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.Filters.UpperFilter.Name">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Filters.UpperFilter.Resolve(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="T:Strinken.Parser.IFilter">
+        <member name="T:Strinken.IFilter">
             <summary>
             Interface describing a filter.
             </summary>
         </member>
-        <member name="P:Strinken.Parser.IFilter.Usage">
+        <member name="P:Strinken.IFilter.Usage">
             <summary>
             Gets the usage of the filter.
             </summary>
         </member>
-        <member name="M:Strinken.Parser.IFilter.Resolve(System.String,System.String[])">
+        <member name="P:Strinken.IFilter.AlternativeName">
+            <summary>
+            Gets the alternative name of the filter.
+            </summary>
+        </member>
+        <member name="M:Strinken.IFilter.Resolve(System.String,System.String[])">
             <summary>
             Resolves the filter.
             </summary>
@@ -785,85 +877,85 @@
             <param name="arguments">Arguments passed to the filter.</param>
             <returns>The resulting value.</returns>
         </member>
-        <member name="M:Strinken.Parser.IFilter.Validate(System.String[])">
+        <member name="M:Strinken.IFilter.Validate(System.String[])">
             <summary>
             Validates the arguments that will be passed to the filter.
             </summary>
             <param name="arguments">Arguments passed to the filter.</param>
             <returns>A value indicating whether the arguments are valid.</returns>
         </member>
-        <member name="T:Strinken.Parser.IParameterTag">
+        <member name="T:Strinken.IParameterTag">
             <summary>
             Interface describing a parameter tag.
             </summary>
         </member>
-        <member name="M:Strinken.Parser.IParameterTag.Resolve">
+        <member name="M:Strinken.IParameterTag.Resolve">
             <summary>
             Resolves the parameter tag.
             </summary>
             <returns>The resulting value.</returns>
         </member>
-        <member name="T:Strinken.Parser.ITag`1">
+        <member name="T:Strinken.ITag`1">
             <summary>
             Interface describing a tag.
             </summary>
             <typeparam name="T">The type related to the tag.</typeparam>
         </member>
-        <member name="M:Strinken.Parser.ITag`1.Resolve(`0)">
+        <member name="M:Strinken.ITag`1.Resolve(`0)">
             <summary>
             Resolves the tag.
             </summary>
             <param name="value">The value used by the tag to be resolved.</param>
             <returns>The resulting value.</returns>
         </member>
-        <member name="T:Strinken.Parser.IToken">
+        <member name="T:Strinken.IToken">
             <summary>
             Base interface describing a token.
             </summary>
         </member>
-        <member name="P:Strinken.Parser.IToken.Name">
+        <member name="P:Strinken.IToken.Name">
             <summary>
             Gets the name of the token.
             </summary>
         </member>
-        <member name="P:Strinken.Parser.IToken.Description">
+        <member name="P:Strinken.IToken.Description">
             <summary>
             Gets the description of the token.
             </summary>
         </member>
-        <member name="T:Strinken.Parser.ParserExtensions">
+        <member name="T:Strinken.ParserExtensions">
             <summary>
-            Extensions for the <see cref="T:Strinken.Parser.Parser`1"/> class.
+            Extensions for the <see cref="T:Strinken.Parser`1"/> class.
             </summary>
         </member>
-        <member name="M:Strinken.Parser.ParserExtensions.WithFilter``1(Strinken.Parser.Parser{``0},Strinken.Parser.IFilter)">
+        <member name="M:Strinken.ParserExtensions.WithFilter``1(Strinken.Parser{``0},Strinken.IFilter)">
             <summary>
             Add a filter to the parser.
             </summary>
             <param name="parser">The parser on which the method is called.</param>
             <param name="filter">The filter to add.</param>
-            <returns>A <see cref="T:Strinken.Parser.Parser`1"/> for chaining.</returns>
+            <returns>A <see cref="T:Strinken.Parser`1"/> for chaining.</returns>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="M:Strinken.Parser.ParserExtensions.WithFilters``1(Strinken.Parser.Parser{``0},System.Collections.Generic.IEnumerable{Strinken.Parser.IFilter})">
+        <member name="M:Strinken.ParserExtensions.WithFilters``1(Strinken.Parser{``0},System.Collections.Generic.IEnumerable{Strinken.IFilter})">
             <summary>
             Add filters to the parser.
             </summary>
             <param name="parser">The parser on which the method is called.</param>
             <param name="filters">The filters to add.</param>
-            <returns>A <see cref="T:Strinken.Parser.Parser`1"/> for chaining.</returns>
+            <returns>A <see cref="T:Strinken.Parser`1"/> for chaining.</returns>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="M:Strinken.Parser.ParserExtensions.WithTag``1(Strinken.Parser.Parser{``0},Strinken.Parser.ITag{``0})">
+        <member name="M:Strinken.ParserExtensions.WithTag``1(Strinken.Parser{``0},Strinken.ITag{``0})">
             <summary>
             Add a tag to the parser.
             </summary>
             <param name="parser">The parser on which the method is called.</param>
             <param name="tag">The tag to add.</param>
-            <returns>A <see cref="T:Strinken.Parser.Parser`1"/> for chaining.</returns>
+            <returns>A <see cref="T:Strinken.Parser`1"/> for chaining.</returns>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="M:Strinken.Parser.ParserExtensions.WithTag``1(Strinken.Parser.Parser{``0},System.String,System.String,System.Func{``0,System.String})">
+        <member name="M:Strinken.ParserExtensions.WithTag``1(Strinken.Parser{``0},System.String,System.String,System.Func{``0,System.String})">
             <summary>
             Add a tag to the parser.
             </summary>
@@ -871,89 +963,84 @@
             <param name="tagName">The description of the tag.</param>
             <param name="tagDescription">The name of the tag.</param>
             <param name="resolveAction">The action linked to the tag.</param>
-            <returns>A <see cref="T:Strinken.Parser.Parser`1"/> for chaining.</returns>
+            <returns>A <see cref="T:Strinken.Parser`1"/> for chaining.</returns>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="M:Strinken.Parser.ParserExtensions.WithTags``1(Strinken.Parser.Parser{``0},System.Collections.Generic.IEnumerable{Strinken.Parser.ITag{``0}})">
+        <member name="M:Strinken.ParserExtensions.WithTags``1(Strinken.Parser{``0},System.Collections.Generic.IEnumerable{Strinken.ITag{``0}})">
             <summary>
             Add tags to the parser.
             </summary>
             <param name="parser">The parser on which the method is called.</param>
             <param name="tags">The tags to add.</param>
-            <returns>A <see cref="T:Strinken.Parser.Parser`1"/> for chaining.</returns>
+            <returns>A <see cref="T:Strinken.Parser`1"/> for chaining.</returns>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="M:Strinken.Parser.ParserExtensions.WithParameterTag``1(Strinken.Parser.Parser{``0},Strinken.Parser.IParameterTag)">
+        <member name="M:Strinken.ParserExtensions.WithParameterTag``1(Strinken.Parser{``0},Strinken.IParameterTag)">
             <summary>
             Add a parameter tag to the parser.
             </summary>
             <param name="parser">The parser on which the method is called.</param>
             <param name="parameterTag">The parameter tag to add.</param>
-            <returns>A <see cref="T:Strinken.Parser.Parser`1"/> for chaining.</returns>
+            <returns>A <see cref="T:Strinken.Parser`1"/> for chaining.</returns>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="M:Strinken.Parser.ParserExtensions.WithParameterTags``1(Strinken.Parser.Parser{``0},System.Collections.Generic.IEnumerable{Strinken.Parser.IParameterTag})">
+        <member name="M:Strinken.ParserExtensions.WithParameterTags``1(Strinken.Parser{``0},System.Collections.Generic.IEnumerable{Strinken.IParameterTag})">
             <summary>
             Add parameter tags to the parser.
             </summary>
             <param name="parser">The parser on which the method is called.</param>
             <param name="parameterTags">The parameter tags to add.</param>
-            <returns>A <see cref="T:Strinken.Parser.Parser`1"/> for chaining.</returns>
+            <returns>A <see cref="T:Strinken.Parser`1"/> for chaining.</returns>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="T:Strinken.Parser.Parser`1">
+        <member name="T:Strinken.Parser`1">
             <summary>
             Strinken parser.
             </summary>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="F:Strinken.Parser.Parser`1.filters">
+        <member name="F:Strinken.Parser`1.filters">
             <summary>
             Filters used by the parser.
             </summary>
         </member>
-        <member name="F:Strinken.Parser.Parser`1.tags">
+        <member name="F:Strinken.Parser`1.tags">
             <summary>
             Tags used by the parser.
             </summary>
         </member>
-        <member name="F:Strinken.Parser.Parser`1.parameterTags">
+        <member name="F:Strinken.Parser`1.parameterTags">
             <summary>
             Parameter tags used by the parser.
             </summary>
         </member>
-        <member name="F:Strinken.Parser.Parser`1.compiledStack">
+        <member name="M:Strinken.Parser`1.#ctor">
             <summary>
-            Stack used when a string is compiled.
+            Initializes a new instance of the <see cref="T:Strinken.Parser`1"/> class.
             </summary>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.#ctor">
+        <member name="M:Strinken.Parser`1.#ctor(System.Boolean)">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Parser.Parser`1"/> class.
-            </summary>
-        </member>
-        <member name="M:Strinken.Parser.Parser`1.#ctor(System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Parser.Parser`1"/> class.
+            Initializes a new instance of the <see cref="T:Strinken.Parser`1"/> class.
             </summary>
             <param name="ignoreBaseFilters">A value indicating whether the base filters should be ignored.</param>
         </member>
-        <member name="P:Strinken.Parser.Parser`1.Filters">
+        <member name="P:Strinken.Parser`1.Filters">
             <summary>
             Gets the filters used by the parser.
             </summary>
         </member>
-        <member name="P:Strinken.Parser.Parser`1.Tags">
+        <member name="P:Strinken.Parser`1.Tags">
             <summary>
             Gets the tags used by the parser.
             </summary>
         </member>
-        <member name="P:Strinken.Parser.Parser`1.ParameterTags">
+        <member name="P:Strinken.Parser`1.ParameterTags">
             <summary>
             Gets the tags used by the parser.
             </summary>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.Resolve(System.String,`0)">
+        <member name="M:Strinken.Parser`1.Resolve(System.String,`0)">
             <summary>
             Resolves the input.
             </summary>
@@ -962,68 +1049,107 @@
             <returns>The resolved input.</returns>
             <exception cref="T:System.FormatException">The input has a wrong format.</exception>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.Validate(System.String)">
+        <member name="M:Strinken.Parser`1.Resolve(Strinken.CompiledString,`0)">
             <summary>
-            Validates an input.
+            Resolves the compiled string.
             </summary>
-            <param name="input">The input to validate.</param>
-            <returns>A value indicating whether the input is valid.</returns>
+            <param name="compiledString">The compiled string to resolve.</param>
+            <param name="value">The value to pass to the tags.</param>
+            <returns>The resolved compiled string.</returns>
+            <exception cref="T:System.ArgumentNullException">The compiled string is null.</exception>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.Compile(System.String)">
+        <member name="M:Strinken.Parser`1.Resolve(System.String,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Resolves the input.
+            </summary>
+            <param name="input">The input to resolve.</param>
+            <param name="values">The values to pass to the tags.</param>
+            <returns>The resolved inputs.</returns>
+            <exception cref="T:System.FormatException">The input has a wrong format.</exception>
+            <exception cref="T:System.ArgumentNullException">Values is null.</exception>
+        </member>
+        <member name="M:Strinken.Parser`1.Resolve(Strinken.CompiledString,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Resolves the compiled string.
+            </summary>
+            <param name="compiledString">The compiled string to resolve.</param>
+            <param name="values">The values to pass to the tags.</param>
+            <returns>The resolved compiled strings.</returns>
+            <exception cref="T:System.ArgumentNullException">The compiled string is null.</exception>
+            <exception cref="T:System.ArgumentNullException">Values is null.</exception>
+        </member>
+        <member name="M:Strinken.Parser`1.Compile(System.String)">
             <summary>
             Compiles a string for a faster resolution time but without any modification allowed after.
             </summary>
             <param name="input">The input to compile.</param>
             <exception cref="T:System.FormatException">The input has a wrong format.</exception>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.ResolveCompiledString(`0)">
+        <member name="M:Strinken.Parser`1.Validate(System.String)">
             <summary>
-            Resolves the input.
+            Validates an input.
             </summary>
-            <param name="value">The value to pass to the tags.</param>
-            <returns>The resolved input.</returns>
-            <exception cref="T:System.InvalidOperationException">No string were previously compiled.</exception>
+            <param name="input">The input to validate.</param>
+            <returns>A value indicating whether the input is valid.</returns>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.AddFilter(Strinken.Parser.IFilter)">
+        <member name="M:Strinken.Parser`1.AddFilter(Strinken.IFilter)">
             <summary>
             Add a filter to the list of filter.
             </summary>
             <param name="filter">The filter to add.</param>
             <exception cref="T:System.ArgumentException">The filter name is already present in the filter list.</exception>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.AddTag(Strinken.Parser.ITag{`0})">
+        <member name="M:Strinken.Parser`1.AddTag(Strinken.ITag{`0})">
             <summary>
             Add a tag to the list of tags.
             </summary>
             <param name="tag">The tag to add.</param>
             <exception cref="T:System.ArgumentException">The tag name is already present in the tag list.</exception>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.AddParameterTag(Strinken.Parser.IParameterTag)">
+        <member name="M:Strinken.Parser`1.AddParameterTag(Strinken.IParameterTag)">
             <summary>
             Add a parameter tag to the list of parameter tags.
             </summary>
             <param name="parameterTag">The parameter tag to add.</param>
             <exception cref="T:System.ArgumentException">The parameter tag name is already present in the parameter tag list.</exception>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.DeepCopy">
+        <member name="M:Strinken.Parser`1.DeepCopy">
             <summary>
             Creates a deep copy of the current parser.
             </summary>
             <returns>A deep copy of the parser.</returns>
         </member>
-        <member name="M:Strinken.Parser.Parser`1.GenerateActionDictionaryForResolution(`0)">
+        <member name="M:Strinken.Parser`1.GenerateActionDictionaryForValidation(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Tuple{System.String,System.String[]}})">
             <summary>
-            Generates the <see cref="T:Strinken.Engine.ActionDictionary"/> used for string resolution.
+            Generates the <see cref="T:Strinken.Core.ActionDictionary"/> used for string validation.
+            </summary>
+            <param name="tagList">The tags to validate.</param>
+            <param name="parameterTagList">The parameter tags to validate.</param>
+            <param name="filterList">The filters to validate.</param>
+            <returns>An <see cref="T:Strinken.Core.ActionDictionary"/>.</returns>
+        </member>
+        <member name="M:Strinken.Parser`1.ValidateLists(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Tuple{System.String,System.String[]}})">
+            <summary>
+            Validates lists of tags, parameter tags and filters.
+            </summary>
+            <param name="tagList">The tags to validate.</param>
+            <param name="parameterTagList">The parameter tags to validate.</param>
+            <param name="filterList">The filters to validate.</param>
+            <returns>A value indicating whether the input is valid.</returns>
+        </member>
+        <member name="M:Strinken.Parser`1.GenerateActionDictionaryForResolution(`0)">
+            <summary>
+            Generates the <see cref="T:Strinken.Core.ActionDictionary"/> used for string resolution.
             </summary>
             <param name="value">The value passed for resolution.</param>
-            <returns>An <see cref="T:Strinken.Engine.ActionDictionary"/>.</returns>
+            <returns>An <see cref="T:Strinken.Core.ActionDictionary"/>.</returns>
         </member>
-        <member name="T:Strinken.Parser.TagFactory">
+        <member name="T:Strinken.TagFactory">
             <summary>
             Factory that creates tags.
             </summary>
         </member>
-        <member name="M:Strinken.Parser.TagFactory.Create``1(System.String,System.String,System.Func{``0,System.String})">
+        <member name="M:Strinken.TagFactory.Create``1(System.String,System.String,System.Func{``0,System.String})">
             <summary>
             Create a new tag.
             </summary>
@@ -1033,45 +1159,45 @@
             <param name="resolveAction">The action linked to the tag.</param>
             <returns>The tag.</returns>
         </member>
-        <member name="T:Strinken.Parser.TagFactory.BaseTag`1">
+        <member name="T:Strinken.TagFactory.BaseTag`1">
             <summary>
             Private class used to create tags.
             </summary>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="F:Strinken.Parser.TagFactory.BaseTag`1.resolve">
+        <member name="F:Strinken.TagFactory.BaseTag`1.resolve">
             <summary>
             Action linked to the tag.
             </summary>
         </member>
-        <member name="M:Strinken.Parser.TagFactory.BaseTag`1.#ctor(System.String,System.String,System.Func{`0,System.String})">
+        <member name="M:Strinken.TagFactory.BaseTag`1.#ctor(System.String,System.String,System.Func{`0,System.String})">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Parser.TagFactory.BaseTag`1"/> class.
+            Initializes a new instance of the <see cref="T:Strinken.TagFactory.BaseTag`1"/> class.
             </summary>
             <param name="name">The description of the tag.</param>
             <param name="description">The name of the tag.</param>
             <param name="resolveAction">The action linked to the tag.</param>
         </member>
-        <member name="P:Strinken.Parser.TagFactory.BaseTag`1.Description">
+        <member name="P:Strinken.TagFactory.BaseTag`1.Description">
             <inheritdoc/>
         </member>
-        <member name="P:Strinken.Parser.TagFactory.BaseTag`1.Name">
+        <member name="P:Strinken.TagFactory.BaseTag`1.Name">
             <inheritdoc/>
         </member>
-        <member name="M:Strinken.Parser.TagFactory.BaseTag`1.Resolve(`0)">
+        <member name="M:Strinken.TagFactory.BaseTag`1.Resolve(`0)">
             <inheritdoc/>
         </member>
-        <member name="T:Strinken.Parser.ValidationResult">
+        <member name="T:Strinken.ValidationResult">
             <summary>
             Class representing the result of the validation process.
             </summary>
         </member>
-        <member name="P:Strinken.Parser.ValidationResult.Message">
+        <member name="P:Strinken.ValidationResult.Message">
             <summary>
             Gets or sets a message describing why the input is not valid.
             </summary>
         </member>
-        <member name="P:Strinken.Parser.ValidationResult.IsValid">
+        <member name="P:Strinken.ValidationResult.IsValid">
             <summary>
             Gets or sets a value indicating whether the input was valid.
             </summary>
