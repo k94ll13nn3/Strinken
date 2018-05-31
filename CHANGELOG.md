@@ -3,7 +3,29 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to[Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [4.0.0] - 2018-05-31
+
+### Changed
+
+- [**Breaking**] Change assembly versionning to be `Major.Minor` (instead of `Major.Minor.Patch`)
+- [**Breaking**] Add a new property to `IFilter`: `AlternativeName`. This property can be used to set an alternative name composed of the following characters for the filter: `!`, `%`, `&`, `*`, `.`, `/`, `<`, `=`, `>`, `@`, `^`, `|`, `~`, `?`, `$` or `#`.
+- [**Breaking**] All classes are now under the `Strinken` namespace only
+- [**Breaking**] Reworked the resolution and compilation of a string. The compilation of a string now returns a `CompiledString` and is no longer stored in the parser. This `CompiledString` can be passed to an overload of `Resolve` for the resolution. Bulk resolution of values is now also possible.
+
+### Fixed
+
+- Fix a potential `NullReferenceException` in some base filters
+
+### Issues
+
+- [#54](https://github.com/k94ll13nn3/Strinken/issues/54): AssemblyVersion should be Major.Minor
+- [#51](https://github.com/k94ll13nn3/Strinken/issues/51): Add possibility to register a filter under a new name
+- [#49](https://github.com/k94ll13nn3/Strinken/issues/49): Consider bringing everything under the same namespace
+- [#46](https://github.com/k94ll13nn3/Strinken/issues/46): Possible null reference exception in base tests
+- [#45](https://github.com/k94ll13nn3/Strinken/issues/45): Add bulk resolution
+- [#44](https://github.com/k94ll13nn3/Strinken/issues/44): Add possibility to compile more than one string
 
 ## [3.3.0] - 2017-09-14
 
@@ -58,22 +80,14 @@ and this project adheres to[Semantic Versioning](http://semver.org/spec/v2.0.0.h
 ### Issues
 
 - [#38](https://github.com/k94ll13nn3/Strinken/issues/38): Repeat filter
-- [#37](https://github.com/k94ll13nn3/Strinken/issues/37): Check filter type when unregistering it in the base filters list
 - [#35](https://github.com/k94ll13nn3/Strinken/issues/35): Remove the state machine
 - [#31](https://github.com/k94ll13nn3/Strinken/issues/31): Add a Parser contructor that allows the creation of a parser without base filters
-- [#29](https://github.com/k94ll13nn3/Strinken/issues/29): Move to FluentAssertions for the tests
-- [#28](https://github.com/k94ll13nn3/Strinken/issues/28): Move Strinken to the csproj format (when RTM)
 - [#27](https://github.com/k94ll13nn3/Strinken/issues/27): Move to Wyam for the docs
 - [#26](https://github.com/k94ll13nn3/Strinken/issues/26): Global filters registration
-- [#14](https://github.com/k94ll13nn3/Strinken/issues/14): Update Cake to 0.16 and use .NET Core
 
 ### Pull Requests
 
 - [#36](https://github.com/k94ll13nn3/Strinken/pull/36): Remove the state machine (by [k94ll13nn3](https://github.com/k94ll13nn3))
-- [#34](https://github.com/k94ll13nn3/Strinken/pull/34): Move Strinken to the csproj format (by [k94ll13nn3](https://github.com/k94ll13nn3))
-- [#33](https://github.com/k94ll13nn3/Strinken/pull/33): Simplify Travis build (by [k94ll13nn3](https://github.com/k94ll13nn3))
-- [#32](https://github.com/k94ll13nn3/Strinken/pull/32): Add code coverage to build (by [k94ll13nn3](https://github.com/k94ll13nn3))
-- [#30](https://github.com/k94ll13nn3/Strinken/pull/30): Move to FluentAssertions and xUnit for the tests (by [k94ll13nn3](https://github.com/k94ll13nn3))
 
 ## [3.0.0] - 2016-12-03
 
@@ -95,9 +109,7 @@ and this project adheres to[Semantic Versioning](http://semver.org/spec/v2.0.0.h
 
 ### Issues
 
-- [#25](https://github.com/k94ll13nn3/Strinken/issues/25): Release version 3.0.0
 - [#23](https://github.com/k94ll13nn3/Strinken/issues/23): Add possibility to compile a string
-- [#17](https://github.com/k94ll13nn3/Strinken/issues/17): Update tests name
 - [#16](https://github.com/k94ll13nn3/Strinken/issues/16): Replace filter
 - [#12](https://github.com/k94ll13nn3/Strinken/issues/12): Update documentation for 3.0.0
 - [#11](https://github.com/k94ll13nn3/Strinken/issues/11): Exclude comma from possible argument character
@@ -108,7 +120,6 @@ and this project adheres to[Semantic Versioning](http://semver.org/spec/v2.0.0.h
 ### Pull Requests
 
 - [#24](https://github.com/k94ll13nn3/Strinken/pull/24): Add possibility to compile a string (by [k94ll13nn3](https://github.com/k94ll13nn3))
-- [#22](https://github.com/k94ll13nn3/Strinken/pull/22): Add separate test project for public API (by [k94ll13nn3](https://github.com/k94ll13nn3))
 - [#20](https://github.com/k94ll13nn3/Strinken/pull/20): Add replace filter (by [k94ll13nn3](https://github.com/k94ll13nn3))
 - [#18](https://github.com/k94ll13nn3/Strinken/pull/18): Implementation of parameter tags (by [k94ll13nn3](https://github.com/k94ll13nn3))
 - [#15](https://github.com/k94ll13nn3/Strinken/pull/15): Parser rewrite (by [k94ll13nn3](https://github.com/k94ll13nn3))
@@ -127,12 +138,7 @@ and this project adheres to[Semantic Versioning](http://semver.org/spec/v2.0.0.h
 ### Issues
 
 - [#6](https://github.com/k94ll13nn3/Strinken/issues/6): Handle empty tag/filter name as invalid
-- [#4](https://github.com/k94ll13nn3/Strinken/issues/4): Add Travis build
 - [#3](https://github.com/k94ll13nn3/Strinken/issues/3): Add documentation for ParserBuilder
-
-### Pull Requests
-
-- [#5](https://github.com/k94ll13nn3/Strinken/pull/5): Travis build (by [k94ll13nn3](https://github.com/k94ll13nn3))
 
 ## [1.0.1] - 2016-07-19
 
@@ -140,15 +146,11 @@ and this project adheres to[Semantic Versioning](http://semver.org/spec/v2.0.0.h
 
 - Fix versioning
 
-### Pull Requests
-
-- [#2](https://github.com/k94ll13nn3/Strinken/pull/2): Fix semicolon (by [k94ll13nn3](https://github.com/k94ll13nn3))
-- [#1](https://github.com/k94ll13nn3/Strinken/pull/1): Update ci (by [k94ll13nn3](https://github.com/k94ll13nn3))
-
 ## 1.0.0 - 2016-07-18
 
 Initial release.
 
+[4.0.0]: https://github.com/k94ll13nn3/Strinken/compare/v3.3.0...v4.0.0
 [3.3.0]: https://github.com/k94ll13nn3/Strinken/compare/v3.2.1...v3.3.0
 [3.2.1]: https://github.com/k94ll13nn3/Strinken/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/k94ll13nn3/Strinken/compare/v3.1.0...v3.2.0
