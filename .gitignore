@@ -260,3 +260,5 @@ TestResult.first.xml
 docs/output/
 output
 packages.xml
+config.wyam.packages.xml
+config.wyam.hash
