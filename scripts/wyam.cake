@@ -9,7 +9,7 @@
 
 #addin Cake.Wyam&version=1.4.1
 #addin Cake.Git&version=0.17.0
-#addin Cake.Kudu&version=0.7.0
+#addin Cake.Kudu&version=0.8.0
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION

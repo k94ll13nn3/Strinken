@@ -6,8 +6,8 @@
 #tool OpenCover&version=4.6.519
 #tool coveralls.io&version=1.4.2
 
-#addin Cake.Coveralls&version=0.8.0
-#addin Octokit&version=0.29.0
+#addin Cake.Coveralls&version=0.9.0
+#addin Octokit&version=0.30.0
 #addin Cake.FileHelpers&version=3.0.0
 
 //////////////////////////////////////////////////////////////////////
@@ -33,9 +33,8 @@ var publishDir = Directory("./artifacts");
 var coverageDir = Directory("./coverage");
 
 // Define script variables
-var releaseNotesPath = new FilePath("releaseNotes.md");
-var coverageResultPath = new FilePath("./coverage.xml");
-var framework = "netstandard1.0";
+var releaseNotesPath = new FilePath("CHANGELOG.md");
+var coverageResultPath = new FilePath("coverage.xml");
 var versionSuffix = "";
 var nugetVersion = "";
 var currentBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
@@ -55,12 +54,8 @@ Task("Clean")
 	CleanDirectory(coverageDir);
 });
 
-Task("Restore")
-    .IsDependentOn("Clean")
-    .Does(() => DotNetCoreRestore());
-
 Task("Set-Environment")
-    .IsDependentOn("Restore")
+    .IsDependentOn("Clean")
     .Does(() =>
 {
     Information("Current branch:      " + currentBranch);
@@ -73,6 +68,7 @@ Task("Set-Environment")
         UpdateAssemblyInfo = true, 
         WorkingDirectory = solutionDir 
     });
+    
     nugetVersion = version.NuGetVersion;
     if(version.CommitsSinceVersionSource.HasValue && version.CommitsSinceVersionSource.Value != 0)
     {
@@ -93,13 +89,11 @@ Task("Build")
     .IsDependentOn("Set-Environment")
     .Does(() =>
 {
-    var settings = new DotNetCoreBuildSettings
+    DotNetCoreBuild(solutionDir, new DotNetCoreBuildSettings
     {
         Configuration = configuration,
         VersionSuffix = versionSuffix
-    };
-
-    DotNetCoreBuild(solutionDir, settings);
+    });
 });
 
 Task("Run-Unit-Tests")
