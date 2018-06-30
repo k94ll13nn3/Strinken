@@ -2,25 +2,19 @@
 
   <PropertyGroup>
     <Description>A parametrized string library !</Description>
-    <AssemblyTitle>Strinken</AssemblyTitle>
     <NeutralLanguage>en-US</NeutralLanguage>
     <VersionPrefix>4.0.1</VersionPrefix>
     <Authors>k94ll13nn3</Authors>
-    <TargetFrameworks>netstandard1.0</TargetFrameworks>
+    <Copyright>Copyright © k94ll13nn3</Copyright>
+    <TargetFramework>netstandard1.0</TargetFramework>
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Strinken</AssemblyName>
-    <PackageId>Strinken</PackageId>
     <PackageTags>parametrized;string;parser;strinken</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/docs/input/assets/img/logo_64x64.png</PackageIconUrl>
-    <PackageProjectUrl>https://k94ll13nn3.github.io/Strinken/</PackageProjectUrl>
+    <PackageProjectUrl>https://k94ll13nn3.github.io/Strinken</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/k94ll13nn3/Strinken</RepositoryUrl>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
