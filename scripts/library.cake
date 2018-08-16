@@ -7,7 +7,7 @@
 #tool coveralls.io&version=1.4.2
 
 #addin Cake.Coveralls&version=0.9.0
-#addin Octokit&version=0.30.0
+#addin Octokit&version=0.31.0
 #addin Cake.FileHelpers&version=3.0.0
 
 //////////////////////////////////////////////////////////////////////
