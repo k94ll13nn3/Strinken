@@ -123,7 +123,7 @@
 	</section>
 	<section class="content">
 		<p>Almost each token in Strinken has its own API, except the simple arguments, as they are just plain string.
-Each token class shares a common interface : <a href="/Strinken/api/Strinken/IToken/">IToken</a>. This interface is composed of two members:</p>
+Each token class shares a common interface : <code><a href="/Strinken/api/Strinken/IToken">IToken</a></code>. This interface is composed of two members:</p>
 <ul>
 <li><code>Name</code>: represents the name of the token, as it should appear in the string to process.</li>
 <li><code>Description</code>: a string describing the token. It has no use inside Strinken, but can be used for documentation or displayed in an gui listing tokens.</li>
@@ -132,13 +132,13 @@ Each token class shares a common interface : <a href="/Strinken/api/Strinken/ITo
 <p>There are two tags token: a simple tag and a parameter tag. The difference between the two is that the simple tag depend on a additional value that
 is pass at the resolution time, where the parameter tag has a fixed value.</p>
 <h2 id="simple-tag">Simple tag</h2>
-<p>The single tag interface is <a href="/Strinken/api/Strinken/ITag_1/">ITag<t></t></a>. In addition to the <strong>IToken</strong> members, it has a <code>Resolve</code> method that takes
+<p>The single tag interface is <code><a href="/Strinken/api/Strinken/ITag_1">ITag&lt;T&gt;</a></code>. In addition to the <strong>IToken</strong> members, it has a <code>Resolve</code> method that takes
 a instance of <em>T</em> and returns the string to be rendered.</p>
 <h2 id="parameter-tag">Parameter tag</h2>
-<p>The single tag interface is <a href="/Strinken/api/Strinken/IParameterTag/">IParameterTag</a>. Like the simple tag; it has a <code>Resolve</code> method that
+<p>The single tag interface is <code><a href="/Strinken/api/Strinken/IParameterTag">IParameterTag</a></code>. Like the simple tag; it has a <code>Resolve</code> method that
 returns the string to be rendered but it has no parameter.</p>
 <h1 id="filter-tokens">Filter tokens</h1>
-<p>For now, there is only one filter token. The filter interface is <a href="/Strinken/api/Strinken/IFilter/">IFilter</a>. In addition to the <strong>IToken</strong> members, it has:</p>
+<p>For now, there is only one filter token. The filter interface is <code><a href="/Strinken/api/Strinken/IFilter">IFilter</a></code>. In addition to the <strong>IToken</strong> members, it has:</p>
 <ul>
 <li><code>Usage</code>: like the description, it has no use inside Strinken but can be used for documentation or displayed in an gui listing tokens.</li>
 <li><code>AlternativeName</code>: an alternative name for the filter.</li>
@@ -152,7 +152,7 @@ returns the string to be rendered but it has no parameter.</p>
 </ul>
 <h2 id="filter-without-arguments">Filter without arguments</h2>
 <p>It is possible to easily create filter that takes no arguments by inheriting the
-<a href="/Strinken/api/Strinken/FilterWithoutArguments/">FilterWithoutArguments</a> abstract class. This class has the following abstract members:</p>
+<code><a href="/Strinken/api/Strinken/FilterWithoutArguments">FilterWithoutArguments</a></code> abstract class. This class has the following abstract members:</p>
 <ul>
 <li><code>Name</code></li>
 <li><code>Description</code></li>
