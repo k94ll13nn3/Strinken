@@ -177,19 +177,24 @@ Task("Generate-Release-Notes")
         .ToList();
     for (int i = 0; i < releases.Count - 1; i++)
     {
-        builder.AppendLine(FormatRelease(releases[i])).AppendLine();
+        var issuesForRelease = issues.Where(x => x.ClosedAt <= releases[i].PublishedAt && x.ClosedAt > releases[i + 1].PublishedAt).Select(FormatIssue);
+        var pullRequestsForRelease = pullRequests.Where(x => x.ClosedAt <= releases[i].PublishedAt && x.ClosedAt > releases[i + 1].PublishedAt).Select(FormatPullRequest);
+
+        if (!string.IsNullOrWhiteSpace(releases[i].Body) || issuesForRelease.Any() || pullRequestsForRelease.Any())
+        {
+            builder.AppendLine(FormatRelease(releases[i])).AppendLine();
+        }
+
         if (!string.IsNullOrWhiteSpace(releases[i].Body))
         {
             builder.AppendLine(releases[i].Body).AppendLine();
         }
 
-        var issuesForRelease = issues.Where(x => x.ClosedAt <= releases[i].PublishedAt && x.ClosedAt > releases[i + 1].PublishedAt).Select(FormatIssue);
         if (issuesForRelease.Any())
         {
             builder.AppendLine("### Issues").AppendLine();
             builder.Append(string.Join($"{Environment.NewLine}", issuesForRelease)).AppendLine().AppendLine();
         }
-        var pullRequestsForRelease = pullRequests.Where(x => x.ClosedAt <= releases[i].PublishedAt && x.ClosedAt > releases[i + 1].PublishedAt).Select(FormatPullRequest);
         if (pullRequestsForRelease.Any())
         {
             builder.AppendLine("### Pull Requests").AppendLine();
