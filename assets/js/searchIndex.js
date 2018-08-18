@@ -1,175 +1,192 @@
 
-var camelCaseTokenizer = function (obj) {
+var camelCaseTokenizer = function (builder) {
+
+  var pipelineFunction = function (token) {
     var previous = '';
-    return obj.toString().trim().split(/[\s\-]+|(?=[A-Z])/).reduce(function(acc, cur) {
-        var current = cur.toLowerCase();
-        if(acc.length === 0) {
-            previous = current;
-            return acc.concat(current);
-        }
-        previous = previous.concat(current);
-        return acc.concat([current, previous]);
+    // split camelCaseString to on each word and combined words
+    // e.g. camelCaseTokenizer -> ['camel', 'case', 'camelcase', 'tokenizer', 'camelcasetokenizer']
+    var tokenStrings = token.toString().trim().split(/[\s\-]+|(?=[A-Z])/).reduce(function(acc, cur) {
+      var current = cur.toLowerCase();
+      if (acc.length === 0) {
+        previous = current;
+        return acc.concat(current);
+      }
+      previous = previous.concat(current);
+      return acc.concat([current, previous]);
     }, []);
+
+    // return token for each string
+    // will copy any metadata on input token
+    return tokenStrings.map(function(tokenString) {
+      return token.clone(function(str) {
+        return tokenString;
+      })
+    });
+  }
+
+  lunr.Pipeline.registerFunction(pipelineFunction, 'camelCaseTokenizer')
+
+  builder.pipeline.before(lunr.stemmer, pipelineFunction)
 }
-lunr.tokenizer.registerFunction(camelCaseTokenizer, 'camelCaseTokenizer')
 var searchModule = function() {
+    var documents = [];
     var idMap = [];
-    function y(e) { 
-        idMap.push(e); 
+    function a(a,b) { 
+        documents.push(a);
+        idMap.push(b); 
     }
+
+    a(
+        {
+            id:0,
+            title:"IParameterTag",
+            content:"IParameterTag",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/IParameterTag',
+            title:"IParameterTag",
+            description:""
+        }
+    );
+    a(
+        {
+            id:1,
+            title:"IFilter",
+            content:"IFilter",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/IFilter',
+            title:"IFilter",
+            description:""
+        }
+    );
+    a(
+        {
+            id:2,
+            title:"IToken",
+            content:"IToken",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/IToken',
+            title:"IToken",
+            description:""
+        }
+    );
+    a(
+        {
+            id:3,
+            title:"ParserExtensions",
+            content:"ParserExtensions",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ParserExtensions',
+            title:"ParserExtensions",
+            description:""
+        }
+    );
+    a(
+        {
+            id:4,
+            title:"BaseFilters",
+            content:"BaseFilters",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/BaseFilters',
+            title:"BaseFilters",
+            description:""
+        }
+    );
+    a(
+        {
+            id:5,
+            title:"FilterWithoutArguments",
+            content:"FilterWithoutArguments",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/FilterWithoutArguments',
+            title:"FilterWithoutArguments",
+            description:""
+        }
+    );
+    a(
+        {
+            id:6,
+            title:"ValidationResult",
+            content:"ValidationResult",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ValidationResult',
+            title:"ValidationResult",
+            description:""
+        }
+    );
+    a(
+        {
+            id:7,
+            title:"CompiledString",
+            content:"CompiledString",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/CompiledString',
+            title:"CompiledString",
+            description:""
+        }
+    );
+    a(
+        {
+            id:8,
+            title:"ITag",
+            content:"ITag",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ITag_1',
+            title:"ITag<T>",
+            description:""
+        }
+    );
+    a(
+        {
+            id:9,
+            title:"Parser",
+            content:"Parser",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/Parser_1',
+            title:"Parser<T>",
+            description:""
+        }
+    );
     var idx = lunr(function() {
-        this.field('title', { boost: 10 });
+        this.field('title');
         this.field('content');
-        this.field('description', { boost: 5 });
-        this.field('tags', { boost: 50 });
+        this.field('description');
+        this.field('tags');
         this.ref('id');
-        this.tokenizer(camelCaseTokenizer);
+        this.use(camelCaseTokenizer);
 
         this.pipeline.remove(lunr.stopWordFilter);
         this.pipeline.remove(lunr.stemmer);
-    });
-    function a(e) { 
-        idx.add(e); 
-    }
-
-    a({
-        id:0,
-        title:"IParameterTag",
-        content:"IParameterTag",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:1,
-        title:"BaseFilters",
-        content:"BaseFilters",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:2,
-        title:"Parser",
-        content:"Parser",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:3,
-        title:"ITag",
-        content:"ITag",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:4,
-        title:"IFilter",
-        content:"IFilter",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:5,
-        title:"ValidationResult",
-        content:"ValidationResult",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:6,
-        title:"FilterWithoutArguments",
-        content:"FilterWithoutArguments",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:7,
-        title:"CompiledString",
-        content:"CompiledString",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:8,
-        title:"IToken",
-        content:"IToken",
-        description:'',
-        tags:''
-    });
-
-    a({
-        id:9,
-        title:"ParserExtensions",
-        content:"ParserExtensions",
-        description:'',
-        tags:''
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/IParameterTag',
-        title:"IParameterTag",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/BaseFilters',
-        title:"BaseFilters",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/Parser_1',
-        title:"Parser<T>",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/ITag_1',
-        title:"ITag<T>",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/IFilter',
-        title:"IFilter",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/ValidationResult',
-        title:"ValidationResult",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/FilterWithoutArguments',
-        title:"FilterWithoutArguments",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/CompiledString',
-        title:"CompiledString",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/IToken',
-        title:"IToken",
-        description:""
-    });
-
-    y({
-        url:'/Strinken/api/Strinken/ParserExtensions',
-        title:"ParserExtensions",
-        description:""
+        documents.forEach(function (doc) { this.add(doc) }, this)
     });
 
     return {
