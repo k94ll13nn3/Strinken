@@ -276,7 +276,8 @@ Task("Upload-Artifact")
 });
 
 Task("Build-Documentation")
-    .WithCriteria(() => generateDocumentation && !string.IsNullOrWhiteSpace(EnvironmentVariable("GITHUB_TOKEN")), "Environment variable \"GITHUB_TOKEN\" not set.")
+    .WithCriteria(generateDocumentation), "[build-doc] not found in commit message.")
+    .WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("GITHUB_TOKEN")), "Environment variable \"GITHUB_TOKEN\" not set.")
     .WithCriteria(isOnWindows, "Not running on Windows.")
     .Does(() =>
 {
