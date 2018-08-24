@@ -6,11 +6,10 @@ environment:
     secure: tohnGHbkou++U/1IejloBChnM+z8eK+cPOBbdgutCzD9QYWjnfhDTnO04+Xgk21Y
 
 install:
-- sh: chmod +x build.sh
+- dotnet tool install -g Cake.Tool --version 0.30.0
 
 build_script:
-- ps: .\build.ps1
-- sh: ./build.sh
+- dotnet cake build.cake --verbosity=Verbose
 
 test: off
 skip_tags: true
