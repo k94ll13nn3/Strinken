@@ -2,7 +2,7 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool GitVersion.CommandLine&version=4.0.0-beta0012
+#tool GitVersion.CommandLine&version=4.0.0-beta0014
 #tool OpenCover&version=4.6.519
 #tool coveralls.io&version=1.4.2
 #tool Wyam&version=1.5.0
@@ -87,10 +87,8 @@ Task("Set-Environment")
     });
     
     nugetVersion = version.NuGetVersion;
-    if(version.CommitsSinceVersionSource.HasValue && version.CommitsSinceVersionSource.Value != 0)
-    {
-        versionSuffix = "ci" + version.CommitsSinceVersionSource?.ToString()?.PadLeft(4, '0');
-    }    
+    versionSuffix = version.NuGetVersion.Split("-").Skip(1).FirstOrDefault() ?? "";
+    Information("VersionSuffix        " + versionSuffix);
 
     Information("AssembyVersion       " + version.AssemblySemVer);
     Information("FileVersion          " + version.AssemblySemFileVer);
