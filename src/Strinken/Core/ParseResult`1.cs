@@ -46,7 +46,7 @@
         /// </summary>
         /// <param name="message">The message associated to the parsing.</param>
         /// <returns>The result.</returns>
-        public static ParseResult<T> FailureWithMessage(string message) => new ParseResult<T>(false, default(T), message);
+        public static ParseResult<T> FailureWithMessage(string message) => new ParseResult<T>(false, default, message);
 
         /// <summary>
         /// Defines an implicit conversion of a <see cref="ParseResult{T}"/> to a <see cref="bool"/>.
