@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>A parametrized string library !</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <VersionPrefix>4.1.0</VersionPrefix>
+    <VersionPrefix>4.1.1</VersionPrefix>
     <Authors>k94ll13nn3</Authors>
     <Copyright>Copyright © k94ll13nn3</Copyright>
     <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>
@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://k94ll13nn3.github.io/Strinken</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>git://github.com/k94ll13nn3/Strinken</RepositoryUrl>
+    <RepositoryUrl>https://github.com/k94ll13nn3/Strinken</RepositoryUrl>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
