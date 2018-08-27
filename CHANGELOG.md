@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.1] - 2018-08-27
+
+### Fixed
+
+- Fix repository url for `NuGet`
+
+## [4.1.0] - 2018-08-27
+
+### Added
+
+- Add [SourceLink](https://github.com/dotnet/sourcelink)
+- Add `netstandard2.0` target framework
+
+### Issues
+
+- [#60](https://github.com/k94ll13nn3/Strinken/issues/60): Add SourceLink
+
 ## [4.0.0] - 2018-05-31
 
 ### Changed
@@ -150,6 +167,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Initial release.
 
+[4.1.1]: https://github.com/k94ll13nn3/Strinken/compare/v4.1.0...v4.1.1
+[4.1.0]: https://github.com/k94ll13nn3/Strinken/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/k94ll13nn3/Strinken/compare/v3.3.0...v4.0.0
 [3.3.0]: https://github.com/k94ll13nn3/Strinken/compare/v3.2.1...v3.3.0
 [3.2.1]: https://github.com/k94ll13nn3/Strinken/compare/v3.2.0...v3.2.1
