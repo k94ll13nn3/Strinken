@@ -39,62 +39,48 @@ var searchModule = function() {
     a(
         {
             id:0,
-            title:"FilterWithoutArguments",
-            content:"FilterWithoutArguments",
+            title:"CompiledString",
+            content:"CompiledString",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/FilterWithoutArguments',
-            title:"FilterWithoutArguments",
+            url:'/Strinken/api/Strinken/CompiledString',
+            title:"CompiledString",
             description:""
         }
     );
     a(
         {
             id:1,
-            title:"IToken",
-            content:"IToken",
+            title:"IFilter",
+            content:"IFilter",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/IToken',
-            title:"IToken",
+            url:'/Strinken/api/Strinken/IFilter',
+            title:"IFilter",
             description:""
         }
     );
     a(
         {
             id:2,
-            title:"BaseFilters",
-            content:"BaseFilters",
+            title:"Parser",
+            content:"Parser",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/BaseFilters',
-            title:"BaseFilters",
+            url:'/Strinken/api/Strinken/Parser_1',
+            title:"Parser<T>",
             description:""
         }
     );
     a(
         {
             id:3,
-            title:"ParserExtensions",
-            content:"ParserExtensions",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/ParserExtensions',
-            title:"ParserExtensions",
-            description:""
-        }
-    );
-    a(
-        {
-            id:4,
             title:"IParameterTag",
             content:"IParameterTag",
             description:'',
@@ -108,15 +94,29 @@ var searchModule = function() {
     );
     a(
         {
-            id:5,
-            title:"Parser",
-            content:"Parser",
+            id:4,
+            title:"IToken",
+            content:"IToken",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/Parser_1',
-            title:"Parser<T>",
+            url:'/Strinken/api/Strinken/IToken',
+            title:"IToken",
+            description:""
+        }
+    );
+    a(
+        {
+            id:5,
+            title:"FilterWithoutArguments",
+            content:"FilterWithoutArguments",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/FilterWithoutArguments',
+            title:"FilterWithoutArguments",
             description:""
         }
     );
@@ -137,6 +137,20 @@ var searchModule = function() {
     a(
         {
             id:7,
+            title:"BaseFilters",
+            content:"BaseFilters",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/BaseFilters',
+            title:"BaseFilters",
+            description:""
+        }
+    );
+    a(
+        {
+            id:8,
             title:"ITag",
             content:"ITag",
             description:'',
@@ -150,29 +164,15 @@ var searchModule = function() {
     );
     a(
         {
-            id:8,
-            title:"IFilter",
-            content:"IFilter",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IFilter',
-            title:"IFilter",
-            description:""
-        }
-    );
-    a(
-        {
             id:9,
-            title:"CompiledString",
-            content:"CompiledString",
+            title:"ParserExtensions",
+            content:"ParserExtensions",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/CompiledString',
-            title:"CompiledString",
+            url:'/Strinken/api/Strinken/ParserExtensions',
+            title:"ParserExtensions",
             description:""
         }
     );
