@@ -66,7 +66,7 @@ namespace Strinken
         public IReadOnlyCollection<ITag<T>> Tags => new ReadOnlyCollection<ITag<T>>(tags.Values.ToList());
 
         /// <summary>
-        /// Gets the tags used by the parser.
+        /// Gets the parameters tags used by the parser.
         /// </summary>
         public IReadOnlyCollection<IParameterTag> ParameterTags => new ReadOnlyCollection<IParameterTag>(parameterTags.Values.ToList());
 
