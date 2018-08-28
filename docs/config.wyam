@@ -15,7 +15,7 @@ Settings[DocsKeys.SearchIndex] = true;
 Settings[DocsKeys.ValidateRelativeLinks] = true;
 Settings[DocsKeys.ValidateAbsoluteLinks] = true;
 Settings[Keys.LinksUseHttps] = true;
-Settings["Version"] = $"v{System.Reflection.Assembly.GetAssembly(typeof(Strinken.IFilter)).GetName().Version}";
+Settings["Version"] = $"v{System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetAssembly(typeof(Strinken.IFilter)).Location).ProductVersion}";
 
 Pipelines["Resources"].Clear();
 Pipelines["Resources"].Add(
