@@ -5,13 +5,13 @@
 #tool GitVersion.CommandLine&version=4.0.0-beta0014
 #tool OpenCover&version=4.6.519
 #tool coveralls.io&version=1.4.2
-#tool Wyam&version=1.5.0
+#tool Wyam&version=1.5.1
 #tool KuduSync.NET&version=1.4.0
 
 #addin Cake.Coveralls&version=0.9.0
 #addin Octokit&version=0.31.0
 #addin Cake.FileHelpers&version=3.1.0
-#addin Cake.Wyam&version=1.5.0
+#addin Cake.Wyam&version=1.5.1
 #addin Cake.Git&version=0.19.0
 #addin Cake.Kudu&version=0.8.0
 
@@ -277,6 +277,7 @@ Task("Build-Documentation")
     .WithCriteria(generateDocumentation, "[build-doc] not found in commit message.")
     .WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("GITHUB_TOKEN")), "Environment variable \"GITHUB_TOKEN\" not set.")
     .WithCriteria(isOnWindows, "Not running on Windows.")
+    .ContinueOnError()
     .Does(() =>
 {
     EnsureDirectoryExists(outputPath);
