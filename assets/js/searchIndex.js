@@ -39,76 +39,6 @@ var searchModule = function() {
     a(
         {
             id:0,
-            title:"CompiledString",
-            content:"CompiledString",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/CompiledString',
-            title:"CompiledString",
-            description:""
-        }
-    );
-    a(
-        {
-            id:1,
-            title:"IFilter",
-            content:"IFilter",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IFilter',
-            title:"IFilter",
-            description:""
-        }
-    );
-    a(
-        {
-            id:2,
-            title:"Parser",
-            content:"Parser",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/Parser_1',
-            title:"Parser<T>",
-            description:""
-        }
-    );
-    a(
-        {
-            id:3,
-            title:"IParameterTag",
-            content:"IParameterTag",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IParameterTag',
-            title:"IParameterTag",
-            description:""
-        }
-    );
-    a(
-        {
-            id:4,
-            title:"IToken",
-            content:"IToken",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IToken',
-            title:"IToken",
-            description:""
-        }
-    );
-    a(
-        {
-            id:5,
             title:"FilterWithoutArguments",
             content:"FilterWithoutArguments",
             description:'',
@@ -122,35 +52,49 @@ var searchModule = function() {
     );
     a(
         {
-            id:6,
-            title:"ValidationResult",
-            content:"ValidationResult",
+            id:1,
+            title:"IToken",
+            content:"IToken",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/ValidationResult',
-            title:"ValidationResult",
+            url:'/Strinken/api/Strinken/IToken',
+            title:"IToken",
             description:""
         }
     );
     a(
         {
-            id:7,
-            title:"BaseFilters",
-            content:"BaseFilters",
+            id:2,
+            title:"IParameterTag",
+            content:"IParameterTag",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/BaseFilters',
-            title:"BaseFilters",
+            url:'/Strinken/api/Strinken/IParameterTag',
+            title:"IParameterTag",
             description:""
         }
     );
     a(
         {
-            id:8,
+            id:3,
+            title:"Parser",
+            content:"Parser",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/Parser_1',
+            title:"Parser<T>",
+            description:""
+        }
+    );
+    a(
+        {
+            id:4,
             title:"ITag",
             content:"ITag",
             description:'',
@@ -164,7 +108,35 @@ var searchModule = function() {
     );
     a(
         {
-            id:9,
+            id:5,
+            title:"IFilter",
+            content:"IFilter",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/IFilter',
+            title:"IFilter",
+            description:""
+        }
+    );
+    a(
+        {
+            id:6,
+            title:"CompiledString",
+            content:"CompiledString",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/CompiledString',
+            title:"CompiledString",
+            description:""
+        }
+    );
+    a(
+        {
+            id:7,
             title:"ParserExtensions",
             content:"ParserExtensions",
             description:'',
@@ -173,6 +145,34 @@ var searchModule = function() {
         {
             url:'/Strinken/api/Strinken/ParserExtensions',
             title:"ParserExtensions",
+            description:""
+        }
+    );
+    a(
+        {
+            id:8,
+            title:"ValidationResult",
+            content:"ValidationResult",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ValidationResult',
+            title:"ValidationResult",
+            description:""
+        }
+    );
+    a(
+        {
+            id:9,
+            title:"BaseFilters",
+            content:"BaseFilters",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/BaseFilters',
+            title:"BaseFilters",
             description:""
         }
     );
