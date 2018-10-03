@@ -39,48 +39,20 @@ var searchModule = function() {
     a(
         {
             id:0,
-            title:"ValidationResult",
-            content:"ValidationResult",
+            title:"IParameterTag",
+            content:"IParameterTag",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/ValidationResult',
-            title:"ValidationResult",
+            url:'/Strinken/api/Strinken/IParameterTag',
+            title:"IParameterTag",
             description:""
         }
     );
     a(
         {
             id:1,
-            title:"ITag",
-            content:"ITag",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/ITag_1',
-            title:"ITag<T>",
-            description:""
-        }
-    );
-    a(
-        {
-            id:2,
-            title:"IToken",
-            content:"IToken",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IToken',
-            title:"IToken",
-            description:""
-        }
-    );
-    a(
-        {
-            id:3,
             title:"IFilter",
             content:"IFilter",
             description:'',
@@ -89,6 +61,34 @@ var searchModule = function() {
         {
             url:'/Strinken/api/Strinken/IFilter',
             title:"IFilter",
+            description:""
+        }
+    );
+    a(
+        {
+            id:2,
+            title:"BaseFilters",
+            content:"BaseFilters",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/BaseFilters',
+            title:"BaseFilters",
+            description:""
+        }
+    );
+    a(
+        {
+            id:3,
+            title:"FilterWithoutArguments",
+            content:"FilterWithoutArguments",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/FilterWithoutArguments',
+            title:"FilterWithoutArguments",
             description:""
         }
     );
@@ -109,20 +109,48 @@ var searchModule = function() {
     a(
         {
             id:5,
-            title:"FilterWithoutArguments",
-            content:"FilterWithoutArguments",
+            title:"IToken",
+            content:"IToken",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/FilterWithoutArguments',
-            title:"FilterWithoutArguments",
+            url:'/Strinken/api/Strinken/IToken',
+            title:"IToken",
             description:""
         }
     );
     a(
         {
             id:6,
+            title:"ParserExtensions",
+            content:"ParserExtensions",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ParserExtensions',
+            title:"ParserExtensions",
+            description:""
+        }
+    );
+    a(
+        {
+            id:7,
+            title:"ITag",
+            content:"ITag",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ITag_1',
+            title:"ITag<T>",
+            description:""
+        }
+    );
+    a(
+        {
+            id:8,
             title:"Parser",
             content:"Parser",
             description:'',
@@ -136,43 +164,15 @@ var searchModule = function() {
     );
     a(
         {
-            id:7,
-            title:"IParameterTag",
-            content:"IParameterTag",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IParameterTag',
-            title:"IParameterTag",
-            description:""
-        }
-    );
-    a(
-        {
-            id:8,
-            title:"BaseFilters",
-            content:"BaseFilters",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/BaseFilters',
-            title:"BaseFilters",
-            description:""
-        }
-    );
-    a(
-        {
             id:9,
-            title:"ParserExtensions",
-            content:"ParserExtensions",
+            title:"ValidationResult",
+            content:"ValidationResult",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/ParserExtensions',
-            title:"ParserExtensions",
+            url:'/Strinken/api/Strinken/ValidationResult',
+            title:"ValidationResult",
             description:""
         }
     );
