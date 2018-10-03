@@ -6,10 +6,10 @@
 #tool OpenCover&version=4.6.519
 #tool coveralls.io&version=1.4.2
 #tool Wyam&version=1.6.0
-#tool KuduSync.NET&version=1.4.0
+#tool KuduSync.NET&version=1.5.2
 
 #addin Cake.Coveralls&version=0.9.0
-#addin Octokit&version=0.31.0
+#addin Octokit&version=0.32.0
 #addin Cake.FileHelpers&version=3.1.0
 #addin Cake.Wyam&version=1.6.0
 #addin Cake.Git&version=0.19.0
