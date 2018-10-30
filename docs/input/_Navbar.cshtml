@@ -14,7 +14,7 @@
     foreach(Tuple<string, string> page in pages)
     {
         string active = Context.GetLink(Document).StartsWith(page.Item2) ? "active" : null;
-        <li class="@active"><a href="@page.Item2">@page.Item1</a></li>
+        <li class="@active"><a href="@(page.Item2)">@(page.Item1)</a></li>
     }
 
     <li><a href="https://github.com/k94ll13nn3/Strinken"><i class="fa fa-github"></i> Source</a></li>
