@@ -6,7 +6,7 @@ environment:
     secure: tohnGHbkou++U/1IejloBChnM+z8eK+cPOBbdgutCzD9QYWjnfhDTnO04+Xgk21Y
 
 install:
-- dotnet tool install -g Cake.Tool --version 0.31.0
+- dotnet tool install -g Cake.Tool --version 0.32.1
 
 build_script:
 - dotnet cake build.cake --verbosity=Verbose
