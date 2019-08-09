@@ -12,7 +12,7 @@
     <PackageTags>parametrized;string;parser;strinken</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/docs/input/assets/img/logo_64x64.png</PackageIconUrl>
     <PackageProjectUrl>https://k94ll13nn3.github.io/Strinken</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/k94ll13nn3/Strinken</RepositoryUrl>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
