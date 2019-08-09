@@ -2,18 +2,18 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool GitVersion.CommandLine&version=4.0.0-beta0014
-#tool OpenCover&version=4.6.519
+#tool GitVersion.CommandLine&version=5.0.0
+#tool OpenCover&version=4.7.922
 #tool coveralls.io&version=1.4.2
-#tool Wyam&version=2.2.3
+#tool Wyam&version=2.2.5
 #tool KuduSync.NET&version=1.5.2
 
-#addin Cake.Coveralls&version=0.9.0
+#addin Cake.Coveralls&version=0.10.0
 #addin Octokit&version=0.32.0
-#addin Cake.FileHelpers&version=3.1.0
-#addin Cake.Wyam&version=2.2.3
-#addin Cake.Git&version=0.19.0
-#addin Cake.Kudu&version=0.8.0
+#addin Cake.FileHelpers&version=3.2.0
+#addin Cake.Wyam&version=2.2.5
+#addin Cake.Git&version=0.21.0
+#addin Cake.Kudu&version=0.10.1
 
 //////////////////////////////////////////////////////////////////////
 // USINGS
@@ -83,7 +83,7 @@ Task("Set-Environment")
     var version = GitVersion(new GitVersionSettings 
     {
         UpdateAssemblyInfo = true, 
-        WorkingDirectory = solutionDir 
+        WorkingDirectory = solutionDir
     });
     
     nugetVersion = version.NuGetVersion;
