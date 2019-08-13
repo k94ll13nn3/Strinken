@@ -253,8 +253,8 @@ paket-files/
 
 tools/
 _site/
-test/Strinken.Tests/Coverage/
-test/Strinken.Tests/opencover.4.6.589/
+tests/Strinken.Tests/Coverage/
+tests/Strinken.Tests/opencover.4.6.589/
 *Coverage*
 TestResult.first.xml
 docs/output/

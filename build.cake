@@ -130,14 +130,14 @@ Task("Run-Unit-Tests-Windows")
     coverageSettings.SkipAutoProps = true;
 
     OpenCover(tool => {
-            tool.DotNetCoreTest("./test/Strinken.Tests/Strinken.Tests.csproj", settings);
+            tool.DotNetCoreTest("./tests/Strinken.Tests/Strinken.Tests.csproj", settings);
         },
         coverageDir + coverageResultPath,
         coverageSettings
     );
 
     OpenCover(tool => {
-            tool.DotNetCoreTest("./test/Strinken.Public.Tests/Strinken.Public.Tests.csproj", settings);
+            tool.DotNetCoreTest("./tests/Strinken.Public.Tests/Strinken.Public.Tests.csproj", settings);
         },
         coverageDir + coverageResultPath,
         coverageSettings
@@ -154,8 +154,8 @@ Task("Run-Unit-Tests-Linux")
         Configuration = configuration
     };
 
-    DotNetCoreTest("./test/Strinken.Tests/Strinken.Tests.csproj", settings);
-    DotNetCoreTest("./test/Strinken.Public.Tests/Strinken.Public.Tests.csproj", settings);
+    DotNetCoreTest("./tests/Strinken.Tests/Strinken.Tests.csproj", settings);
+    DotNetCoreTest("./tests/Strinken.Public.Tests/Strinken.Public.Tests.csproj", settings);
 });
 
 Task("Nuget-Pack")
