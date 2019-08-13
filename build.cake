@@ -3,12 +3,9 @@
 //////////////////////////////////////////////////////////////////////
 
 #tool GitVersion.CommandLine&version=5.0.0
-#tool OpenCover&version=4.7.922
-#tool coveralls.io&version=1.4.2
 #tool Wyam&version=2.2.5
 #tool KuduSync.NET&version=1.5.2
 
-#addin Cake.Coveralls&version=0.10.0
 #addin Octokit&version=0.32.0
 #addin Cake.FileHelpers&version=3.2.0
 #addin Cake.Wyam&version=2.2.5
@@ -36,13 +33,11 @@ var target = Argument("target", "Default");
 var solutionDir = Directory("./src/") + Directory("Strinken/");
 var buildDir = solutionDir + Directory("bin/");
 var publishDir = Directory("./artifacts");
-var coverageDir = Directory("./coverage");
 var outputPath = MakeAbsolute(Directory("./docs/output"));
 var rootPublishFolder = MakeAbsolute(Directory("./docs/publish"));
 
 // Define script variables
 var releaseNotesPath = new FilePath("CHANGELOG.md");
-var coverageResultPath = new FilePath("coverage.xml");
 var versionSuffix = "";
 var nugetVersion = "";
 var currentBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
@@ -67,7 +62,6 @@ Task("Clean")
 {
     CleanDirectory(buildDir);
 	CleanDirectory(publishDir);
-	CleanDirectory(coverageDir);
 });
 
 Task("Set-Environment")
@@ -111,42 +105,8 @@ Task("Build")
     });
 });
 
-Task("Run-Unit-Tests-Windows")
+Task("Run-Unit-Tests")
     .IsDependentOn("Build")
-    .WithCriteria(isOnWindows, "Not running on Windows.")
-    .Does(() =>
-{
-    EnsureDirectoryExists(coverageDir);
-    var settings = new DotNetCoreTestSettings
-    {
-        Configuration = "Coverage"
-    };
-
-    var coverageSettings = new OpenCoverSettings().WithFilter("+[Strinken*]*").WithFilter("-[Strinken.Tests]*").WithFilter("-[Strinken.Public.Tests]*");
-    coverageSettings.ReturnTargetCodeOffset = 1000; // Offset in order to have Cake fail if a test is a failure
-    coverageSettings.Register = "user";
-    coverageSettings.MergeOutput = true;
-    coverageSettings.OldStyle = true;
-    coverageSettings.SkipAutoProps = true;
-
-    OpenCover(tool => {
-            tool.DotNetCoreTest("./tests/Strinken.Tests/Strinken.Tests.csproj", settings);
-        },
-        coverageDir + coverageResultPath,
-        coverageSettings
-    );
-
-    OpenCover(tool => {
-            tool.DotNetCoreTest("./tests/Strinken.Public.Tests/Strinken.Public.Tests.csproj", settings);
-        },
-        coverageDir + coverageResultPath,
-        coverageSettings
-    );
-});
-
-Task("Run-Unit-Tests-Linux")
-    .IsDependentOn("Build")
-    .WithCriteria(!isOnWindows, "Running on Windows.")
     .Does(() =>
 {
     var settings = new DotNetCoreTestSettings
@@ -159,8 +119,7 @@ Task("Run-Unit-Tests-Linux")
 });
 
 Task("Nuget-Pack")
-    .IsDependentOn("Run-Unit-Tests-Windows")
-    .IsDependentOn("Run-Unit-Tests-Linux")
+    .IsDependentOn("Run-Unit-Tests")
     .WithCriteria(isOnWindows, "Not running on Windows.")
     .Does(() =>
 {
@@ -247,23 +206,10 @@ Task("Generate-Release-Notes")
     string FormatPullRequest(PullRequest pullRequest) => $"- [#{pullRequest.Number}](https://github.com/{owner}/{project}/pull/{pullRequest.Number}): {pullRequest.Title} (by [{pullRequest.User.Login}](https://github.com/{pullRequest.User.Login}))";
 });
 
-Task("Upload-Coverage")
-    .ContinueOnError()
-    .WithCriteria(() => isOnAppVeyor && isOnMaster && !isPullRequest)
-    .WithCriteria(isOnWindows, "Not running on Windows.")
-    .IsDependentOn("Generate-Release-Notes")
-    .Does(() =>
-{
-    CoverallsIo(coverageDir + coverageResultPath, new CoverallsIoSettings
-    {
-        RepoToken = EnvironmentVariable("COVERALLS_TOKEN")
-    });
-});
-
 Task("Upload-Artifact")
     .WithCriteria(() => isOnAppVeyor && isOnMaster && !isPullRequest)
     .WithCriteria(isOnWindows, "Not running on Windows.")
-    .IsDependentOn("Upload-Coverage")
+    .IsDependentOn("Generate-Release-Notes")
     .Does(() =>
 {
     AppVeyor.UploadArtifact(publishDir + new FilePath("Strinken." + nugetVersion +".nupkg"));
