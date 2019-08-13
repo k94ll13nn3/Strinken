@@ -137,7 +137,6 @@ Task("Nuget-Pack")
 Task("Generate-Release-Notes")
     .WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("GITHUB_TOKEN")), "Environment variable \"GITHUB_TOKEN\" not set.")
     .WithCriteria(isOnWindows, "Not running on Windows.")
-    .IsDependentOn("Nuget-Pack")
     .Does(async () => 
 {
     var owner = "k94ll13nn3";
@@ -206,19 +205,6 @@ Task("Generate-Release-Notes")
     string FormatPullRequest(PullRequest pullRequest) => $"- [#{pullRequest.Number}](https://github.com/{owner}/{project}/pull/{pullRequest.Number}): {pullRequest.Title} (by [{pullRequest.User.Login}](https://github.com/{pullRequest.User.Login}))";
 });
 
-Task("Upload-Artifact")
-    .WithCriteria(() => isOnAppVeyor && isOnMaster && !isPullRequest)
-    .WithCriteria(isOnWindows, "Not running on Windows.")
-    .IsDependentOn("Generate-Release-Notes")
-    .Does(() =>
-{
-    AppVeyor.UploadArtifact(publishDir + new FilePath("Strinken." + nugetVersion +".nupkg"));
-    if (FileExists(publishDir + releaseNotesPath))
-    {
-        AppVeyor.UploadArtifact(publishDir + releaseNotesPath);
-    }
-});
-
 Task("Build-Documentation")
     .WithCriteria(generateDocumentation, "[build-doc] not found in commit message.")
     .WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("GITHUB_TOKEN")), "Environment variable \"GITHUB_TOKEN\" not set.")
@@ -268,7 +254,8 @@ Task("Build-Documentation")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Upload-Artifact")
+    .IsDependentOn("Nuget-Pack")
+    .IsDependentOn("Generate-Release-Notes")
     .IsDependentOn("Build-Documentation");
 
 //////////////////////////////////////////////////////////////////////

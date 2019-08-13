@@ -17,3 +17,7 @@ skip_branch_with_pr: true
 image: 
 - Visual Studio 2017
 - Ubuntu
+
+artifacts:
+- path: 'artifacts\*.nupkg'
+- path: 'artifacts\CHANGELOG.md'
