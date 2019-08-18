@@ -18,8 +18,9 @@ image:
 - Visual Studio 2019
 - Ubuntu
 
-publish_nuget: false
-publish_nuget_symbols: false
+build:
+  publish_nuget: false
+  publish_nuget_symbols: false
 
 artifacts:
 - path: 'artifacts\*.nupkg'
