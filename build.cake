@@ -160,7 +160,8 @@ Task("Generate-Release-Notes")
 
     builder.Append(string.Join($"{Environment.NewLine}", links));
 
-    FileWriteText(publishDir.ToString() + releaseNotesPath, builder.ToString());
+    Information($"Writting release notes files to '{publishDir.ToString() + "/" + releaseNotesPath}'");
+    FileWriteText(publishDir.ToString() + "/" + releaseNotesPath, builder.ToString());
 
     string FormatRelease(Release release) => release.Name == "Unreleased" ? $"## {release.Name}" : $"## [{release.Name}] - {release.PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}";
     string FormatIssue(Issue issue) => $"- [#{issue.Number}](https://github.com/{owner}/{project}/issues/{issue.Number}): {issue.Title}";
