@@ -12,15 +12,9 @@ A parametrized string library ! ([Documentation](https://k94ll13nn3.github.io/St
 
 ## Installation
 
-### NuGet
-
 - Grab the latest package on [NuGet](https://www.nuget.org/packages/Strinken/).
 - Install it via the Package Manager Console: `Install-Package Strinken`.
-
-### Manual downloads
-
-- Get the latest release on [GitHub](https://github.com/k94ll13nn3/Strinken/releases/latest).
-- Get the latest CI build on [AppVeyor](https://ci.appveyor.com/project/k94ll13nn3/strinken) (Visual Studio 2017 image).
+- Get the latest CI build on [AppVeyor](https://ci.appveyor.com/project/k94ll13nn3/strinken) (Visual Studio image).
 
 ## Basic example
 
