@@ -2,7 +2,6 @@
 // DEPENDENCIES
 //////////////////////////////////////////////////////////////////////
 
-#tool GitVersion.CommandLine&version=5.0.0
 #tool Wyam&version=2.2.5
 #tool KuduSync.NET&version=1.5.2
 
@@ -31,15 +30,12 @@ var target = Argument("target", "Default");
 
 // Define directories.
 var solutionDir = Directory("./src/") + Directory("Strinken/");
-var buildDir = solutionDir + Directory("bin/");
-var publishDir = Directory("./artifacts");
+var publishDir = MakeAbsolute(Directory("./artifacts"));
 var outputPath = MakeAbsolute(Directory("./docs/output"));
 var rootPublishFolder = MakeAbsolute(Directory("./docs/publish"));
 
 // Define script variables
 var releaseNotesPath = new FilePath("CHANGELOG.md");
-var versionSuffix = "";
-var nugetVersion = "";
 var currentBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 var isOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 var isOnMaster =  currentBranch == "master";
@@ -57,52 +53,33 @@ var isOnWindows = Context.Environment.Platform.Family == PlatformFamily.Windows;
 // TASKS
 //////////////////////////////////////////////////////////////////////
 
-Task("Clean")
-    .Does(() =>
-{
-    CleanDirectory(buildDir);
-	CleanDirectory(publishDir);
-});
-
-Task("Set-Environment")
-    .IsDependentOn("Clean")
-    .WithCriteria(isOnWindows, "Not running on Windows.")
+Task("Get-Environment")
     .Does(() =>
 {
     Information("Current branch:      " + currentBranch);
     Information("Master branch:       " + isOnMaster.ToString());
     Information("Pull Request:        " + isPullRequest.ToString());
     Information("Running on AppVeyor: " + isOnAppVeyor.ToString());
-
-    var version = GitVersion(new GitVersionSettings 
-    {
-        UpdateAssemblyInfo = true, 
-        WorkingDirectory = solutionDir
-    });
-    
-    nugetVersion = version.NuGetVersion;
-    versionSuffix = version.NuGetVersion.Split("-").Skip(1).FirstOrDefault() ?? "";
-    Information("VersionSuffix        " + versionSuffix);
-
-    Information("AssembyVersion       " + version.AssemblySemVer);
-    Information("FileVersion          " + version.AssemblySemFileVer);
-    Information("InformationalVersion " + version.InformationalVersion);
-    if (isOnAppVeyor)
-    {
-        Information("Build version:       " + nugetVersion + " (" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")");
-        AppVeyor.UpdateBuildVersion(nugetVersion + " (" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")");
-    }
 });
 
 Task("Build")
-    .IsDependentOn("Set-Environment")
+    .IsDependentOn("Get-Environment")
     .Does(() =>
 {
+	CleanDirectory(publishDir);
     DotNetCoreBuild(solutionDir, new DotNetCoreBuildSettings
     {
         Configuration = configuration,
-        VersionSuffix = versionSuffix
+        MSBuildSettings = new DotNetCoreMSBuildSettings().WithProperty("PackageOutputPath", publishDir.ToString())
     });
+
+    if (isOnAppVeyor)
+    {
+        // Temporary before removing Cake
+        var buildVersion = $"{System.Diagnostics.FileVersionInfo.GetVersionInfo("src/Strinken/bin/Release/netstandard2.0/" + new FilePath("Strinken.dll")).ProductVersion}";
+        Information("Build version:       " + buildVersion + " (" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")");
+        AppVeyor.UpdateBuildVersion(buildVersion + " (" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER") + ")");
+    }
 });
 
 Task("Run-Unit-Tests")
@@ -118,23 +95,8 @@ Task("Run-Unit-Tests")
     DotNetCoreTest("./tests/Strinken.Public.Tests/Strinken.Public.Tests.csproj", settings);
 });
 
-Task("Nuget-Pack")
-    .IsDependentOn("Run-Unit-Tests")
-    .WithCriteria(isOnWindows, "Not running on Windows.")
-    .Does(() =>
-{
-    EnsureDirectoryExists(publishDir);
-    var settings = new DotNetCorePackSettings
-    {
-        Configuration = configuration,
-        OutputDirectory = publishDir,
-        VersionSuffix = versionSuffix
-    };
-
-    DotNetCorePack(solutionDir, settings);
-});
-
 Task("Generate-Release-Notes")
+    .ContinueOnError()
     .WithCriteria(() => !string.IsNullOrWhiteSpace(EnvironmentVariable("GITHUB_TOKEN")), "Environment variable \"GITHUB_TOKEN\" not set.")
     .WithCriteria(isOnWindows, "Not running on Windows.")
     .Does(async () => 
@@ -198,7 +160,7 @@ Task("Generate-Release-Notes")
 
     builder.Append(string.Join($"{Environment.NewLine}", links));
 
-    FileWriteText(publishDir + releaseNotesPath, builder.ToString());
+    FileWriteText(publishDir.ToString() + releaseNotesPath, builder.ToString());
 
     string FormatRelease(Release release) => release.Name == "Unreleased" ? $"## {release.Name}" : $"## [{release.Name}] - {release.PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}";
     string FormatIssue(Issue issue) => $"- [#{issue.Number}](https://github.com/{owner}/{project}/issues/{issue.Number}): {issue.Title}";
@@ -254,7 +216,7 @@ Task("Build-Documentation")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Nuget-Pack")
+    .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Generate-Release-Notes")
     .IsDependentOn("Build-Documentation");
 
