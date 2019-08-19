@@ -1,7 +1,5 @@
 environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
-  COVERALLS_TOKEN:
-    secure: 9e+vrJ65VDmTcwWipInm3fmWWnG1cLYLsoQHnKkroGtLHTkUvTJ9w8KwD12W0u0w
   GITHUB_TOKEN:
     secure: tohnGHbkou++U/1IejloBChnM+z8eK+cPOBbdgutCzD9QYWjnfhDTnO04+Xgk21Y
 
