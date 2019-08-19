@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C886EF68-10DC-4C2B-B370-FB4387575205}"
 EndProject
@@ -16,11 +16,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{05D87119-F2DC-4B23-9288-60EEC7AA09DA}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		appveyor.yml = appveyor.yml
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D1A9C5E8-FCA6-4AE3-A552-3C080E8BFFC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strinken.Build", "build\Strinken.Build\Strinken.Build.csproj", "{35180220-0721-490D-ACC4-B2FFB182716D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strinken.Build", "build\Strinken.Build\Strinken.Build.csproj", "{35180220-0721-490D-ACC4-B2FFB182716D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,5 +55,8 @@ Global
 		{3B3D0FEC-99CA-469C-B337-99492672196A} = {052F6B63-D2B3-4A98-9D7A-3E83524B8B95}
 		{4696D864-467E-492C-BBC0-D2EE638E47E7} = {052F6B63-D2B3-4A98-9D7A-3E83524B8B95}
 		{35180220-0721-490D-ACC4-B2FFB182716D} = {D1A9C5E8-FCA6-4AE3-A552-3C080E8BFFC6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8DE1ADA-3FB4-4C5C-BA58-83C4E10C4F0F}
 	EndGlobalSection
 EndGlobal
