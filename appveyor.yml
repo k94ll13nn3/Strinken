@@ -5,11 +5,8 @@ environment:
   GITHUB_TOKEN:
     secure: tohnGHbkou++U/1IejloBChnM+z8eK+cPOBbdgutCzD9QYWjnfhDTnO04+Xgk21Y
 
-install:
-- dotnet tool install -g Cake.Tool --version 0.34.1
-
 build_script:
-- dotnet cake build.cake --verbosity=Verbose
+- dotnet run --project .\build\Strinken.Build\
 
 test: off
 skip_tags: true
