@@ -43,6 +43,7 @@ namespace Strinken.Build
                     Run("coverlet", @".\tests\Strinken.Public.Tests\bin\Debug\netcoreapp2.2\Strinken.Public.Tests.dll --target ""dotnet"" --targetargs ""test .\tests\Strinken.Public.Tests\Strinken.Public.Tests.csproj --no-build"" --format cobertura --output coverage.public.xml");
                     Run("coverlet", @".\tests\Strinken.Tests\bin\Debug\netcoreapp2.2\Strinken.Tests.dll --target ""dotnet"" --targetargs ""test .\tests\Strinken.Tests\Strinken.Tests.csproj --no-build"" --format cobertura --output coverage.xml");
                     Run("reportgenerator", @"-reports:""coverage.xml;coverage.public.xml"" -targetdir:coverage -reporttypes:""HtmlInline_AzurePipelines""");
+                    Run("powershell", "ii coverage/index.htm");
                 });
 
             Target(
