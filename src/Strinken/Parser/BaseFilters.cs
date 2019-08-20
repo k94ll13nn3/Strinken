@@ -54,7 +54,7 @@ namespace Strinken
                     {
                         if (InternalRegisteredFilters.Values.Select(x => x.AlternativeName).Contains(filter.AlternativeName))
                         {
-                            throw new ArgumentException($"A filter already has {filter.AlternativeName} as its alternative name.");
+                            throw new ArgumentException($"A base filter already has {filter.AlternativeName} as its alternative name.");
                         }
 
                         filter.AlternativeName.ThrowIfInvalidAlternativeName();
@@ -64,7 +64,7 @@ namespace Strinken
                 }
                 else
                 {
-                    throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
+                    throw new ArgumentException($"{filter.Name} was already registered in the base filter list.");
                 }
             }
         }

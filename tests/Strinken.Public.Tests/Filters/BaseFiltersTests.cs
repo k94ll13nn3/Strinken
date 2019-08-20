@@ -60,7 +60,7 @@ namespace Strinken.Public.Tests.Filters
         {
             Action act = () => BaseFilters.Register(new FilterGenerator("Length"));
 
-            act.Should().Throw<ArgumentException>().WithMessage("Length was already registered in the filter list.");
+            act.Should().Throw<ArgumentException>().WithMessage("Length was already registered in the base filter list.");
         }
 
         [Fact]
@@ -74,24 +74,31 @@ namespace Strinken.Public.Tests.Filters
         [Fact]
         public void Register_FilterWithAlternativeNameAlreadyRegistered_ThrowsArgumentException()
         {
-            Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new SomeFilter(), new SomeBisFilter() });
+            BaseFilters.Register(new FilterGenerator("BAOne", "!**"));
+            Action act = () => BaseFilters.Register(new FilterGenerator("BARTwo", "!**"));
 
-            act.Should().Throw<ArgumentException>().WithMessage("A filter already has !* as its alternative name.");
+            act.Should().Throw<ArgumentException>().WithMessage("A base filter already has !** as its alternative name.");
         }
 
         [Fact]
         public void Register_FilterWithInvalidAlternativeName_ThrowsArgumentException()
         {
-            Action act = () => new Parser<string>().WithTag("tag", "tag", s => s).WithFilter(new InvalidAlternativeNameFilter());
+            Action act = () => BaseFilters.Register(new InvalidAlternativeNameFilter());
 
             act.Should().Throw<ArgumentException>().WithMessage("n is an invalid character for an alternative name.");
         }
 
         private class FilterGenerator : IFilter
         {
-            public FilterGenerator(string data)
+            public FilterGenerator(string name)
+                : this(name, null)
             {
-                Name = data;
+            }
+
+            public FilterGenerator(string name, string alternativeName)
+            {
+                Name = name;
+                AlternativeName = alternativeName;
             }
 
             public string Description => Name;
@@ -100,7 +107,7 @@ namespace Strinken.Public.Tests.Filters
 
             public string Usage => "";
 
-            public string AlternativeName => null;
+            public string AlternativeName { get; }
 
             public string Resolve(string value, string[] arguments) => value;
 
