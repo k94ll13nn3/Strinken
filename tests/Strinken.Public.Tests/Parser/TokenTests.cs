@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Strinken.Public.Tests.TestsClasses;
@@ -10,6 +11,7 @@ namespace Strinken.Public.Tests.Parser
     public class TokenTests
     {
         [Fact]
+        [SuppressMessage("Usage", "RCS1202:Avoid NullReferenceException.", Justification = "It is the goal of the test to test nullability")]
         public void Tags_Get_ReturnsReadOnlyCollection()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -28,6 +30,7 @@ namespace Strinken.Public.Tests.Parser
         }
 
         [Fact]
+        [SuppressMessage("Usage", "RCS1202:Avoid NullReferenceException.", Justification = "It is the goal of the test to test nullability")]
         public void Filters_Get_ReturnsReadOnlyCollection()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
@@ -45,6 +48,7 @@ namespace Strinken.Public.Tests.Parser
         }
 
         [Fact]
+        [SuppressMessage("Usage", "RCS1202:Avoid NullReferenceException.", Justification = "It is the goal of the test to test nullability")]
         public void ParameterTags_Get_ReturnsReadOnlyCollection()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());

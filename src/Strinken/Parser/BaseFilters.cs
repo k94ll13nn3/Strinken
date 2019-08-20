@@ -33,20 +33,6 @@ namespace Strinken
             }.ToDictionary(x => x.Name, x => x);
 
         /// <summary>
-        /// Gets base filters shared by all parsers.
-        /// </summary>
-        internal static IReadOnlyCollection<IFilter> RegisteredFilters
-        {
-            get
-            {
-                lock (Lock)
-                {
-                    return new ReadOnlyCollection<IFilter>(InternalRegisteredFilters.Values.ToList());
-                }
-            }
-        }
-
-        /// <summary>
         /// Registers a filter that will be used as a base filter for all parser built after.
         /// </summary>
         /// <param name="filter">The filter to register.</param>
@@ -95,6 +81,17 @@ namespace Strinken
                 {
                     InternalRegisteredFilters.Remove(filterName);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets base filters shared by all parsers.
+        /// </summary>
+        internal static IReadOnlyCollection<IFilter> GetRegisteredFilters()
+        {
+            lock (Lock)
+            {
+                return new ReadOnlyCollection<IFilter>(InternalRegisteredFilters.Values.ToList());
             }
         }
     }

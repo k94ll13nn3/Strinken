@@ -25,7 +25,7 @@ namespace Strinken
         /// <inheritdoc/>
         public bool Validate(string[] arguments)
         {
-            return arguments?.Length == 1 && int.TryParse(arguments[0], out var n);
+            return arguments?.Length == 1 && int.TryParse(arguments[0], out int _);
         }
     }
 }

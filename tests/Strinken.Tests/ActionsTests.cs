@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Strinken.Core;
@@ -11,7 +11,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_OneTag_ActionOnTagCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var tagSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -35,7 +35,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TwoTags_ActionOnTagCalledTwice()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var tagSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -96,7 +96,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithFilter_ActionOnFilterCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -120,7 +120,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithFilter_ActionOnFilterCalledOnceWithTag()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string>();
             var actions = new ActionDictionary
             {
@@ -146,7 +146,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithMultipleFilters_ActionOnFilterCalledTwice()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -171,7 +171,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithMultipleFiltersAndOneArgumentOnFirstFilter_ActionOnFilterCalledTwice()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -196,7 +196,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithMultipleFilters_ActionOnFilterCalledTwiceAndFiltersChained()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string>();
             var actions = new ActionDictionary
             {
@@ -224,7 +224,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithFilterAndOneArgument_ActionOnFilterCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
@@ -251,7 +251,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithFilterAndTwoArguments_ActionOnFilterCalledOnceAndArgumentsProperlySorted()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
@@ -279,7 +279,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithFilterAndOneArgumentTag_ActionOnFilterCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
@@ -307,7 +307,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithFilterAndOneArgumentTagAndOneArgument_ActionOnFilterCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
@@ -337,7 +337,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithMultipleFiltersAndArguments_ActionOnFilterCalledTwiceAndFiltersChained()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string>();
             var actions = new ActionDictionary
             {
@@ -354,7 +354,7 @@ namespace Strinken.Tests
 
             const string input = "lorem{ipsum:belli+tute:patse+paku,=malo:kuki}";
             EngineResult result = StrinkenEngine.Run(input);
-            var parsedString = result.Stack.Resolve(actions);
+            string parsedString = result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(3);
             filterSeen.Should().HaveCount(3);
@@ -370,7 +370,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_ActionOnTagIsNull_ActionOnFilterCalledTwiceAndFiltersChained()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string>();
             var actions = new ActionDictionary
             {
@@ -385,7 +385,7 @@ namespace Strinken.Tests
 
             const string input = "lorem{ipsum:patse+paku,=malo}";
             EngineResult result = StrinkenEngine.Run(input);
-            var parsedString = result.Stack.Resolve(actions);
+            string parsedString = result.Stack.Resolve(actions);
 
             numberOfCall.Should().Be(1);
             filterSeen.Should().HaveCount(1);
@@ -404,7 +404,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_OneParameterTag_ActionOnParameterTagCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var tagSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -428,14 +428,14 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithFilterAndOneArgumentParameterTag_ActionOnFilterCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new Dictionary<string, string[]>();
             var actions = new ActionDictionary
             {
                 [TokenType.Tag, '\0', '\0'] = a => a[0],
                 [TokenType.Argument, '=', '\0'] = a => a[0],
-                [TokenType.Tag, '\0', '!'] = a => "KAPOUE",
-                [TokenType.Argument, '=', '!'] = a => "KAPOUE",
+                [TokenType.Tag, '\0', '!'] = _ => "KAPOUE",
+                [TokenType.Argument, '=', '!'] = _ => "KAPOUE",
                 [TokenType.Filter, '\0', '\0'] = a =>
                 {
                     numberOfCall++;
@@ -459,7 +459,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_OneValueTagAndOneTag_ActionOnValueTagCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var valuesSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -483,7 +483,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_OneNumberAndBinaryTag_ActionOnValueTagCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var valuesSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -507,7 +507,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_OneNumberAndOctalTag_ActionOnValueTagCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var valuesSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -531,7 +531,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_OneNumberAndDecimalTag_ActionOnValueTagCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var valuesSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -555,7 +555,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_OneNumberAndHexadecimalTag_ActionOnValueTagCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var valuesSeen = new List<string>();
             var actions = new ActionDictionary
             {
@@ -579,7 +579,7 @@ namespace Strinken.Tests
         [Fact]
         public void Run_TagWithFilterWithAlternativeName_ActionOnFilterCalledOnce()
         {
-            var numberOfCall = 0;
+            int numberOfCall = 0;
             var filterSeen = new List<string>();
             var actions = new ActionDictionary
             {

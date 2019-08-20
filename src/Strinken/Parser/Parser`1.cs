@@ -1,4 +1,4 @@
-// stylecop.header
+﻿// stylecop.header
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,17 +16,17 @@ namespace Strinken
         /// <summary>
         /// Filters used by the parser.
         /// </summary>
-        private readonly IDictionary<string, IFilter> filters;
+        private readonly IDictionary<string, IFilter> _filters;
 
         /// <summary>
         /// Tags used by the parser.
         /// </summary>
-        private readonly IDictionary<string, ITag<T>> tags;
+        private readonly IDictionary<string, ITag<T>> _tags;
 
         /// <summary>
         /// Parameter tags used by the parser.
         /// </summary>
-        private readonly IDictionary<string, IParameterTag> parameterTags;
+        private readonly IDictionary<string, IParameterTag> _parameterTags;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Parser{T}"/> class.
@@ -42,13 +42,13 @@ namespace Strinken
         /// <param name="ignoreBaseFilters">A value indicating whether the base filters should be ignored.</param>
         public Parser(bool ignoreBaseFilters)
         {
-            tags = new Dictionary<string, ITag<T>>();
-            parameterTags = new Dictionary<string, IParameterTag>();
-            filters = new Dictionary<string, IFilter>();
+            _tags = new Dictionary<string, ITag<T>>();
+            _parameterTags = new Dictionary<string, IParameterTag>();
+            _filters = new Dictionary<string, IFilter>();
 
             if (!ignoreBaseFilters)
             {
-                foreach (IFilter filter in BaseFilters.RegisteredFilters)
+                foreach (IFilter filter in BaseFilters.GetRegisteredFilters())
                 {
                     AddFilter(filter);
                 }
@@ -58,17 +58,17 @@ namespace Strinken
         /// <summary>
         /// Gets the filters used by the parser.
         /// </summary>
-        public IReadOnlyCollection<IFilter> Filters => new ReadOnlyCollection<IFilter>(filters.Values.ToList());
+        public IReadOnlyCollection<IFilter> Filters => new ReadOnlyCollection<IFilter>(_filters.Values.ToList());
 
         /// <summary>
         /// Gets the tags used by the parser.
         /// </summary>
-        public IReadOnlyCollection<ITag<T>> Tags => new ReadOnlyCollection<ITag<T>>(tags.Values.ToList());
+        public IReadOnlyCollection<ITag<T>> Tags => new ReadOnlyCollection<ITag<T>>(_tags.Values.ToList());
 
         /// <summary>
         /// Gets the parameters tags used by the parser.
         /// </summary>
-        public IReadOnlyCollection<IParameterTag> ParameterTags => new ReadOnlyCollection<IParameterTag>(parameterTags.Values.ToList());
+        public IReadOnlyCollection<IParameterTag> ParameterTags => new ReadOnlyCollection<IParameterTag>(_parameterTags.Values.ToList());
 
         /// <summary>
         /// Resolves the input.
@@ -199,7 +199,7 @@ namespace Strinken
         /// <exception cref="ArgumentException">The filter name is already present in the filter list.</exception>
         public void AddFilter(IFilter filter)
         {
-            if (filters.ContainsKey(filter.Name))
+            if (_filters.ContainsKey(filter.Name))
             {
                 throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
             }
@@ -208,7 +208,7 @@ namespace Strinken
 
             if (!string.IsNullOrWhiteSpace(filter.AlternativeName))
             {
-                if (filters.Values.Select(x => x.AlternativeName).Contains(filter.AlternativeName))
+                if (_filters.Values.Select(x => x.AlternativeName).Contains(filter.AlternativeName))
                 {
                     throw new ArgumentException($"A filter already has {filter.AlternativeName} as its alternative name.");
                 }
@@ -216,7 +216,7 @@ namespace Strinken
                 filter.AlternativeName.ThrowIfInvalidAlternativeName();
             }
 
-            filters.Add(filter.Name, filter);
+            _filters.Add(filter.Name, filter);
         }
 
         /// <summary>
@@ -226,13 +226,13 @@ namespace Strinken
         /// <exception cref="ArgumentException">The tag name is already present in the tag list.</exception>
         public void AddTag(ITag<T> tag)
         {
-            if (tags.ContainsKey(tag.Name))
+            if (_tags.ContainsKey(tag.Name))
             {
                 throw new ArgumentException($"{tag.Name} was already registered in the tag list.");
             }
 
             tag.Name.ThrowIfInvalidName();
-            tags.Add(tag.Name, tag);
+            _tags.Add(tag.Name, tag);
         }
 
         /// <summary>
@@ -242,13 +242,13 @@ namespace Strinken
         /// <exception cref="ArgumentException">The parameter tag name is already present in the parameter tag list.</exception>
         public void AddParameterTag(IParameterTag parameterTag)
         {
-            if (parameterTags.ContainsKey(parameterTag.Name))
+            if (_parameterTags.ContainsKey(parameterTag.Name))
             {
                 throw new ArgumentException($"{parameterTag.Name} was already registered in the parameter tag list.");
             }
 
             parameterTag.Name.ThrowIfInvalidName();
-            parameterTags.Add(parameterTag.Name, parameterTag);
+            _parameterTags.Add(parameterTag.Name, parameterTag);
         }
 
         /// <summary>
@@ -258,17 +258,17 @@ namespace Strinken
         internal Parser<T> DeepCopy()
         {
             var newParser = new Parser<T>(true);
-            foreach (ITag<T> tag in tags.Values)
+            foreach (ITag<T> tag in _tags.Values)
             {
                 newParser.AddTag(tag);
             }
 
-            foreach (IParameterTag parameterTag in parameterTags.Values)
+            foreach (IParameterTag parameterTag in _parameterTags.Values)
             {
                 newParser.AddParameterTag(parameterTag);
             }
 
-            foreach (IFilter filter in filters.Values)
+            foreach (IFilter filter in _filters.Values)
             {
                 newParser.AddFilter(filter);
             }
@@ -336,38 +336,38 @@ namespace Strinken
         private ValidationResult ValidateLists(List<string> tagList, List<string> parameterTagList, List<Tuple<string, string[]>> filterList)
         {
             // Find the first tag that was not registered in the parser.
-            foreach (var tag in tagList)
+            foreach (string tag in tagList)
             {
-                if (!tags.ContainsKey(tag))
+                if (!_tags.ContainsKey(tag))
                 {
                     return new ValidationResult { Message = $"{tag} is not a valid tag.", IsValid = false };
                 }
             }
 
             // Find the first parameter tag that was not registered in the parser.
-            foreach (var parameterTag in parameterTagList)
+            foreach (string parameterTag in parameterTagList)
             {
-                if (!parameterTags.ContainsKey(parameterTag))
+                if (!_parameterTags.ContainsKey(parameterTag))
                 {
                     return new ValidationResult { Message = $"{parameterTag} is not a valid parameter tag.", IsValid = false };
                 }
             }
 
             // Find the first filter that was not registered in the parser.
-            IEnumerable<string> alternativeNames = filters.Values.Select(x => x.AlternativeName).Where(x => !string.IsNullOrWhiteSpace(x));
-            foreach (var filter in filterList)
+            IEnumerable<string> alternativeNames = _filters.Values.Select(x => x.AlternativeName).Where(x => !string.IsNullOrWhiteSpace(x));
+            foreach (Tuple<string, string[]> filter in filterList)
             {
-                if (!filters.ContainsKey(filter.Item1) && !alternativeNames.Contains(filter.Item1))
+                if (!_filters.ContainsKey(filter.Item1) && !alternativeNames.Contains(filter.Item1))
                 {
                     return new ValidationResult { Message = $"{filter.Item1} is not a valid filter.", IsValid = false };
                 }
             }
 
             // Find the first filter that has invalid arguments.
-            foreach (var filter in filterList)
+            foreach (Tuple<string, string[]> filter in filterList)
             {
-                if ((filters.ContainsKey(filter.Item1) && !filters[filter.Item1].Validate(filter.Item2))
-                    || (!filters.ContainsKey(filter.Item1) && !filters.Values.FirstOrDefault(x => x.AlternativeName == filter.Item1).Validate(filter.Item2)))
+                if ((_filters.ContainsKey(filter.Item1) && !_filters[filter.Item1].Validate(filter.Item2))
+                    || (!_filters.ContainsKey(filter.Item1) && !_filters.Values.First(x => x.AlternativeName == filter.Item1).Validate(filter.Item2)))
                 {
                     return new ValidationResult { Message = $"{filter.Item1} does not have valid arguments.", IsValid = false };
                 }
@@ -391,23 +391,23 @@ namespace Strinken
                     switch (ind.ResolutionMethod)
                     {
                         case ResolutionMethod.Tag:
-                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => tags[a[0]].Resolve(value);
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => _tags[a[0]].Resolve(value);
                             break;
 
                         case ResolutionMethod.ParameterTag:
-                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => parameterTags[a[0]].Resolve();
+                            actions[op.TokenType, op.Symbol, ind.Symbol] = a => _parameterTags[a[0]].Resolve();
                             break;
 
                         case ResolutionMethod.Filter:
                             actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                             {
-                                if (filters.ContainsKey(a[0]))
+                                if (_filters.ContainsKey(a[0]))
                                 {
-                                    return filters[a[0]].Resolve(a[1], a.Skip(2).ToArray());
+                                    return _filters[a[0]].Resolve(a[1], a.Skip(2).ToArray());
                                 }
                                 else
                                 {
-                                    return filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], a.Skip(2).ToArray());
+                                    return _filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], a.Skip(2).ToArray());
                                 }
                             };
                             break;

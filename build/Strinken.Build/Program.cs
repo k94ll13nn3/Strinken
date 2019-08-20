@@ -45,6 +45,14 @@ namespace Strinken.Build
                     Run("reportgenerator", @"-reports:""coverage.xml;coverage.public.xml"" -targetdir:coverage -reporttypes:""HtmlInline_AzurePipelines""");
                 });
 
+            Target(
+                "format",
+                () =>
+                {
+                    Run("dotnet", "tool update -g dotnet-format");
+                    Run("dotnet", "format");
+                });
+
             Target("default", DependsOn("tests", "notes", "doc"));
 
             await RunTargetsAndExitAsync(args);

@@ -4,7 +4,7 @@
     /// Base class for all parsing result.
     /// </summary>
     /// <typeparam name="T">The type of the parsed data.</typeparam>
-    internal class ParseResult<T>
+    internal sealed class ParseResult<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ParseResult{T}"/> class.

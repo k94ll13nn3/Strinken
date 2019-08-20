@@ -20,10 +20,10 @@
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments)
         {
-            var newValue = value;
+            string newValue = value;
             if (value != null)
             {
-                for (var i = 0; i < arguments.Length / 2; i++)
+                for (int i = 0; i < arguments.Length / 2; i++)
                 {
                     newValue = newValue.Replace(arguments[i * 2], arguments[(i * 2) + 1]);
                 }

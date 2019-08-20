@@ -1,7 +1,6 @@
 ﻿// stylecop.header
 using System;
 using System.Collections.Generic;
-using Strinken.Core;
 
 namespace Strinken
 {

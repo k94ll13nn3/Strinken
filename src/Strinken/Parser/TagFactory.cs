@@ -26,7 +26,7 @@ namespace Strinken
             /// <summary>
             /// Action linked to the tag.
             /// </summary>
-            private readonly Func<T, string> resolve;
+            private readonly Func<T, string> _resolve;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="BaseTag{T}"/> class.
@@ -36,7 +36,7 @@ namespace Strinken
             /// <param name="resolveAction">The action linked to the tag.</param>
             public BaseTag(string name, string description, Func<T, string> resolveAction)
             {
-                resolve = resolveAction;
+                _resolve = resolveAction;
 
                 Description = description;
                 Name = name;
@@ -49,7 +49,7 @@ namespace Strinken
             public string Name { get; }
 
             /// <inheritdoc/>
-            public string Resolve(T value) => resolve(value);
+            public string Resolve(T value) => _resolve(value);
         }
     }
 }

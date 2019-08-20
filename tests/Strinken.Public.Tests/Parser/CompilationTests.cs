@@ -56,8 +56,8 @@ namespace Strinken.Public.Tests.Parser
 
             CompiledString compiledString = stringSolver.Compile("The {DataName} is in the kitchen.");
 
-            var expected = new[] { "The Lorem is in the kitchen.", "The Ipsum is in the kitchen.", "The Sanctum is in the kitchen." };
-            var data = new[] { new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" } };
+            string[] expected = new[] { "The Lorem is in the kitchen.", "The Ipsum is in the kitchen.", "The Sanctum is in the kitchen." };
+            Data[] data = new[] { new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" } };
             stringSolver.Resolve(compiledString, data).Should().BeEquivalentTo(expected);
         }
 
@@ -68,7 +68,7 @@ namespace Strinken.Public.Tests.Parser
 
             Action act = () => stringSolver.Resolve((CompiledString)null, new Data { Name = "Lorem" });
 
-            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "compiledString"); ;
+            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "compiledString");
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Strinken.Public.Tests.Parser
 
             Action act = () => stringSolver.Resolve((CompiledString)null, Array.Empty<Data>());
 
-            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "compiledString"); ;
+            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "compiledString");
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Strinken.Public.Tests.Parser
             CompiledString compiledString = stringSolver.Compile("The {DataName} is in the kitchen.");
             Action act = () => stringSolver.Resolve(compiledString, (IEnumerable<Data>)null);
 
-            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "values"); ;
+            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "values");
         }
     }
 }

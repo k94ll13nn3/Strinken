@@ -43,7 +43,7 @@ namespace Strinken.Core
                 throw new ArgumentException("A name cannot be empty.");
             }
 
-            for (var i = 0; i < name.Length; i++)
+            for (int i = 0; i < name.Length; i++)
             {
                 if (name[i].IsInvalidTokenNameCharacter())
                 {
@@ -64,7 +64,7 @@ namespace Strinken.Core
                 return;
             }
 
-            for (var i = 0; i < alternativeName.Length; i++)
+            for (int i = 0; i < alternativeName.Length; i++)
             {
                 if (alternativeName[i].IsInvalidAlternativeNameCharacter())
                 {

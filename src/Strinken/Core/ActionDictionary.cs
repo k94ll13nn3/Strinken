@@ -11,14 +11,14 @@ namespace Strinken.Core
         /// <summary>
         /// Internal dictionary containing the list of actions and the related token propeties.
         /// </summary>
-        private readonly IDictionary<TokenProperties, Func<string[], string>> items;
+        private readonly IDictionary<TokenProperties, Func<string[], string>> _items;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionDictionary"/> class.
         /// </summary>
         public ActionDictionary()
         {
-            items = new Dictionary<TokenProperties, Func<string[], string>>();
+            _items = new Dictionary<TokenProperties, Func<string[], string>>();
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Strinken.Core
         public Func<string[], string> this[TokenType type, char operatorSymbol, char indicatorSymbol]
         {
             get { return Get(type, operatorSymbol, indicatorSymbol); }
-            set { items[new TokenProperties(type, operatorSymbol, indicatorSymbol)] = value; }
+            set { _items[new TokenProperties(type, operatorSymbol, indicatorSymbol)] = value; }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Strinken.Core
         private Func<string[], string> Get(TokenType type, char operatorSymbol, char indicatorSymbol)
         {
             var key = new TokenProperties(type, operatorSymbol, indicatorSymbol);
-            return items.ContainsKey(key) ? items[key] : null;
+            return _items.ContainsKey(key) ? _items[key] : null;
         }
 
         /// <summary>
@@ -89,18 +89,18 @@ namespace Strinken.Core
                 }
 
                 var properties = (TokenProperties)obj;
-                return TokenType == properties.TokenType &&
-                       OperatorSymbol == properties.OperatorSymbol &&
-                       IndicatorSymbol == properties.IndicatorSymbol;
+                return TokenType == properties.TokenType
+                       && OperatorSymbol == properties.OperatorSymbol
+                       && IndicatorSymbol == properties.IndicatorSymbol;
             }
 
             /// <inheritdoc/>
             public override int GetHashCode()
             {
-                var hashCode = -658720343;
-                hashCode = hashCode * -1521134295 + TokenType.GetHashCode();
-                hashCode = hashCode * -1521134295 + OperatorSymbol.GetHashCode();
-                hashCode = hashCode * -1521134295 + IndicatorSymbol.GetHashCode();
+                int hashCode = -658720343;
+                hashCode = (hashCode * -1521134295) + TokenType.GetHashCode();
+                hashCode = (hashCode * -1521134295) + OperatorSymbol.GetHashCode();
+                hashCode = (hashCode * -1521134295) + IndicatorSymbol.GetHashCode();
                 return hashCode;
             }
         }

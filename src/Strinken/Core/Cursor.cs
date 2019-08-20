@@ -14,7 +14,7 @@ namespace Strinken.Core
         /// <summary>
         /// The reader used to read the string.
         /// </summary>
-        private readonly StringReader reader;
+        private readonly StringReader _reader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cursor"/> class.
@@ -22,8 +22,8 @@ namespace Strinken.Core
         /// <param name="input">The string to read.</param>
         public Cursor(string input)
         {
-            reader = new StringReader(input);
-            Value = reader.Read();
+            _reader = new StringReader(input);
+            Value = _reader.Read();
             Position = 0;
         }
 
@@ -45,7 +45,7 @@ namespace Strinken.Core
         /// <inheritdoc/>
         public void Dispose()
         {
-            reader?.Dispose();
+            _reader?.Dispose();
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Strinken.Core
         /// </summary>
         public void Next()
         {
-            Value = reader.Read();
+            Value = _reader.Read();
             Position++;
         }
 
@@ -67,7 +67,7 @@ namespace Strinken.Core
         /// Peeks the next character of the cursor.
         /// </summary>
         /// <returns>The next character of the cursor.</returns>
-        public int Peek() => reader.Peek();
+        public int Peek() => _reader.Peek();
 
         /// <summary>
         /// Indicates if the next character is the end.
@@ -84,7 +84,7 @@ namespace Strinken.Core
         public ParseResult<TokenDefinition> ParseName(ICollection<int> ends, TokenType tokenType)
         {
             var updatedEnd = new List<int> { SpecialCharacter.TokenEndIndicator };
-            foreach (var end in ends ?? Enumerable.Empty<int>())
+            foreach (int end in ends ?? Enumerable.Empty<int>())
             {
                 updatedEnd.Add(end);
             }
@@ -347,7 +347,7 @@ namespace Strinken.Core
                 switch (Value)
                 {
                     case int _ when updatedEnd.Contains(Value):
-                        var parsedName = builder.ToString();
+                        string parsedName = builder.ToString();
                         return !string.IsNullOrEmpty(parsedName) ?
                             ParseResult<TokenDefinition>.Success(new TokenDefinition(parsedName, tokenType, operatorDefined.Symbol, indicatorDefined.Symbol)) :
                             ParseResult<TokenDefinition>.FailureWithMessage(Errors.EmptyName);

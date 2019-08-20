@@ -13,14 +13,14 @@ namespace Strinken.Core
         /// <summary>
         /// Internal stack.
         /// </summary>
-        private Stack<TokenDefinition> tokenStack;
+        private Stack<TokenDefinition> _tokenStack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenStack"/> class.
         /// </summary>
         public TokenStack()
         {
-            tokenStack = new Stack<TokenDefinition>();
+            _tokenStack = new Stack<TokenDefinition>();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Strinken.Core
         /// <param name="token">The token to push.</param>
         public void Push(TokenDefinition token)
         {
-            tokenStack.Push(token);
+            _tokenStack.Push(token);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Strinken.Core
         {
             foreach (TokenDefinition token in tokens)
             {
-                tokenStack.Push(token);
+                _tokenStack.Push(token);
             }
         }
 
@@ -51,21 +51,21 @@ namespace Strinken.Core
         /// <returns>The result of the resolution of the stack.</returns>
         public string Resolve(ActionDictionary actions)
         {
-            if (tokenStack.Count == 1 && tokenStack.Peek().Type == TokenType.None)
+            if (_tokenStack.Count == 1 && _tokenStack.Peek().Type == TokenType.None)
             {
-                return tokenStack.Peek().Data;
+                return _tokenStack.Peek().Data;
             }
 
             // The stack is copied in order to be able to be reused because it will be emptied.
-            var copiedStack = new Stack<TokenDefinition>(tokenStack.Reverse());
+            var copiedStack = new Stack<TokenDefinition>(_tokenStack.Reverse());
             var result = new StringBuilder();
-            while (tokenStack.Count > 0)
+            while (_tokenStack.Count > 0)
             {
-                TokenDefinition nextToken = tokenStack.Peek();
+                TokenDefinition nextToken = _tokenStack.Peek();
                 switch (nextToken.Type)
                 {
                     case TokenType.None:
-                        TokenDefinition currentToken = tokenStack.Pop();
+                        TokenDefinition currentToken = _tokenStack.Pop();
                         result.Insert(0, currentToken.Data);
                         break;
 
@@ -75,7 +75,7 @@ namespace Strinken.Core
                 }
             }
 
-            tokenStack = copiedStack;
+            _tokenStack = copiedStack;
             return result.ToString();
         }
 
@@ -88,9 +88,9 @@ namespace Strinken.Core
         {
             var arguments = new List<string>();
 
-            while (tokenStack.Count > 0)
+            while (_tokenStack.Count > 0)
             {
-                TokenDefinition currentToken = tokenStack.Pop();
+                TokenDefinition currentToken = _tokenStack.Pop();
                 switch (currentToken.Type)
                 {
                     case TokenType.Argument:
@@ -98,10 +98,10 @@ namespace Strinken.Core
                         break;
 
                     case TokenType.Filter:
-                        var temporaryResult = ResolveTagOrFilter(actions);
+                        string temporaryResult = ResolveTagOrFilter(actions);
 
                         // An array is created containing all arguments.
-                        var concatenatedArguments = new string[arguments.Count + 2];
+                        string[] concatenatedArguments = new string[arguments.Count + 2];
                         concatenatedArguments[0] = currentToken.Data;
                         concatenatedArguments[1] = temporaryResult;
                         arguments.CopyTo(concatenatedArguments, 2);

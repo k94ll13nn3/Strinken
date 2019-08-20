@@ -152,8 +152,8 @@ namespace Strinken.Public.Tests.Parser
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
-            var expected = new[] { "The 5 is in the kitchen.", "The 5 is in the kitchen.", "The 7 is in the kitchen." };
-            var data = new[] { new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" } };
+            string[] expected = new[] { "The 5 is in the kitchen.", "The 5 is in the kitchen.", "The 7 is in the kitchen." };
+            Data[] data = new[] { new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" } };
             stringSolver.Resolve("The {DataName:Length} is in the kitchen.", data).Should().BeEquivalentTo(expected);
         }
 
@@ -163,7 +163,7 @@ namespace Strinken.Public.Tests.Parser
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
             Action act = () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", (IEnumerable<Data>)null);
 
-            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "values"); ;
+            act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "values");
         }
 
         [Fact]
