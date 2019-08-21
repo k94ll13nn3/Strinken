@@ -4,7 +4,7 @@ namespace Strinken
     /// <summary>
     /// Class representing the result of the validation process.
     /// </summary>
-    public class ValidationResult
+    public sealed class ValidationResult
     {
         /// <summary>
         /// Gets or sets a message describing why the input is not valid.

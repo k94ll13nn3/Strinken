@@ -5,7 +5,7 @@ namespace Strinken
     /// <summary>
     /// A compiled string for fast resolution.
     /// </summary>
-    public class CompiledString
+    public sealed class CompiledString
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledString"/> class with the specified <see cref="TokenStack"/>.

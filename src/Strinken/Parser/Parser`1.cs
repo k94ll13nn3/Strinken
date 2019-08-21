@@ -11,7 +11,7 @@ namespace Strinken
     /// Strinken parser.
     /// </summary>
     /// <typeparam name="T">The type related to the parser.</typeparam>
-    public class Parser<T>
+    public sealed class Parser<T>
     {
         /// <summary>
         /// Filters used by the parser.
