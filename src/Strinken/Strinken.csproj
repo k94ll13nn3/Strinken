@@ -40,10 +40,9 @@
     <MinVerDefaultPreReleasePhase>ci</MinVerDefaultPreReleasePhase>
   </PropertyGroup>
 
-  <!-- Update FileVersion after running MinVer to add APPVEYOR_BUILD_NUMBER (0 outside AppVeyor) -->
-  <Target Name="UpdateFileVersion" AfterTargets="MinVer">
+  <!-- Update FileVersion after running MinVer to add APPVEYOR_BUILD_NUMBER (on AppVeyor) -->
+  <Target Name="UpdateFileVersion" AfterTargets="MinVer" Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">
     <PropertyGroup>
-      <APPVEYOR_BUILD_NUMBER Condition="'$(APPVEYOR_BUILD_NUMBER)' == ''">0</APPVEYOR_BUILD_NUMBER>
       <FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).$(APPVEYOR_BUILD_NUMBER)</FileVersion>
     </PropertyGroup>
   </Target>
