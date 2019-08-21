@@ -39,34 +39,6 @@ var searchModule = function() {
     a(
         {
             id:0,
-            title:"IFilter",
-            content:"IFilter",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IFilter',
-            title:"IFilter",
-            description:""
-        }
-    );
-    a(
-        {
-            id:1,
-            title:"IParameterTag",
-            content:"IParameterTag",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IParameterTag',
-            title:"IParameterTag",
-            description:""
-        }
-    );
-    a(
-        {
-            id:2,
             title:"ParserExtensions",
             content:"ParserExtensions",
             description:'',
@@ -80,21 +52,7 @@ var searchModule = function() {
     );
     a(
         {
-            id:3,
-            title:"ValidationResult",
-            content:"ValidationResult",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/ValidationResult',
-            title:"ValidationResult",
-            description:""
-        }
-    );
-    a(
-        {
-            id:4,
+            id:1,
             title:"BaseFilters",
             content:"BaseFilters",
             description:'',
@@ -103,6 +61,48 @@ var searchModule = function() {
         {
             url:'/Strinken/api/Strinken/BaseFilters',
             title:"BaseFilters",
+            description:""
+        }
+    );
+    a(
+        {
+            id:2,
+            title:"ITag",
+            content:"ITag",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ITag_1',
+            title:"ITag<T>",
+            description:""
+        }
+    );
+    a(
+        {
+            id:3,
+            title:"FilterWithoutArguments",
+            content:"FilterWithoutArguments",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/FilterWithoutArguments',
+            title:"FilterWithoutArguments",
+            description:""
+        }
+    );
+    a(
+        {
+            id:4,
+            title:"Parser",
+            content:"Parser",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/Parser_1',
+            title:"Parser<T>",
             description:""
         }
     );
@@ -123,6 +123,20 @@ var searchModule = function() {
     a(
         {
             id:6,
+            title:"ValidationResult",
+            content:"ValidationResult",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ValidationResult',
+            title:"ValidationResult",
+            description:""
+        }
+    );
+    a(
+        {
+            id:7,
             title:"IToken",
             content:"IToken",
             description:'',
@@ -136,43 +150,29 @@ var searchModule = function() {
     );
     a(
         {
-            id:7,
-            title:"ITag",
-            content:"ITag",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/ITag_1',
-            title:"ITag<T>",
-            description:""
-        }
-    );
-    a(
-        {
             id:8,
-            title:"FilterWithoutArguments",
-            content:"FilterWithoutArguments",
+            title:"IFilter",
+            content:"IFilter",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/FilterWithoutArguments',
-            title:"FilterWithoutArguments",
+            url:'/Strinken/api/Strinken/IFilter',
+            title:"IFilter",
             description:""
         }
     );
     a(
         {
             id:9,
-            title:"Parser",
-            content:"Parser",
+            title:"IParameterTag",
+            content:"IParameterTag",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/Parser_1',
-            title:"Parser<T>",
+            url:'/Strinken/api/Strinken/IParameterTag',
+            title:"IParameterTag",
             description:""
         }
     );
