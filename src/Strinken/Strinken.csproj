@@ -8,13 +8,17 @@
     <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageTags>parametrized;string;parser;strinken</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/docs/input/assets/img/logo_64x64.png</PackageIconUrl>
+    <PackageIcon>logo_64x64.png</PackageIcon>
     <PackageProjectUrl>https://k94ll13nn3.github.io/Strinken</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/k94ll13nn3/Strinken</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\input\assets\img\logo_64x64.png" Pack="true" PackagePath="" Visible="false" />
+  </ItemGroup>
  
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01" PrivateAssets="all" />

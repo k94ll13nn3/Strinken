@@ -81,14 +81,14 @@ namespace Strinken.Build
                 }
             }
 
-            builder.AppendLine($"## {releases.Last().Name} - {releases.Last().PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}").AppendLine();
+            builder.AppendLine(FormatRelease(releases.Last())).AppendLine();
             builder.AppendLine(releases.Last().Body).AppendLine();
 
             builder.Append(string.Join($"{Environment.NewLine}", links));
 
             File.WriteAllText(Path.Combine(artifactsPath, releaseNotesPath), builder.ToString());
 
-            string FormatRelease(Release release) => release.Name == "Unreleased" ? $"## {release.Name}" : $"## [{release.Name}] - {release.PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}";
+            static string FormatRelease(Release release) => release.Name == "Unreleased" ? $"## {release.Name}" : $"## [{release.Name}] - {release.PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}";
             string FormatIssue(Issue issue) => $"- [#{issue.Number}](https://github.com/{owner}/{project}/issues/{issue.Number}): {issue.Title}";
             string FormatPullRequest(PullRequest pullRequest) => $"- [#{pullRequest.Number}](https://github.com/{owner}/{project}/pull/{pullRequest.Number}): {pullRequest.Title} (by [{pullRequest.User.Login}](https://github.com/{pullRequest.User.Login}))";
         }
