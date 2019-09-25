@@ -12,8 +12,8 @@ namespace Strinken.Public.Tests.Parser
         {
             Parser<Data> solver = new Parser<Data>().WithTag("OTF", "OTF", a => a.Name);
 
-            solver.Tags.Should().HaveCount(1);
-            solver.Tags.First().Name.Should().Be("OTF");
+            solver.GetTags().Should().HaveCount(1);
+            solver.GetTags().First().Name.Should().Be("OTF");
             solver.Resolve("The {OTF} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Lorem is in the kitchen.");
         }
 

@@ -58,17 +58,17 @@ namespace Strinken
         /// <summary>
         /// Gets the filters used by the parser.
         /// </summary>
-        public IReadOnlyCollection<IFilter> Filters => new ReadOnlyCollection<IFilter>(_filters.Values.ToList());
+        public IReadOnlyCollection<IFilter> GetFilters() => new ReadOnlyCollection<IFilter>(_filters.Values.ToList());
 
         /// <summary>
         /// Gets the tags used by the parser.
         /// </summary>
-        public IReadOnlyCollection<ITag<T>> Tags => new ReadOnlyCollection<ITag<T>>(_tags.Values.ToList());
+        public IReadOnlyCollection<ITag<T>> GetTags() => new ReadOnlyCollection<ITag<T>>(_tags.Values.ToList());
 
         /// <summary>
         /// Gets the parameters tags used by the parser.
         /// </summary>
-        public IReadOnlyCollection<IParameterTag> ParameterTags => new ReadOnlyCollection<IParameterTag>(_parameterTags.Values.ToList());
+        public IReadOnlyCollection<IParameterTag> GetParameterTags() => new ReadOnlyCollection<IParameterTag>(_parameterTags.Values.ToList());
 
         /// <summary>
         /// Resolves the input.

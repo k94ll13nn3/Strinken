@@ -12,7 +12,7 @@ namespace Strinken.Public.Tests.Parser
         {
             var solver = new Parser<Data>(true);
 
-            solver.Filters.Should().HaveCount(0);
+            solver.GetFilters().Should().HaveCount(0);
         }
 
         [Fact]
