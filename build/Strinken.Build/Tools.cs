@@ -20,7 +20,7 @@ namespace Strinken.Build
             }
         }
 
-        public static async Task GenerateReleaseNotes(string artifactsPath, string tokenName, string owner, string project)
+        public static async Task GenerateReleaseNotesAsync(string artifactsPath, string tokenName, string owner, string project)
         {
             if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(tokenName)))
             {
@@ -61,7 +61,7 @@ namespace Strinken.Build
 
                 if (!string.IsNullOrWhiteSpace(releases[i].Body) || issuesForRelease.Any() || pullRequestsForRelease.Any())
                 {
-                    builder.AppendLine(FormatRelease(releases[i])).AppendLine();
+                    builder.AppendLine(FormatRelease(releases[i], true)).AppendLine();
                 }
 
                 if (!string.IsNullOrWhiteSpace(releases[i].Body))
@@ -81,16 +81,27 @@ namespace Strinken.Build
                 }
             }
 
-            builder.AppendLine(FormatRelease(releases.Last())).AppendLine();
+            builder.AppendLine(FormatRelease(releases.Last(), false)).AppendLine();
             builder.AppendLine(releases.Last().Body).AppendLine();
 
             builder.Append(string.Join($"{Environment.NewLine}", links));
 
             File.WriteAllText(Path.Combine(artifactsPath, releaseNotesPath), builder.ToString());
 
-            static string FormatRelease(Release release) => release.Name == "Unreleased" ? $"## {release.Name}" : $"## [{release.Name}] - {release.PublishedAt.Value.ToString("yyyy'-'MM'-'dd")}";
-            string FormatIssue(Issue issue) => $"- [#{issue.Number}](https://github.com/{owner}/{project}/issues/{issue.Number}): {issue.Title}";
             string FormatPullRequest(PullRequest pullRequest) => $"- [#{pullRequest.Number}](https://github.com/{owner}/{project}/pull/{pullRequest.Number}): {pullRequest.Title} (by [{pullRequest.User.Login}](https://github.com/{pullRequest.User.Login}))";
+            string FormatIssue(Issue issue) => $"- [#{issue.Number}](https://github.com/{owner}/{project}/issues/{issue.Number}): {issue.Title}";
+            static string FormatRelease(Release release, bool linked)
+            {
+                if (release.Name == "Unreleased")
+                {
+                    return "## Unreleased";
+                }
+                else
+                {
+                    string name = linked ? $"## [{release.Name}]" : $"## {release.Name}";
+                    return $"## {name} - {release.PublishedAt?.ToString("yyyy'-'MM'-'dd")}";
+                }
+            }
         }
 
         public static void GenerateDocumentation(string documentationPath, string tokenName, string owner, string project)

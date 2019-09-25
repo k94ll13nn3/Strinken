@@ -27,7 +27,7 @@ namespace Strinken.Build
 
             Target(
                 "notes",
-                async () => await Tools.GenerateReleaseNotes(artifactsPath, "GITHUB_TOKEN", "k94ll13nn3", "Strinken"));
+                async () => await Tools.GenerateReleaseNotesAsync(artifactsPath, "GITHUB_TOKEN", "k94ll13nn3", "Strinken"));
 
             Target(
                 "doc",
