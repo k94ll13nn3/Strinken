@@ -15,21 +15,30 @@ namespace Strinken.Core
         /// </summary>
         /// <param name="c">The <see cref="char"/> to test.</param>
         /// <returns>A value indicating whether the <see cref="char"/> is an invalid token name character</returns>
-        public static bool IsInvalidTokenNameCharacter(this char c) => !char.IsLetter(c) && c != '-' && c != '_';
+        public static bool IsInvalidTokenNameCharacter(this char c)
+        {
+            return !char.IsLetter(c) && c != '-' && c != '_';
+        }
 
         /// <summary>
         /// Tests if a <see cref="char"/> is an invalid alternative name character i.e. not in <see cref="ValidAlternativeNameCharacter"/>.
         /// </summary>
         /// <param name="c">The <see cref="char"/> to test.</param>
         /// <returns>A value indicating whether the <see cref="char"/> is an invalid alternative name character</returns>
-        public static bool IsInvalidAlternativeNameCharacter(this char c) => !ValidAlternativeNameCharacter.Contains(c);
+        public static bool IsInvalidAlternativeNameCharacter(this char c)
+        {
+            return !ValidAlternativeNameCharacter.Contains(c);
+        }
 
         /// <summary>
         /// Tests if a <see cref="char"/> is an invalid hexadecimal character i.e. not a-f, A-F or 0-9.
         /// </summary>
         /// <param name="c">The <see cref="char"/> to test.</param>
         /// <returns>A value indicating whether the <see cref="char"/> is an invalid hexadecimal character</returns>
-        public static bool IsInvalidHexadecimalCharacter(this char c) => !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
+        public static bool IsInvalidHexadecimalCharacter(this char c)
+        {
+            return !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
+        }
 
         /// <summary>
         /// Validates a name and throws a <see cref="ArgumentException"/> if the name is invalid.

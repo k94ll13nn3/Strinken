@@ -33,6 +33,9 @@
         }
 
         /// <inheritdoc/>
-        public bool Validate(string[] arguments) => arguments?.Length > 0 && arguments?.Length % 2 == 0;
+        public bool Validate(string[] arguments)
+        {
+            return arguments?.Length > 0 && arguments?.Length % 2 == 0;
+        }
     }
 }

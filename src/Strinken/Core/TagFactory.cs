@@ -15,7 +15,10 @@ namespace Strinken.Core
         /// <param name="tagDescription">The name of the tag.</param>
         /// <param name="resolveAction">The action linked to the tag.</param>
         /// <returns>The tag.</returns>
-        internal static ITag<T> Create<T>(string tagName, string tagDescription, Func<T, string> resolveAction) => new BaseTag<T>(tagName, tagDescription, resolveAction);
+        internal static ITag<T> Create<T>(string tagName, string tagDescription, Func<T, string> resolveAction)
+        {
+            return new BaseTag<T>(tagName, tagDescription, resolveAction);
+        }
 
         /// <summary>
         /// Private class used to create tags.
@@ -49,7 +52,10 @@ namespace Strinken.Core
             public string Name { get; }
 
             /// <inheritdoc/>
-            public string Resolve(T value) => _resolve(value);
+            public string Resolve(T value)
+            {
+                return _resolve(value);
+            }
         }
     }
 }

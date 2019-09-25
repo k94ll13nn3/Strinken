@@ -39,14 +39,20 @@
         /// </summary>
         /// <param name="value">The parsed value.</param>
         /// <returns>The result.</returns>
-        public static ParseResult<T> Success(T value) => new ParseResult<T>(true, value, string.Empty);
+        public static ParseResult<T> Success(T value)
+        {
+            return new ParseResult<T>(true, value, string.Empty);
+        }
 
         /// <summary>
         /// Creates a new failure result.
         /// </summary>
         /// <param name="message">The message associated to the parsing.</param>
         /// <returns>The result.</returns>
-        public static ParseResult<T> FailureWithMessage(string message) => new ParseResult<T>(false, default!, message);
+        public static ParseResult<T> FailureWithMessage(string message)
+        {
+            return new ParseResult<T>(false, default!, message);
+        }
 
         /// <summary>
         /// Defines an implicit conversion of a <see cref="ParseResult{T}"/> to a <see cref="bool"/>.

@@ -18,9 +18,15 @@ namespace Strinken
         public string AlternativeName => "?";
 
         /// <inheritdoc/>
-        public string Resolve(string value, string[] arguments) => value == arguments[0] ? arguments[1] : arguments[2];
+        public string Resolve(string value, string[] arguments)
+        {
+            return value == arguments[0] ? arguments[1] : arguments[2];
+        }
 
         /// <inheritdoc/>
-        public bool Validate(string[] arguments) => arguments?.Length == 3;
+        public bool Validate(string[] arguments)
+        {
+            return arguments?.Length == 3;
+        }
     }
 }

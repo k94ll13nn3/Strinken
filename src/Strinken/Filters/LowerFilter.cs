@@ -15,6 +15,9 @@ namespace Strinken
         public override string AlternativeName => string.Empty;
 
         /// <inheritdoc/>
-        public override string Resolve(string value) => value?.ToLowerInvariant() ?? string.Empty;
+        public override string Resolve(string value)
+        {
+            return value?.ToLowerInvariant() ?? string.Empty;
+        }
     }
 }

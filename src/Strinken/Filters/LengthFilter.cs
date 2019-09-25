@@ -15,6 +15,9 @@ namespace Strinken
         public override string AlternativeName => string.Empty;
 
         /// <inheritdoc/>
-        public override string Resolve(string value) => (value?.Length ?? 0).ToString();
+        public override string Resolve(string value)
+        {
+            return (value?.Length ?? 0).ToString();
+        }
     }
 }

@@ -30,8 +30,8 @@ namespace Strinken.Core
         /// <returns>The element with the specified key, or null if the key is not present.</returns>
         public Func<string[], string> this[TokenType type, char operatorSymbol, char indicatorSymbol]
         {
-            get { return Get(type, operatorSymbol, indicatorSymbol); }
-            set { _items[new TokenProperties(type, operatorSymbol, indicatorSymbol)] = value; }
+            get => Get(type, operatorSymbol, indicatorSymbol);
+            set => _items[new TokenProperties(type, operatorSymbol, indicatorSymbol)] = value;
         }
 
         /// <summary>

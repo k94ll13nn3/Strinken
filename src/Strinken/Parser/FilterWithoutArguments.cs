@@ -18,7 +18,10 @@
         public string Usage => $"{{tag:{Name}}}{(!string.IsNullOrWhiteSpace(AlternativeName) ? $" or {{tag:{AlternativeName}}}" : string.Empty)}";
 
         /// <inheritdoc/>
-        public string Resolve(string value, string[] arguments) => Resolve(value);
+        public string Resolve(string value, string[] arguments)
+        {
+            return Resolve(value);
+        }
 
         /// <summary>
         /// Resolves the filter.
@@ -28,6 +31,9 @@
         public abstract string Resolve(string value);
 
         /// <inheritdoc/>
-        public bool Validate(string[] arguments) => arguments == null || arguments.Length == 0;
+        public bool Validate(string[] arguments)
+        {
+            return arguments == null || arguments.Length == 0;
+        }
     }
 }

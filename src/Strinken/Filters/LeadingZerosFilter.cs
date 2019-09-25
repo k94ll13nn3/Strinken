@@ -18,7 +18,10 @@ namespace Strinken
         public string AlternativeName => string.Empty;
 
         /// <inheritdoc/>
-        public string Resolve(string value, string[] arguments) => (value ?? string.Empty).PadLeft(int.Parse(arguments[0]), '0');
+        public string Resolve(string value, string[] arguments)
+        {
+            return (value ?? string.Empty).PadLeft(int.Parse(arguments[0]), '0');
+        }
 
         /// <inheritdoc/>
         public bool Validate(string[] arguments)

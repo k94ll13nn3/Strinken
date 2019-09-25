@@ -52,7 +52,10 @@ namespace Strinken.Core
         /// Indicates if the cursor has reached the end.
         /// </summary>
         /// <returns>A value indicating whether the cursor as reached the end.</returns>
-        public bool HasEnded() => Value == -1;
+        public bool HasEnded()
+        {
+            return Value == -1;
+        }
 
         /// <summary>
         /// Moves the cursor.
@@ -67,13 +70,19 @@ namespace Strinken.Core
         /// Peeks the next character of the cursor.
         /// </summary>
         /// <returns>The next character of the cursor.</returns>
-        public int Peek() => _reader.Peek();
+        public int Peek()
+        {
+            return _reader.Peek();
+        }
 
         /// <summary>
         /// Indicates if the next character is the end.
         /// </summary>
         /// <returns>A value indicating whether the next character is the end.</returns>
-        public bool PeekIsEnd() => Peek() == -1;
+        public bool PeekIsEnd()
+        {
+            return Peek() == -1;
+        }
 
         /// <summary>
         /// Parses a string inside a token and returns the first name in it.

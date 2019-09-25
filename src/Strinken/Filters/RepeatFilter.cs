@@ -20,7 +20,10 @@ namespace Strinken
         public string AlternativeName => "*";
 
         /// <inheritdoc/>
-        public string Resolve(string value, string[] arguments) => string.Concat(Enumerable.Repeat(value, int.Parse(arguments[0])));
+        public string Resolve(string value, string[] arguments)
+        {
+            return string.Concat(Enumerable.Repeat(value, int.Parse(arguments[0])));
+        }
 
         /// <inheritdoc/>
         public bool Validate(string[] arguments)

@@ -58,17 +58,26 @@ namespace Strinken
         /// <summary>
         /// Gets the filters used by the parser.
         /// </summary>
-        public IReadOnlyCollection<IFilter> GetFilters() => new ReadOnlyCollection<IFilter>(_filters.Values.ToList());
+        public IReadOnlyCollection<IFilter> GetFilters()
+        {
+            return new ReadOnlyCollection<IFilter>(_filters.Values.ToList());
+        }
 
         /// <summary>
         /// Gets the tags used by the parser.
         /// </summary>
-        public IReadOnlyCollection<ITag<T>> GetTags() => new ReadOnlyCollection<ITag<T>>(_tags.Values.ToList());
+        public IReadOnlyCollection<ITag<T>> GetTags()
+        {
+            return new ReadOnlyCollection<ITag<T>>(_tags.Values.ToList());
+        }
 
         /// <summary>
         /// Gets the parameters tags used by the parser.
         /// </summary>
-        public IReadOnlyCollection<IParameterTag> GetParameterTags() => new ReadOnlyCollection<IParameterTag>(_parameterTags.Values.ToList());
+        public IReadOnlyCollection<IParameterTag> GetParameterTags()
+        {
+            return new ReadOnlyCollection<IParameterTag>(_parameterTags.Values.ToList());
+        }
 
         /// <summary>
         /// Resolves the input.
@@ -77,7 +86,10 @@ namespace Strinken
         /// <param name="value">The value to pass to the tags.</param>
         /// <returns>The resolved input.</returns>
         /// <exception cref="FormatException">The input has a wrong format.</exception>
-        public string Resolve(string input, T value) => Resolve(Compile(input), value);
+        public string Resolve(string input, T value)
+        {
+            return Resolve(Compile(input), value);
+        }
 
         /// <summary>
         /// Resolves the compiled string.

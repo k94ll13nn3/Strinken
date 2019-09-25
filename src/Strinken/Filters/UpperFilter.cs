@@ -15,6 +15,9 @@
         public override string AlternativeName => string.Empty;
 
         /// <inheritdoc/>
-        public override string Resolve(string value) => value?.ToUpperInvariant() ?? string.Empty;
+        public override string Resolve(string value)
+        {
+            return value?.ToUpperInvariant() ?? string.Empty;
+        }
     }
 }
