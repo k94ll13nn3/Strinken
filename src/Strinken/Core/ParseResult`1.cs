@@ -4,7 +4,7 @@
     /// Base class for all parsing result.
     /// </summary>
     /// <typeparam name="T">The type of the parsed data.</typeparam>
-    internal sealed class ParseResult<T>
+    internal sealed class ParseResult<T> where T : notnull
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ParseResult{T}"/> class.
@@ -39,14 +39,14 @@
         /// </summary>
         /// <param name="value">The parsed value.</param>
         /// <returns>The result.</returns>
-        public static ParseResult<T> Success(T value) => new ParseResult<T>(true, value, null);
+        public static ParseResult<T> Success(T value) => new ParseResult<T>(true, value, string.Empty);
 
         /// <summary>
         /// Creates a new failure result.
         /// </summary>
         /// <param name="message">The message associated to the parsing.</param>
         /// <returns>The result.</returns>
-        public static ParseResult<T> FailureWithMessage(string message) => new ParseResult<T>(false, default, message);
+        public static ParseResult<T> FailureWithMessage(string message) => new ParseResult<T>(false, default!, message);
 
         /// <summary>
         /// Defines an implicit conversion of a <see cref="ParseResult{T}"/> to a <see cref="bool"/>.

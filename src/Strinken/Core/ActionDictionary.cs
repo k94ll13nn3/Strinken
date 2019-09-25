@@ -44,7 +44,7 @@ namespace Strinken.Core
         private Func<string[], string> Get(TokenType type, char operatorSymbol, char indicatorSymbol)
         {
             var key = new TokenProperties(type, operatorSymbol, indicatorSymbol);
-            return _items.ContainsKey(key) ? _items[key] : null;
+            return _items.ContainsKey(key) ? _items[key] : (_ => string.Empty);
         }
 
         /// <summary>

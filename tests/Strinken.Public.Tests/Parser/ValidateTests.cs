@@ -13,7 +13,7 @@ namespace Strinken.Public.Tests.Parser
             ValidationResult validationResult = stringSolver.Validate("The {DataName:Upper} is in the kitchen.");
 
             validationResult.IsValid.Should().BeTrue();
-            validationResult.Message.Should().BeNull();
+            validationResult.Message.Should().BeEmpty();
         }
 
         [Fact]
@@ -23,7 +23,7 @@ namespace Strinken.Public.Tests.Parser
             ValidationResult validationResult = stringSolver.Validate("The {DataName:!*} is in the kitchen.");
 
             validationResult.IsValid.Should().BeTrue();
-            validationResult.Message.Should().BeNull();
+            validationResult.Message.Should().BeEmpty();
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Strinken.Public.Tests.Parser
             ValidationResult validationResult = stringSolver.Validate("The {DataName:Length:Zeros+6} is in the kitchen.");
 
             validationResult.IsValid.Should().BeTrue();
-            validationResult.Message.Should().BeNull();
+            validationResult.Message.Should().BeEmpty();
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Strinken.Public.Tests.Parser
             ValidationResult validationResult = stringSolver.Validate("The {DataName} is in the kitchen.");
 
             validationResult.IsValid.Should().BeTrue();
-            validationResult.Message.Should().BeNull();
+            validationResult.Message.Should().BeEmpty();
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace Strinken.Public.Tests.Parser
             ValidationResult validationResult = stringSolver.Validate("The {!Blue} is in the kitchen.");
 
             validationResult.IsValid.Should().BeTrue();
-            validationResult.Message.Should().BeNull();
+            validationResult.Message.Should().BeEmpty();
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Strinken.Public.Tests.Parser
             ValidationResult validationResult = stringSolver.Validate("The {DataName:!*:Null+Ok} is in the kitchen.");
 
             validationResult.IsValid.Should().BeTrue();
-            validationResult.Message.Should().BeNull();
+            validationResult.Message.Should().BeEmpty();
         }
 
         [Fact]

@@ -19,7 +19,7 @@ namespace Strinken.Core
             {
                 var stack = new TokenStack();
                 stack.Push(new TokenDefinition(input, TokenType.None, '\0', '\0'));
-                result = new EngineResult(true, stack, null);
+                result = new EngineResult(true, stack, string.Empty);
             }
             else
             {
@@ -28,13 +28,13 @@ namespace Strinken.Core
                     ParseResult<IEnumerable<TokenDefinition>> parsingResult = cursor.ParseString();
                     if (!parsingResult)
                     {
-                        result = new EngineResult(false, null, parsingResult.Message);
+                        result = new EngineResult(false, new TokenStack(), parsingResult.Message);
                     }
                     else
                     {
                         var tokenStack = new TokenStack();
                         tokenStack.PushRange(parsingResult.Value);
-                        result = new EngineResult(true, tokenStack, null);
+                        result = new EngineResult(true, tokenStack, string.Empty);
                     }
                 }
             }

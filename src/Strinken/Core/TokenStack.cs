@@ -87,14 +87,13 @@ namespace Strinken.Core
         private string ResolveTagOrFilter(ActionDictionary actions)
         {
             var arguments = new List<string>();
-
             while (_tokenStack.Count > 0)
             {
                 TokenDefinition currentToken = _tokenStack.Pop();
                 switch (currentToken.Type)
                 {
                     case TokenType.Argument:
-                        arguments.Insert(0, actions?[TokenType.Argument, currentToken.OperatorSymbol, currentToken.IndicatorSymbol]?.Invoke(new[] { currentToken.Data }));
+                        arguments.Insert(0, actions[TokenType.Argument, currentToken.OperatorSymbol, currentToken.IndicatorSymbol](new[] { currentToken.Data }));
                         break;
 
                     case TokenType.Filter:
@@ -105,10 +104,10 @@ namespace Strinken.Core
                         concatenatedArguments[0] = currentToken.Data;
                         concatenatedArguments[1] = temporaryResult;
                         arguments.CopyTo(concatenatedArguments, 2);
-                        return actions?[TokenType.Filter, currentToken.OperatorSymbol, currentToken.IndicatorSymbol]?.Invoke(concatenatedArguments);
+                        return actions[TokenType.Filter, currentToken.OperatorSymbol, currentToken.IndicatorSymbol](concatenatedArguments);
 
                     case TokenType.Tag:
-                        return actions?[TokenType.Tag, currentToken.OperatorSymbol, currentToken.IndicatorSymbol]?.Invoke(new[] { currentToken.Data });
+                        return actions[TokenType.Tag, currentToken.OperatorSymbol, currentToken.IndicatorSymbol](new[] { currentToken.Data });
                 }
             }
 

@@ -15,7 +15,7 @@
         public string Usage => "{tag:Replace+value1,replaceValue1,value2,replaceValue2...}";
 
         /// <inheritdoc/>
-        public string AlternativeName => null;
+        public string AlternativeName => string.Empty;
 
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments)

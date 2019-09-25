@@ -390,7 +390,7 @@ namespace Strinken.Tests
             numberOfCall.Should().Be(1);
             filterSeen.Should().HaveCount(1);
             filterSeen.Should().ContainKey("patse");
-            filterSeen["patse"].Should().BeNull();
+            filterSeen["patse"].Should().BeEmpty();
             parsedString.Should().Be("lorempatsepaku|");
         }
 
@@ -398,7 +398,7 @@ namespace Strinken.Tests
         public void Run_NoActions_ReturnsOutsideString()
         {
             const string input = "lorem{ipsum:patse+paku,=malo}aku";
-            StrinkenEngine.Run(input).Stack.Resolve(null).Should().Be("loremaku");
+            StrinkenEngine.Run(input).Stack.Resolve(new ActionDictionary()).Should().Be("loremaku");
         }
 
         [Fact]

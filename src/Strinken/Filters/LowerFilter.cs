@@ -12,9 +12,9 @@ namespace Strinken
         public override string Name => "Lower";
 
         /// <inheritdoc/>
-        public override string AlternativeName => null;
+        public override string AlternativeName => string.Empty;
 
         /// <inheritdoc/>
-        public override string Resolve(string value) => value?.ToLowerInvariant();
+        public override string Resolve(string value) => value?.ToLowerInvariant() ?? string.Empty;
     }
 }

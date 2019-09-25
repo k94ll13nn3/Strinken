@@ -11,7 +11,7 @@ namespace Strinken.Tests
         {
             EngineResult result = StrinkenEngine.Run(null);
             result.Success.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.ErrorMessage.Should().BeEmpty();
             result.Stack.Resolve(null).Should().BeNull();
         }
 
@@ -20,7 +20,7 @@ namespace Strinken.Tests
         {
             EngineResult result = StrinkenEngine.Run(string.Empty);
             result.Success.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.ErrorMessage.Should().BeEmpty();
             result.Stack.Resolve(null).Should().BeEmpty();
         }
 
@@ -229,7 +229,7 @@ namespace Strinken.Tests
             const string input = "lorem{ispum:abc}";
             EngineResult result = StrinkenEngine.Run(input);
             result.Success.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.ErrorMessage.Should().BeEmpty();
         }
 
         [Theory]
@@ -255,7 +255,7 @@ namespace Strinken.Tests
         {
             EngineResult result = StrinkenEngine.Run(input);
             result.Success.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.ErrorMessage.Should().BeEmpty();
         }
 
         [Theory]
@@ -282,7 +282,7 @@ namespace Strinken.Tests
         {
             EngineResult result = StrinkenEngine.Run(input);
             result.Success.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.ErrorMessage.Should().BeEmpty();
         }
 
         [Theory]
@@ -293,7 +293,7 @@ namespace Strinken.Tests
         {
             EngineResult result = StrinkenEngine.Run(input);
             result.Success.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.ErrorMessage.Should().BeEmpty();
         }
 
         [Theory]
@@ -351,7 +351,7 @@ namespace Strinken.Tests
         {
             EngineResult result = StrinkenEngine.Run(input);
             result.Success.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            result.ErrorMessage.Should().BeEmpty();
         }
     }
 }

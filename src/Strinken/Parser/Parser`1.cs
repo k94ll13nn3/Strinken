@@ -179,7 +179,7 @@ namespace Strinken
             EngineResult runResult = StrinkenEngine.Run(input);
             if (!runResult.Success)
             {
-                return new ValidationResult { Message = runResult.ErrorMessage, IsValid = false };
+                return new ValidationResult(runResult.ErrorMessage, false);
             }
 
             var tagList = new List<string>();
@@ -340,7 +340,7 @@ namespace Strinken
             {
                 if (!_tags.ContainsKey(tag))
                 {
-                    return new ValidationResult { Message = $"{tag} is not a valid tag.", IsValid = false };
+                    return new ValidationResult($"{tag} is not a valid tag.", false);
                 }
             }
 
@@ -349,7 +349,7 @@ namespace Strinken
             {
                 if (!_parameterTags.ContainsKey(parameterTag))
                 {
-                    return new ValidationResult { Message = $"{parameterTag} is not a valid parameter tag.", IsValid = false };
+                    return new ValidationResult($"{parameterTag} is not a valid parameter tag.", false);
                 }
             }
 
@@ -359,7 +359,7 @@ namespace Strinken
             {
                 if (!_filters.ContainsKey(filter.Item1) && !alternativeNames.Contains(filter.Item1))
                 {
-                    return new ValidationResult { Message = $"{filter.Item1} is not a valid filter.", IsValid = false };
+                    return new ValidationResult($"{filter.Item1} is not a valid filter.", false);
                 }
             }
 
@@ -369,11 +369,11 @@ namespace Strinken
                 if ((_filters.ContainsKey(filter.Item1) && !_filters[filter.Item1].Validate(filter.Item2))
                     || (!_filters.ContainsKey(filter.Item1) && !_filters.Values.First(x => x.AlternativeName == filter.Item1).Validate(filter.Item2)))
                 {
-                    return new ValidationResult { Message = $"{filter.Item1} does not have valid arguments.", IsValid = false };
+                    return new ValidationResult($"{filter.Item1} does not have valid arguments.", false);
                 }
             }
 
-            return new ValidationResult { Message = null, IsValid = true };
+            return new ValidationResult(string.Empty, true);
         }
 
         /// <summary>

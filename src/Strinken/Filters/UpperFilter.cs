@@ -12,9 +12,9 @@
         public override string Name => "Upper";
 
         /// <inheritdoc/>
-        public override string AlternativeName => null;
+        public override string AlternativeName => string.Empty;
 
         /// <inheritdoc/>
-        public override string Resolve(string value) => value?.ToUpperInvariant();
+        public override string Resolve(string value) => value?.ToUpperInvariant() ?? string.Empty;
     }
 }
