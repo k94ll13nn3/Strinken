@@ -22,6 +22,12 @@ namespace Strinken.Build
 
         public static async Task GenerateReleaseNotesAsync(string artifactsPath, string tokenName, string owner, string project)
         {
+            if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")))
+            {
+                Console.WriteLine("Not running on pull requests.");
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(tokenName)))
             {
                 Console.WriteLine($"Environment variable \"{tokenName}\" not set.");
@@ -106,6 +112,12 @@ namespace Strinken.Build
 
         public static void GenerateDocumentation(string documentationPath, string tokenName, string owner, string project)
         {
+            if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER")))
+            {
+                Console.WriteLine("Not running on pull requests.");
+                return;
+            }
+
             string lastCommitMessage = Read("git", "log -1 --pretty=format:%B");
             if (!lastCommitMessage.Contains("[build-doc]"))
             {
