@@ -98,7 +98,7 @@ namespace Strinken.Build
                 }
                 else
                 {
-                    string name = linked ? $"## [{release.Name}]" : $"## {release.Name}";
+                    string name = linked ? $"[{release.Name}]" : release.Name;
                     return $"## {name} - {release.PublishedAt?.ToString("yyyy'-'MM'-'dd")}";
                 }
             }
