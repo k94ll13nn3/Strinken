@@ -4,7 +4,7 @@
     /// Base class for all parsing result.
     /// </summary>
     /// <typeparam name="T">The type of the parsed data.</typeparam>
-    internal sealed class ParseResult<T> where T : notnull
+    internal sealed class ParseResult<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ParseResult{T}"/> class.
@@ -51,7 +51,7 @@
         /// <returns>The result.</returns>
         public static ParseResult<T> FailureWithMessage(string message)
         {
-            return new ParseResult<T>(false, default!, message);
+            return new ParseResult<T>(false, default, message);
         }
 
         /// <summary>

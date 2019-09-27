@@ -14,7 +14,6 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/k94ll13nn3/Strinken</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
