@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
  
   <PropertyGroup>
-    <Description>A parametrized string library !</Description>
+    <Description>A parametrized string library!</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>k94ll13nn3</Authors>
     <Copyright>Copyright © k94ll13nn3</Copyright>
