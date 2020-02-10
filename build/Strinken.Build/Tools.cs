@@ -42,7 +42,7 @@ namespace Strinken.Build
 
             IReadOnlyList<Release> releases = await client.Repository.Release.GetAll(owner, project);
             IReadOnlyList<Issue> allIssues = await client.Issue.GetAllForRepository(owner, project, new RepositoryIssueRequest { State = ItemStateFilter.Closed });
-            string[] excludedLabels = new[] { "duplicate", "invalid", "wontfix", "internal" };
+            string[] excludedLabels = new[] { "duplicate", "invalid", "wontfix", "internal", "dependencies" };
             IEnumerable<Issue> issues = allIssues.Where(x => x.PullRequest == null && !x.Labels.Select(l => l.Name).Intersect(excludedLabels).Any());
             var pullRequestsLabels = allIssues
                 .Where(x => x.PullRequest != null)
