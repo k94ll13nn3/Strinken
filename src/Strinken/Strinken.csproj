@@ -5,7 +5,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>k94ll13nn3</Authors>
     <Copyright>Copyright © k94ll13nn3</Copyright>
-    <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageTags>parametrized;string;parser;strinken</PackageTags>
     <PackageIcon>logo_64x64.png</PackageIcon>
