@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
- 
+
   <PropertyGroup>
     <Description>A parametrized string library!</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -14,12 +14,13 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/k94ll13nn3/Strinken</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>..\..\artifacts\</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\docs\input\assets\img\logo_64x64.png" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
- 
+
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="MinVer" Version="2.3.1">
