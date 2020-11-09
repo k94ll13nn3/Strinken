@@ -3,10 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Strinken.svg)](https://www.nuget.org/packages/Strinken/)
 [![GitHub release](https://img.shields.io/github/release/k94ll13nn3/Strinken.svg)](https://github.com/k94ll13nn3/Strinken/releases/latest)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/k94ll13nn3/Strinken/master/LICENSE)
-
-| Build server   | Platform     | Status                                                                                                                    |
-|----------------|--------------|---------------------------------------------------------------------------------------------------------------------------|
-| GitHub       | Windows      | ![ci.yml](https://github.com/k94ll13nn3/Strinken/workflows/.github/workflows/ci.yml/badge.svg) |
+![ci.yml](https://github.com/k94ll13nn3/Strinken/workflows/.github/workflows/ci.yml/badge.svg)
 
 A parametrized string library! ([Documentation](https://k94ll13nn3.github.io/Strinken/))
 
