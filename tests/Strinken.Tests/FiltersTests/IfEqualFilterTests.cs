@@ -28,7 +28,7 @@ namespace Strinken.Tests.FiltersTests
         {
             var filter = new IfEqualFilter();
 
-            filter.Validate(null).Should().BeFalse();
+            filter.Validate(null!).Should().BeFalse();
             filter.Validate(Array.Empty<string>()).Should().BeFalse();
         }
 

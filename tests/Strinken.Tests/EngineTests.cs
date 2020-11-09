@@ -9,10 +9,10 @@ namespace Strinken.Tests
         [Fact]
         public void Run_NullInput_ReturnsNull()
         {
-            EngineResult result = StrinkenEngine.Run(null);
+            EngineResult result = StrinkenEngine.Run(null!);
             result.Success.Should().BeTrue();
             result.ErrorMessage.Should().BeEmpty();
-            result.Stack.Resolve(null).Should().BeNull();
+            result.Stack.Resolve(null!).Should().BeNull();
         }
 
         [Fact]
@@ -21,7 +21,7 @@ namespace Strinken.Tests
             EngineResult result = StrinkenEngine.Run(string.Empty);
             result.Success.Should().BeTrue();
             result.ErrorMessage.Should().BeEmpty();
-            result.Stack.Resolve(null).Should().BeEmpty();
+            result.Stack.Resolve(null!).Should().BeEmpty();
         }
 
         [Fact]

@@ -66,7 +66,7 @@ namespace Strinken.Public.Tests.Parser
         {
             var stringSolver = new Parser<Data>();
 
-            Action act = () => stringSolver.Resolve((CompiledString)null, new Data { Name = "Lorem" });
+            Action act = () => stringSolver.Resolve((CompiledString)null!, new Data { Name = "Lorem" });
 
             act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "compiledString");
         }
@@ -76,7 +76,7 @@ namespace Strinken.Public.Tests.Parser
         {
             var stringSolver = new Parser<Data>();
 
-            Action act = () => stringSolver.Resolve((CompiledString)null, Array.Empty<Data>());
+            Action act = () => stringSolver.Resolve((CompiledString)null!, Array.Empty<Data>());
 
             act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "compiledString");
         }
@@ -87,7 +87,7 @@ namespace Strinken.Public.Tests.Parser
             var stringSolver = new Parser<Data>();
 
             CompiledString compiledString = stringSolver.Compile("The {DataName} is in the kitchen.");
-            Action act = () => stringSolver.Resolve(compiledString, (IEnumerable<Data>)null);
+            Action act = () => stringSolver.Resolve(compiledString, (IEnumerable<Data>)null!);
 
             act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "values");
         }

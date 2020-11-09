@@ -1,5 +1,4 @@
-﻿// stylecop.header
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Strinken.Core;
 
@@ -19,6 +18,8 @@ namespace Strinken
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithFilter<T>(this Parser<T> parser, IFilter filter)
         {
+            _ = parser ?? throw new ArgumentNullException(nameof(parser));
+
             Parser<T> copiedParser = parser.DeepCopy();
             copiedParser.AddFilter(filter);
             return copiedParser;
@@ -33,6 +34,9 @@ namespace Strinken
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithFilters<T>(this Parser<T> parser, IEnumerable<IFilter> filters)
         {
+            _ = parser ?? throw new ArgumentNullException(nameof(parser));
+            _ = filters ?? throw new ArgumentNullException(nameof(filters));
+
             Parser<T> copiedParser = parser.DeepCopy();
             foreach (IFilter filter in filters)
             {
@@ -51,6 +55,8 @@ namespace Strinken
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithTag<T>(this Parser<T> parser, ITag<T> tag)
         {
+            _ = parser ?? throw new ArgumentNullException(nameof(parser));
+
             Parser<T> copiedParser = parser.DeepCopy();
             copiedParser.AddTag(tag);
             return copiedParser;
@@ -67,6 +73,8 @@ namespace Strinken
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithTag<T>(this Parser<T> parser, string tagName, string tagDescription, Func<T, string> resolveAction)
         {
+            _ = parser ?? throw new ArgumentNullException(nameof(parser));
+
             Parser<T> copiedParser = parser.DeepCopy();
             ITag<T> tag = TagFactory.Create(tagName, tagDescription, resolveAction);
             copiedParser.AddTag(tag);
@@ -82,6 +90,9 @@ namespace Strinken
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithTags<T>(this Parser<T> parser, IEnumerable<ITag<T>> tags)
         {
+            _ = parser ?? throw new ArgumentNullException(nameof(parser));
+            _ = tags ?? throw new ArgumentNullException(nameof(tags));
+
             Parser<T> copiedParser = parser.DeepCopy();
             foreach (ITag<T> tag in tags)
             {
@@ -100,6 +111,8 @@ namespace Strinken
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithParameterTag<T>(this Parser<T> parser, IParameterTag parameterTag)
         {
+            _ = parser ?? throw new ArgumentNullException(nameof(parser));
+
             Parser<T> copiedParser = parser.DeepCopy();
             copiedParser.AddParameterTag(parameterTag);
             return copiedParser;
@@ -114,6 +127,9 @@ namespace Strinken
         /// <typeparam name="T">The type related to the parser.</typeparam>
         public static Parser<T> WithParameterTags<T>(this Parser<T> parser, IEnumerable<IParameterTag> parameterTags)
         {
+            _ = parser ?? throw new ArgumentNullException(nameof(parser));
+            _ = parameterTags ?? throw new ArgumentNullException(nameof(parameterTags));
+
             Parser<T> copiedParser = parser.DeepCopy();
             foreach (IParameterTag parameterTag in parameterTags)
             {

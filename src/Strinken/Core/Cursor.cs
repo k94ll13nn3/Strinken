@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,7 +16,18 @@ namespace Strinken.Core
         /// <summary>
         /// The reader used to read the string.
         /// </summary>
+        [SuppressMessage("Usage", "CA2213", Justification = "Analyzer is drunk, field is disposed!")]
         private readonly StringReader _reader;
+
+        /// <summary>
+        /// Gets the current position of the cursor.
+        /// </summary>
+        private uint _position;
+
+        /// <summary>
+        /// Gets the current value of the cursor.
+        /// </summary>
+        private int _value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cursor"/> class.
@@ -23,65 +36,14 @@ namespace Strinken.Core
         public Cursor(string input)
         {
             _reader = new StringReader(input);
-            Value = _reader.Read();
-            Position = 0;
+            _value = _reader.Read();
+            _position = 0;
         }
-
-        /// <summary>
-        /// Gets the current value of the cursor as a <see cref="char"/>.
-        /// </summary>
-        public char CharValue => (char)Value;
-
-        /// <summary>
-        /// Gets the current position of the cursor.
-        /// </summary>
-        public uint Position { get; private set; }
-
-        /// <summary>
-        /// Gets the current value of the cursor.
-        /// </summary>
-        public int Value { get; private set; }
 
         /// <inheritdoc/>
         public void Dispose()
         {
             _reader?.Dispose();
-        }
-
-        /// <summary>
-        /// Indicates if the cursor has reached the end.
-        /// </summary>
-        /// <returns>A value indicating whether the cursor as reached the end.</returns>
-        public bool HasEnded()
-        {
-            return Value == -1;
-        }
-
-        /// <summary>
-        /// Moves the cursor.
-        /// </summary>
-        public void Next()
-        {
-            Value = _reader.Read();
-            Position++;
-        }
-
-        /// <summary>
-        /// Peeks the next character of the cursor.
-        /// </summary>
-        /// <returns>The next character of the cursor.</returns>
-        public int Peek()
-        {
-            return _reader.Peek();
-        }
-
-        /// <summary>
-        /// Indicates if the next character is the end.
-        /// </summary>
-        /// <returns>A value indicating whether the next character is the end.</returns>
-        public bool PeekIsEnd()
-        {
-            return Peek() == -1;
         }
 
         /// <summary>
@@ -98,8 +60,8 @@ namespace Strinken.Core
                 updatedEnd.Add(end);
             }
 
-            Operator operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == CharValue && x.TokenType == tokenType);
-            if (operatorDefined != null)
+            Operator operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == GetValueAsChar() && x.TokenType == tokenType);
+            if (operatorDefined is not null)
             {
                 Next();
             }
@@ -108,8 +70,8 @@ namespace Strinken.Core
                 operatorDefined = BaseOperators.RegisteredOperators.Single(x => x.Symbol == '\0' && x.TokenType == tokenType);
             }
 
-            Indicator indicatorDefined = operatorDefined.Indicators.FirstOrDefault(x => x.Symbol == CharValue);
-            if (indicatorDefined != null)
+            Indicator indicatorDefined = operatorDefined.Indicators.FirstOrDefault(x => x.Symbol == GetValueAsChar());
+            if (indicatorDefined is not null)
             {
                 Next();
             }
@@ -180,11 +142,11 @@ namespace Strinken.Core
             }
 
             tokenList.Add(filterParseResult.Value);
-            while (Value != SpecialCharacter.FilterSeparator && Value != SpecialCharacter.TokenEndIndicator && !HasEnded())
+            while (_value != SpecialCharacter.FilterSeparator && _value != SpecialCharacter.TokenEndIndicator && !HasEnded())
             {
-                if (Value != SpecialCharacter.ArgumentIndicator && Value != SpecialCharacter.ArgumentSeparator)
+                if (_value != SpecialCharacter.ArgumentIndicator && _value != SpecialCharacter.ArgumentSeparator)
                 {
-                    return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                    return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));
                 }
 
                 Next();
@@ -214,11 +176,11 @@ namespace Strinken.Core
             }
 
             tokenList.Add(tagParseResult.Value);
-            while (!HasEnded() && Value != SpecialCharacter.TokenEndIndicator)
+            while (!HasEnded() && _value != SpecialCharacter.TokenEndIndicator)
             {
-                if (Value != SpecialCharacter.FilterSeparator)
+                if (_value != SpecialCharacter.FilterSeparator)
                 {
-                    return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                    return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));
                 }
 
                 Next();
@@ -245,7 +207,7 @@ namespace Strinken.Core
             var builder = new StringBuilder();
             while (true)
             {
-                switch (Value)
+                switch (_value)
                 {
                     // Escaped indicator
                     case SpecialCharacter.TokenStartIndicator when Peek() == SpecialCharacter.TokenStartIndicator:
@@ -259,13 +221,13 @@ namespace Strinken.Core
                         return ParseResult<TokenDefinition>.Success(new TokenDefinition(builder.ToString(), TokenType.None, '\0', '\0'));
 
                     case SpecialCharacter.TokenEndIndicator when PeekIsEnd():
-                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacterAtStringEnd, CharValue));
+                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacterAtStringEnd, GetValueAsChar()));
 
                     case SpecialCharacter.TokenEndIndicator:
-                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));
                 }
 
-                builder.Append(CharValue);
+                builder.Append(GetValueAsChar());
                 Next();
             }
         }
@@ -284,9 +246,9 @@ namespace Strinken.Core
             }
 
             tokenList.AddRange(tokenParseResult.Value ?? Enumerable.Empty<TokenDefinition>());
-            if (Value != SpecialCharacter.TokenEndIndicator)
+            if (_value != SpecialCharacter.TokenEndIndicator)
             {
-                return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));
             }
 
             Next();
@@ -316,9 +278,9 @@ namespace Strinken.Core
             tokenList.Add(outsideParseResult.Value);
             while (!HasEnded())
             {
-                if (Value != SpecialCharacter.TokenStartIndicator)
+                if (_value != SpecialCharacter.TokenStartIndicator)
                 {
-                    return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                    return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));
                 }
 
                 Next();
@@ -340,6 +302,50 @@ namespace Strinken.Core
         }
 
         /// <summary>
+        /// Gets the current value of the cursor as a <see cref="char"/>.
+        /// </summary>
+        private char GetValueAsChar()
+        {
+            return (char)_value;
+        }
+
+        /// <summary>
+        /// Indicates if the cursor has reached the end.
+        /// </summary>
+        /// <returns>A value indicating whether the cursor as reached the end.</returns>
+        private bool HasEnded()
+        {
+            return _value == -1;
+        }
+
+        /// <summary>
+        /// Moves the cursor.
+        /// </summary>
+        private void Next()
+        {
+            _value = _reader.Read();
+            _position++;
+        }
+
+        /// <summary>
+        /// Peeks the next character of the cursor.
+        /// </summary>
+        /// <returns>The next character of the cursor.</returns>
+        private int Peek()
+        {
+            return _reader.Peek();
+        }
+
+        /// <summary>
+        /// Indicates if the next character is the end.
+        /// </summary>
+        /// <returns>A value indicating whether the next character is the end.</returns>
+        private bool PeekIsEnd()
+        {
+            return Peek() == -1;
+        }
+
+        /// <summary>
         /// Parses a string inside a token and returns the first name in it.
         /// </summary>
         /// <param name="tokenType">The type of the token to parse.</param>
@@ -353,9 +359,9 @@ namespace Strinken.Core
             var builder = new StringBuilder();
             while (true)
             {
-                switch (Value)
+                switch (_value)
                 {
-                    case int _ when updatedEnd.Contains(Value):
+                    case int _ when updatedEnd.Contains(_value):
                         string parsedName = builder.ToString();
                         return !string.IsNullOrEmpty(parsedName) ?
                             ParseResult<TokenDefinition>.Success(new TokenDefinition(parsedName, tokenType, operatorDefined.Symbol, indicatorDefined.Symbol)) :
@@ -364,25 +370,25 @@ namespace Strinken.Core
                     case int _ when HasEnded():
                         return ParseResult<TokenDefinition>.FailureWithMessage(Errors.EndOfString);
 
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Name && CharValue.IsInvalidTokenNameCharacter():
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Binary && CharValue != '0' && CharValue != '1':
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Octal && (CharValue < '0' || CharValue > '7'):
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Decimal && (CharValue < '0' || CharValue > '9'):
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Hexadecimal && CharValue.IsInvalidHexadecimalCharacter():
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Name && GetValueAsChar().IsInvalidTokenNameCharacter():
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Binary && GetValueAsChar() != '0' && GetValueAsChar() != '1':
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Octal && (GetValueAsChar() < '0' || GetValueAsChar() > '7'):
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Decimal && (GetValueAsChar() < '0' || GetValueAsChar() > '9'):
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Hexadecimal && GetValueAsChar().IsInvalidHexadecimalCharacter():
                     case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol
-                        && ((isSymbolContext == false && CharValue.IsInvalidTokenNameCharacter()) || (isSymbolContext == true && CharValue.IsInvalidAlternativeNameCharacter())):
-                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(Errors.IllegalCharacter, CharValue, Position));
+                        && ((isSymbolContext == false && GetValueAsChar().IsInvalidTokenNameCharacter()) || (isSymbolContext == true && GetValueAsChar().IsInvalidAlternativeNameCharacter())):
+                        return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));
 
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !CharValue.IsInvalidTokenNameCharacter():
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !GetValueAsChar().IsInvalidTokenNameCharacter():
                         isSymbolContext = false;
                         break;
 
-                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !CharValue.IsInvalidAlternativeNameCharacter():
+                    case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !GetValueAsChar().IsInvalidAlternativeNameCharacter():
                         isSymbolContext = true;
                         break;
                 }
 
-                builder.Append(CharValue);
+                builder.Append(GetValueAsChar());
                 Next();
             }
         }

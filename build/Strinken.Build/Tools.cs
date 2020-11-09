@@ -45,7 +45,7 @@ namespace Strinken.Build
             string[] excludedLabels = new[] { "duplicate", "invalid", "wontfix", "internal", "dependencies" };
             IEnumerable<Issue> issues = allIssues.Where(x => x.PullRequest == null && !x.Labels.Select(l => l.Name).Intersect(excludedLabels).Any());
             var pullRequestsLabels = allIssues
-                .Where(x => x.PullRequest != null)
+                .Where(x => x.PullRequest is not null)
                 .ToDictionary(x => x.Number, x => x.Labels.Select(l => l.Name));
             IEnumerable<PullRequest> pullRequests = (await client.PullRequest.GetAllForRepository(owner, project, new PullRequestRequest { State = ItemStateFilter.Closed }))
                 .Where(x => x.Merged && !pullRequestsLabels[x.Number].Intersect(excludedLabels).Any());

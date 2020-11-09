@@ -20,7 +20,7 @@ namespace Strinken.Tests.FiltersTests
         {
             var filter = new NullFilter();
 
-            filter.Resolve(null, new string[] { "data" }).Should().Be("data");
+            filter.Resolve(null!, new string[] { "data" }).Should().Be("data");
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Strinken.Tests.FiltersTests
         {
             var filter = new NullFilter();
 
-            filter.Validate(null).Should().BeFalse();
+            filter.Validate(null!).Should().BeFalse();
             filter.Validate(Array.Empty<string>()).Should().BeFalse();
         }
 
@@ -53,7 +53,7 @@ namespace Strinken.Tests.FiltersTests
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Resolve("The {DataName:Null+Ipsum} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Lorem is in the kitchen.");
-            stringSolver.Resolve("The {DataName:Null+Ipsum} is in the kitchen.", new Data { Name = null }).Should().Be("The Ipsum is in the kitchen.");
+            stringSolver.Resolve("The {DataName:Null+Ipsum} is in the kitchen.", new Data { Name = null! }).Should().Be("The Ipsum is in the kitchen.");
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Strinken.Tests.FiltersTests
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
             stringSolver.Resolve("The {DataName:??+Ipsum} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The Lorem is in the kitchen.");
-            stringSolver.Resolve("The {DataName:??+Ipsum} is in the kitchen.", new Data { Name = null }).Should().Be("The Ipsum is in the kitchen.");
+            stringSolver.Resolve("The {DataName:??+Ipsum} is in the kitchen.", new Data { Name = null! }).Should().Be("The Ipsum is in the kitchen.");
         }
 
         [Fact]

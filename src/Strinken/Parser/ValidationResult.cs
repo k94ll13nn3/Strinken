@@ -1,5 +1,4 @@
-﻿// stylecop.header
-namespace Strinken
+﻿namespace Strinken
 {
     /// <summary>
     /// Class representing the result of the validation process.

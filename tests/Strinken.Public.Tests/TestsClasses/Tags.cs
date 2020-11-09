@@ -1,6 +1,6 @@
 namespace Strinken.Public.Tests.TestsClasses
 {
-    public class DataNameTag : ITag<Data>
+    internal class DataNameTag : ITag<Data>
     {
         public string Description => "DataName";
         public string Name => "DataName";
@@ -8,7 +8,7 @@ namespace Strinken.Public.Tests.TestsClasses
         public string Resolve(Data value) => value.Name;
     }
 
-    public class EmptyNameTag : ITag<string>
+    internal class EmptyNameTag : ITag<string>
     {
         public string Description => string.Empty;
         public string Name => string.Empty;
@@ -16,7 +16,7 @@ namespace Strinken.Public.Tests.TestsClasses
         public string Resolve(string value) => value;
     }
 
-    public class InvalidNameTag : ITag<string>
+    internal class InvalidNameTag : ITag<string>
     {
         public string Description => string.Empty;
         public string Name => "dollar$";

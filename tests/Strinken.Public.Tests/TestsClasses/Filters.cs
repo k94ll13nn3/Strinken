@@ -23,7 +23,7 @@ namespace Strinken.Public.Tests.TestsClasses
 
         public string Usage => string.Empty;
 
-        public string AlternativeName => null;
+        public string AlternativeName => string.Empty;
 
         public string Resolve(string value, string[] arguments) => value;
 
@@ -38,7 +38,7 @@ namespace Strinken.Public.Tests.TestsClasses
 
         public string Usage => string.Empty;
 
-        public string AlternativeName => null;
+        public string AlternativeName => string.Empty;
 
         public string Resolve(string value, string[] arguments) => value;
 

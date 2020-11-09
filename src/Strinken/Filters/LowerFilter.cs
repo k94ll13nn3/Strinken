@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Strinken
 {
     /// <summary>
@@ -15,6 +17,7 @@ namespace Strinken
         public override string AlternativeName => string.Empty;
 
         /// <inheritdoc/>
+        [SuppressMessage("Globalization", "CA1308", Justification = "This is the purpose of the filter.")]
         public override string Resolve(string value)
         {
             return value?.ToLowerInvariant() ?? string.Empty;

@@ -22,7 +22,7 @@ namespace Strinken.Tests.FiltersTests
         {
             var filter = new RepeatFilter();
 
-            filter.Validate(null).Should().BeFalse();
+            filter.Validate(null!).Should().BeFalse();
             filter.Validate(Array.Empty<string>()).Should().BeFalse();
         }
 
@@ -74,7 +74,7 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Resolve_NullString_ReturnsResolvedString()
         {
-            Parser<Data> stringSolver = new Parser<Data>().WithTag("Null", string.Empty, _ => null);
+            Parser<Data> stringSolver = new Parser<Data>().WithTag("Null", string.Empty, _ => null!);
             stringSolver.Resolve("The {Null:Repeat+3} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The  is in the kitchen.");
         }
     }

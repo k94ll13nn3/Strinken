@@ -1,7 +1,7 @@
 namespace Strinken.Tests.TestsClasses
 {
-    public class Data
+    internal class Data
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

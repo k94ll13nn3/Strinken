@@ -1,5 +1,4 @@
-﻿// stylecop.header
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -124,9 +123,8 @@ namespace Strinken
                 throw new ArgumentNullException(nameof(values));
             }
 
-            CompiledString compiledString = Compile(input);
-            return ResolveInternal();
-            IEnumerable<string> ResolveInternal()
+            return ResolveInternal(Compile(input));
+            IEnumerable<string> ResolveInternal(CompiledString compiledString)
             {
                 foreach (T value in values)
                 {
@@ -211,6 +209,8 @@ namespace Strinken
         /// <exception cref="ArgumentException">The filter name is already present in the filter list.</exception>
         public void AddFilter(IFilter filter)
         {
+            _ = filter ?? throw new ArgumentNullException(nameof(filter));
+
             if (_filters.ContainsKey(filter.Name))
             {
                 throw new ArgumentException($"{filter.Name} was already registered in the filter list.");
@@ -238,6 +238,8 @@ namespace Strinken
         /// <exception cref="ArgumentException">The tag name is already present in the tag list.</exception>
         public void AddTag(ITag<T> tag)
         {
+            _ = tag ?? throw new ArgumentNullException(nameof(tag));
+
             if (_tags.ContainsKey(tag.Name))
             {
                 throw new ArgumentException($"{tag.Name} was already registered in the tag list.");
@@ -254,6 +256,8 @@ namespace Strinken
         /// <exception cref="ArgumentException">The parameter tag name is already present in the parameter tag list.</exception>
         public void AddParameterTag(IParameterTag parameterTag)
         {
+            _ = parameterTag ?? throw new ArgumentNullException(nameof(parameterTag));
+
             if (_parameterTags.ContainsKey(parameterTag.Name))
             {
                 throw new ArgumentException($"{parameterTag.Name} was already registered in the parameter tag list.");

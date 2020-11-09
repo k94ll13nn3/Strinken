@@ -1,5 +1,3 @@
-// stylecop.header
-
 namespace Strinken
 {
     /// <summary>

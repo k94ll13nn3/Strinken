@@ -12,7 +12,7 @@ namespace Strinken.Tests.FiltersTests
         {
             var filter = new LowerFilter();
 
-            filter.Resolve("DAta", null).Should().Be("data");
+            filter.Resolve("DAta", Array.Empty<string>()).Should().Be("data");
         }
 
         [Fact]
@@ -20,7 +20,7 @@ namespace Strinken.Tests.FiltersTests
         {
             var filter = new LowerFilter();
 
-            filter.Validate(null).Should().BeTrue();
+            filter.Validate(null!).Should().BeTrue();
             filter.Validate(Array.Empty<string>()).Should().BeTrue();
         }
 
@@ -50,7 +50,7 @@ namespace Strinken.Tests.FiltersTests
         [Fact]
         public void Resolve_NullString_ReturnsResolvedString()
         {
-            Parser<Data> stringSolver = new Parser<Data>().WithTag("Null", string.Empty, _ => null);
+            Parser<Data> stringSolver = new Parser<Data>().WithTag("Null", string.Empty, _ => null!);
             stringSolver.Resolve("The {Null:Lower} is in the kitchen.", new Data { Name = "Lorem" }).Should().Be("The  is in the kitchen.");
         }
     }

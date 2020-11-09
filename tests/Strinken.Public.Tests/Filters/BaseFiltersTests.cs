@@ -66,7 +66,7 @@ namespace Strinken.Public.Tests.Filters
         [Fact]
         public void Register_FilterNull_ThrowsArgumentNullException()
         {
-            Action act = () => BaseFilters.Register(null);
+            Action act = () => BaseFilters.Register(null!);
 
             act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "filter");
         }
@@ -91,7 +91,7 @@ namespace Strinken.Public.Tests.Filters
         private class FilterGenerator : IFilter
         {
             public FilterGenerator(string name)
-                : this(name, null)
+                : this(name, string.Empty)
             {
             }
 

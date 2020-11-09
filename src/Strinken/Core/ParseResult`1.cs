@@ -1,39 +1,11 @@
 ﻿namespace Strinken.Core
 {
     /// <summary>
-    /// Base class for all parsing result.
+    /// Results of the parsing.
     /// </summary>
-    /// <typeparam name="T">The type of the parsed data.</typeparam>
-    internal sealed class ParseResult<T>
+    internal sealed record ParseResult<T>(bool Result, T Value, string Message)
+        where T : notnull
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ParseResult{T}"/> class.
-        /// </summary>
-        /// <param name="result">A value indicating whether the parsing was successful.</param>
-        /// <param name="value">The parsed value.</param>
-        /// <param name="message">The message associated to the parsing.</param>
-        private ParseResult(bool result, T value, string message)
-        {
-            Result = result;
-            Value = value;
-            Message = message;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the parsing was successful.
-        /// </summary>
-        public bool Result { get; }
-
-        /// <summary>
-        /// Gets the parsed value.
-        /// </summary>
-        public T Value { get; }
-
-        /// <summary>
-        /// Gets the message associated to the parsing.
-        /// </summary>
-        public string Message { get; }
-
         /// <summary>
         /// Creates a new successful result.
         /// </summary>
@@ -51,7 +23,7 @@
         /// <returns>The result.</returns>
         public static ParseResult<T> FailureWithMessage(string message)
         {
-            return new ParseResult<T>(false, default, message);
+            return new ParseResult<T>(false, default!, message);
         }
 
         /// <summary>

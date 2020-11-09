@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Strinken
 {
     /// <summary>
@@ -20,7 +22,7 @@ namespace Strinken
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments)
         {
-            return (value ?? string.Empty).PadLeft(int.Parse(arguments[0]), '0');
+            return (value ?? string.Empty).PadLeft(int.Parse(arguments[0], CultureInfo.InvariantCulture), '0');
         }
 
         /// <inheritdoc/>

@@ -136,7 +136,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
 
-            stringSolver.Resolve("The {DataName:??+Ipsum} is in the kitchen.", new Data { Name = null }).Should().Be("The Ipsum is in the kitchen.");
+            stringSolver.Resolve("The {DataName:??+Ipsum} is in the kitchen.", new Data { Name = null! }).Should().Be("The Ipsum is in the kitchen.");
         }
 
         [Fact]
@@ -144,7 +144,7 @@ namespace Strinken.Public.Tests.Parser
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag());
 
-            stringSolver.Resolve("The {DataName:??+Ipsum:Repeat+2} is in the kitchen.", new Data { Name = null }).Should().Be("The IpsumIpsum is in the kitchen.");
+            stringSolver.Resolve("The {DataName:??+Ipsum:Repeat+2} is in the kitchen.", new Data { Name = null! }).Should().Be("The IpsumIpsum is in the kitchen.");
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace Strinken.Public.Tests.Parser
         public void Resolve_ValidStringWithNullValues_ThrowsArgumentNullException()
         {
             Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
-            Action act = () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", (IEnumerable<Data>)null);
+            Action act = () => stringSolver.Resolve("The {DataName:Append+} is in the kitchen.", (IEnumerable<Data>)null!);
 
             act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "values");
         }

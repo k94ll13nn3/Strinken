@@ -21,7 +21,7 @@
         public string Resolve(string value, string[] arguments)
         {
             string newValue = value;
-            if (value != null)
+            if (value is not null)
             {
                 for (int i = 0; i < arguments.Length / 2; i++)
                 {

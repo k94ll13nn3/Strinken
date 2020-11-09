@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 
 namespace Strinken
 {
@@ -22,7 +23,7 @@ namespace Strinken
         /// <inheritdoc/>
         public string Resolve(string value, string[] arguments)
         {
-            return string.Concat(Enumerable.Repeat(value, int.Parse(arguments[0])));
+            return string.Concat(Enumerable.Repeat(value, int.Parse(arguments[0], CultureInfo.InvariantCulture)));
         }
 
         /// <inheritdoc/>
