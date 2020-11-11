@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="/Strinken/assets/img/favicon.ico" type="image/x-icon">
         <link rel="icon" href="/Strinken/assets/img/favicon.ico" type="image/x-icon">
-        <title>Strinken - API - ITag&lt;T&gt; Interface</title>
+        <title>Strinken - API - Parser&lt;T&gt;.GetParameterTags() Method</title>
         <link href="/Strinken/assets/css/highlight.css" rel="stylesheet">
         <link href="/Strinken/assets/css/bootstrap/bootstrap.css" rel="stylesheet">
         <link href="/Strinken/assets/css/adminlte/AdminLTE.css" rel="stylesheet">
@@ -78,8 +78,7 @@
                     	
 	<div id="infobar-headings"><h6>On This Page</h6><p><a href="#Summary">Summary</a></p>
 <p><a href="#Syntax">Syntax</a></p>
-<p><a href="#TypeParameters">Type Parameters</a></p>
-<p><a href="#Methods">Methods</a></p>
+<p><a href="#ReturnValue">Return Value</a></p>
 <hr class="infobar-hidden">
 </div>
 
@@ -142,19 +141,25 @@
 		<li><a href="/Strinken/api/Strinken.dll">Strinken<wbr>.dll</a></li>
 		<li class="header">Namespace</li>
 		<li><a href="/Strinken/api/Strinken">Strinken</a></li>
+		<li class="header">Type</li>
+		<li><a href="/Strinken/api/Strinken/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></li>
 		<li role="separator" class="divider"></li>
-			<li class="header">Class Types</li>
-				<li><a href="/Strinken/api/Strinken/BaseFilters">BaseFilters</a></li>
-				<li><a href="/Strinken/api/Strinken/CompiledString">CompiledString</a></li>
-				<li><a href="/Strinken/api/Strinken/FilterWithoutArguments">Filter<wbr>Without<wbr>Arguments</a></li>
-				<li><a href="/Strinken/api/Strinken/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></li>
-				<li><a href="/Strinken/api/Strinken/ParserExtensions">ParserExtensions</a></li>
-				<li><a href="/Strinken/api/Strinken/ValidationResult">ValidationResult</a></li>
-			<li class="header">Interface Types</li>
-				<li><a href="/Strinken/api/Strinken/IFilter">IFilter</a></li>
-				<li><a href="/Strinken/api/Strinken/IParameterTag">IParameterTag</a></li>
-				<li class="selected"><a href="/Strinken/api/Strinken/ITag_1">ITag<wbr>&lt;T&gt;<wbr></a></li>
-				<li><a href="/Strinken/api/Strinken/IToken">IToken</a></li>
+			<li class="header">Constructors</li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/28D3959B">Parser<wbr>()<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/10961F54">Parser<wbr>(bool)<wbr></a></li>
+			<li class="header">Method Members</li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/B8CBFCAA">AddFilter<wbr>(IFilter)<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/47925AAB">AddParameterTag<wbr>(IParameterTag)<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/872F7DD2">AddTag<wbr>(ITag<wbr>&lt;T&gt;<wbr>)<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/DBC6C443">Compile<wbr>(string)<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/4C60BBD0">GetFilters<wbr>()<wbr></a></li>
+				<li class="selected"><a href="/Strinken/api/Strinken/Parser_1/2C279905">GetParameterTags<wbr>()<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/2A900470">GetTags<wbr>()<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/92CEFFC8">Resolve<wbr>(string, <wbr>T)<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/AAC50234">Resolve<wbr>(CompiledString, <wbr>T)<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/917B722B">Resolve<wbr>(string, <wbr>IEnumerable<wbr>&lt;T&gt;<wbr>)<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/95964FCF">Resolve<wbr>(CompiledString, <wbr>IEnumerable<wbr>&lt;T&gt;<wbr>)<wbr></a></li>
+				<li><a href="/Strinken/api/Strinken/Parser_1/13E7A836">Validate<wbr>(string)<wbr></a></li>
 
 
                     </ul>
@@ -170,106 +175,57 @@
 
 
 <section class="content-header">
-	<h1>ITag<wbr>&lt;T&gt;<wbr> <small>Interface</small></h1>
+	<h1><a href="/Strinken/api/Strinken/Parser_1">Parser</a><wbr>&lt;<a href="/Strinken/api/Strinken/Parser_1#typeparam-T">T</a>&gt;<wbr>.​GetParameterTags<wbr>()<wbr> <small>Method</small></h1>
 </section>
 <section class="content">
 	
 	
 		<h1 id="Summary">Summary</h1>
 	<div class="lead">
-            Interface describing a tag.
+            Gets the parameters tags used by the parser.
             </div>
 
 		<div class="panel panel-default">
-  			<div class="panel-body">
-				<div class="row">
-					<div class="col-md-6">
-						<dl class="dl-horizontal">		
-								<dt>Assembly</dt>
-								<dd><a href="/Strinken/api/Strinken.dll">Strinken<wbr>.dll</a></dd>
-
-								<dt>Namespace</dt>
-								<dd><a href="/Strinken/api/Strinken">Strinken</a></dd>
-											
-								<dt>Interfaces</dt>
-								<dd>
-									<ul class="list-unstyled">
-											<li><a href="/Strinken/api/Strinken/IToken">IToken</a></li>								
-									</ul>
-								</dd>
-							
-							
-							
-						</dl>
-					</div>		
-					<div class="col-md-6">
-						<div class="mermaid">
-							graph TD
-	Interface0["IToken"]-.-&gt;Type
-	click Interface0 "/Strinken/api/Strinken/IToken"
-	Type["ITag&lt;T&gt;"]
-class Type type-node
-
-						</div>
-					</div>
-				</div>
+  			<div class="panel-body">	
+				<dl class="dl-horizontal">	
+						<dt>Assembly</dt>
+						<dd><a href="/Strinken/api/Strinken.dll">Strinken<wbr>.dll</a></dd>
+						
+						<dt>Namespace</dt>
+						<dd><a href="/Strinken/api/Strinken">Strinken</a></dd>
+					
+						<dt>Containing Type</dt>
+						<dd><a href="/Strinken/api/Strinken/Parser_1">Parser</a><wbr>&lt;<a href="/Strinken/api/Strinken/Parser_1#typeparam-T">T</a>&gt;<wbr></dd>		
+					
+				</dl>
   			</div>
 		</div>
 
 	<h1 id="Syntax">Syntax</h1>
-	<pre><code class="cs">public interface ITag&lt;in T&gt; : IToken</code></pre>
+	<pre><code class="cs">public IReadOnlyCollection&lt;IParameterTag&gt; GetParameterTags()</code></pre>
 
 
 
 
-	<h1 id="TypeParameters">Type Parameters</h1>
+
+
+	<h1 id="ReturnValue">Return Value</h1>
 	<div class="box">
 		<div class="box-body no-padding table-responsive">
 			<table class="table table-striped table-hover two-cols">
 				<thead>
 					<tr>
-						<th>Name</th>
+						<th>Type</th>
 						<th>Description</th>
 					</tr>
 				</thead>
-					<tbody><tr id="typeparam-T">
-						<td>T</td>
-						<td>The type related to the tag.</td>
-					</tr>
+				<tbody><tr>
+					<td>IReadOnlyCollection<wbr>&lt;<a href="/Strinken/api/Strinken/IParameterTag">IParameterTag</a>&gt;<wbr></td>
+					<td></td>
+				</tr>
 			</tbody></table>
 		</div>
 	</div>	
-
-
-
-
-
-
-
-			<h1 id="Methods">Methods</h1>
-			<div class="box">
-				<div class="box-body no-padding table-responsive">
-					<table class="table table-striped table-hover three-cols">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Value</th>
-								<th>Summary</th>
-							</tr>
-						</thead>
-							<tbody><tr>
-								<td><a href="/Strinken/api/Strinken/ITag_1/3E13417F">Resolve<wbr>(T)<wbr></a></td>
-								<td>string</td>
-								<td>
-									<div>
-            Resolves the tag.
-            </div>
-								</td>
-							</tr>
-					</tbody></table>
-				</div>
-			</div>
-		
 
 
 

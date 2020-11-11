@@ -39,42 +39,42 @@ var searchModule = function() {
     a(
         {
             id:0,
-            title:"ParserExtensions",
-            content:"ParserExtensions",
+            title:"IsExternalInit",
+            content:"IsExternalInit",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/ParserExtensions',
-            title:"ParserExtensions",
+            url:'/Strinken/api/System.Runtime.CompilerServices/IsExternalInit',
+            title:"IsExternalInit",
             description:""
         }
     );
     a(
         {
             id:1,
-            title:"BaseFilters",
-            content:"BaseFilters",
+            title:"IFilter",
+            content:"IFilter",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/BaseFilters',
-            title:"BaseFilters",
+            url:'/Strinken/api/Strinken/IFilter',
+            title:"IFilter",
             description:""
         }
     );
     a(
         {
             id:2,
-            title:"ITag",
-            content:"ITag",
+            title:"CompiledString",
+            content:"CompiledString",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/ITag_1',
-            title:"ITag<T>",
+            url:'/Strinken/api/Strinken/CompiledString',
+            title:"CompiledString",
             description:""
         }
     );
@@ -95,34 +95,6 @@ var searchModule = function() {
     a(
         {
             id:4,
-            title:"Parser",
-            content:"Parser",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/Parser_1',
-            title:"Parser<T>",
-            description:""
-        }
-    );
-    a(
-        {
-            id:5,
-            title:"CompiledString",
-            content:"CompiledString",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/CompiledString',
-            title:"CompiledString",
-            description:""
-        }
-    );
-    a(
-        {
-            id:6,
             title:"ValidationResult",
             content:"ValidationResult",
             description:'',
@@ -136,7 +108,49 @@ var searchModule = function() {
     );
     a(
         {
+            id:5,
+            title:"ITag",
+            content:"ITag",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ITag_1',
+            title:"ITag<T>",
+            description:""
+        }
+    );
+    a(
+        {
+            id:6,
+            title:"Parser",
+            content:"Parser",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/Parser_1',
+            title:"Parser<T>",
+            description:""
+        }
+    );
+    a(
+        {
             id:7,
+            title:"ParserExtensions",
+            content:"ParserExtensions",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/ParserExtensions',
+            title:"ParserExtensions",
+            description:""
+        }
+    );
+    a(
+        {
+            id:8,
             title:"IToken",
             content:"IToken",
             description:'',
@@ -150,21 +164,21 @@ var searchModule = function() {
     );
     a(
         {
-            id:8,
-            title:"IFilter",
-            content:"IFilter",
+            id:9,
+            title:"BaseFilters",
+            content:"BaseFilters",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/IFilter',
-            title:"IFilter",
+            url:'/Strinken/api/Strinken/BaseFilters',
+            title:"BaseFilters",
             description:""
         }
     );
     a(
         {
-            id:9,
+            id:10,
             title:"IParameterTag",
             content:"IParameterTag",
             description:'',

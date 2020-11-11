@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="/Strinken/assets/img/favicon.ico" type="image/x-icon">
         <link rel="icon" href="/Strinken/assets/img/favicon.ico" type="image/x-icon">
-        <title>Strinken - API - ITag&lt;T&gt; Interface</title>
+        <title>Strinken - API - System Namespace</title>
         <link href="/Strinken/assets/css/highlight.css" rel="stylesheet">
         <link href="/Strinken/assets/css/bootstrap/bootstrap.css" rel="stylesheet">
         <link href="/Strinken/assets/css/adminlte/AdminLTE.css" rel="stylesheet">
@@ -76,10 +76,7 @@
             <aside class="main-sidebar ">
                 <section class="infobar" data-spy="affix" data-offset-top="60" data-offset-bottom="200"> 
                     	
-	<div id="infobar-headings"><h6>On This Page</h6><p><a href="#Summary">Summary</a></p>
-<p><a href="#Syntax">Syntax</a></p>
-<p><a href="#TypeParameters">Type Parameters</a></p>
-<p><a href="#Methods">Methods</a></p>
+	<div id="infobar-headings"><h6>On This Page</h6><p><a href="#Namespaces">Namespaces</a></p>
 <hr class="infobar-hidden">
 </div>
 
@@ -138,24 +135,20 @@
 
                     <ul class="sidebar-menu">
                         
-			<li class="header">Assembly</li>
-		<li><a href="/Strinken/api/Strinken.dll">Strinken<wbr>.dll</a></li>
-		<li class="header">Namespace</li>
-		<li><a href="/Strinken/api/Strinken">Strinken</a></li>
-		<li role="separator" class="divider"></li>
-			<li class="header">Class Types</li>
-				<li><a href="/Strinken/api/Strinken/BaseFilters">BaseFilters</a></li>
-				<li><a href="/Strinken/api/Strinken/CompiledString">CompiledString</a></li>
-				<li><a href="/Strinken/api/Strinken/FilterWithoutArguments">Filter<wbr>Without<wbr>Arguments</a></li>
-				<li><a href="/Strinken/api/Strinken/Parser_1">Parser<wbr>&lt;T&gt;<wbr></a></li>
-				<li><a href="/Strinken/api/Strinken/ParserExtensions">ParserExtensions</a></li>
-				<li><a href="/Strinken/api/Strinken/ValidationResult">ValidationResult</a></li>
-			<li class="header">Interface Types</li>
-				<li><a href="/Strinken/api/Strinken/IFilter">IFilter</a></li>
-				<li><a href="/Strinken/api/Strinken/IParameterTag">IParameterTag</a></li>
-				<li class="selected"><a href="/Strinken/api/Strinken/ITag_1">ITag<wbr>&lt;T&gt;<wbr></a></li>
-				<li><a href="/Strinken/api/Strinken/IToken">IToken</a></li>
+	<li class="header">Namespaces</li>   
+			<li><a href="/Strinken/api/global">global</a></li>
+			<li><a href="/Strinken/api/Microsoft">Microsoft</a></li>
+			<li><a href="/Strinken/api/Strinken">Strinken</a></li>
 
+				<li class="treeview active selected">
+				<a href="/Strinken/api/System">System</a> <a href="#" class="expand"></a>
+				<ul class="treeview-menu">
+			
+				<li class="treeview">
+				<a href="/Strinken/api/System.Runtime">System<wbr>.Runtime</a> <a href="#" class="expand"></a>
+				<ul class="treeview-menu">
+						<li><a href="/Strinken/api/System.Runtime.CompilerServices">System<wbr>.Runtime<wbr>.CompilerServices</a></li>
+</ul></li></ul></li>      
 
                     </ul>
                             
@@ -170,109 +163,32 @@
 
 
 <section class="content-header">
-	<h1>ITag<wbr>&lt;T&gt;<wbr> <small>Interface</small></h1>
+	<h1>System <small>Namespace</small></h1>
 </section>
 <section class="content">
 	
 	
-		<h1 id="Summary">Summary</h1>
-	<div class="lead">
-            Interface describing a tag.
-            </div>
-
-		<div class="panel panel-default">
-  			<div class="panel-body">
-				<div class="row">
-					<div class="col-md-6">
-						<dl class="dl-horizontal">		
-								<dt>Assembly</dt>
-								<dd><a href="/Strinken/api/Strinken.dll">Strinken<wbr>.dll</a></dd>
-
-								<dt>Namespace</dt>
-								<dd><a href="/Strinken/api/Strinken">Strinken</a></dd>
-											
-								<dt>Interfaces</dt>
-								<dd>
-									<ul class="list-unstyled">
-											<li><a href="/Strinken/api/Strinken/IToken">IToken</a></li>								
-									</ul>
-								</dd>
-							
-							
-							
-						</dl>
-					</div>		
-					<div class="col-md-6">
-						<div class="mermaid">
-							graph TD
-	Interface0["IToken"]-.-&gt;Type
-	click Interface0 "/Strinken/api/Strinken/IToken"
-	Type["ITag&lt;T&gt;"]
-class Type type-node
-
-						</div>
-					</div>
-				</div>
-  			</div>
-		</div>
-
-	<h1 id="Syntax">Syntax</h1>
-	<pre><code class="cs">public interface ITag&lt;in T&gt; : IToken</code></pre>
+	
 
 
-
-
-	<h1 id="TypeParameters">Type Parameters</h1>
-	<div class="box">
-		<div class="box-body no-padding table-responsive">
-			<table class="table table-striped table-hover two-cols">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-					<tbody><tr id="typeparam-T">
-						<td>T</td>
-						<td>The type related to the tag.</td>
-					</tr>
-			</tbody></table>
-		</div>
-	</div>	
-
-
-
-
-
-
-
-			<h1 id="Methods">Methods</h1>
+			<h1 id="Namespaces">Namespaces</h1>
 			<div class="box">
 				<div class="box-body no-padding table-responsive">
-					<table class="table table-striped table-hover three-cols">
+					<table class="table table-striped table-hover two-cols">
 						<thead>
 							<tr>
-								<th>Name</th>
-								<th>Value</th>
-								<th>Summary</th>
+								<th>Namespace</th>
+									<th>Summary</th>
 							</tr>
 						</thead>
 							<tbody><tr>
-								<td><a href="/Strinken/api/Strinken/ITag_1/3E13417F">Resolve<wbr>(T)<wbr></a></td>
-								<td>string</td>
-								<td>
-									<div>
-            Resolves the tag.
-            </div>
-								</td>
+								<td><a href="/Strinken/api/System.Runtime">System<wbr>.Runtime</a></td>
+									<td></td>
 							</tr>
 					</tbody></table>
 				</div>
 			</div>
 		
-
-
-
 	
 </section>
                 
