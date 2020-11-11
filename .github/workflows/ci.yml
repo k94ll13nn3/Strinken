@@ -16,12 +16,6 @@ jobs:
         fetch-depth: 0 # for minver
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.100-rc.2.20479.15
-    - name: Setup .NET Core for Wyam
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 2.1.811
     - name: Execute build
       run: |
         dotnet build --configuration Release /nologo
@@ -31,6 +25,11 @@ jobs:
       with:
         name: strinken
         path: artifacts/*
+    - name: Setup .NET Core for Wyam
+      if: contains(github.event.head_commit.message, '[build-doc]') && github.ref == 'refs/heads/master'
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1.811
     - name: Generate doc
       if: contains(github.event.head_commit.message, '[build-doc]') && github.ref == 'refs/heads/master'
       run: |
