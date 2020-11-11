@@ -10,7 +10,6 @@ A parametrized string library! ([Documentation](https://k94ll13nn3.github.io/Str
 ## Installation
 
 - Grab the latest package on [NuGet](https://www.nuget.org/packages/Strinken/).
-- Get the latest CI build on [AppVeyor](https://ci.appveyor.com/project/k94ll13nn3/strinken) (Visual Studio image).
 
 ## Basic example
 
