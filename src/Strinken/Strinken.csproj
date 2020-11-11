@@ -40,7 +40,6 @@
 
   <!-- MinVer properties -->
   <PropertyGroup>
-    <MinVerMinimumMajorMinor>5.0</MinVerMinimumMajorMinor>
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerDefaultPreReleasePhase>ci</MinVerDefaultPreReleasePhase>
   </PropertyGroup>

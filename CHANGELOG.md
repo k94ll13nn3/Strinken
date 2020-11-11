@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.0.0] - 2020-11-11
+
+### Changed
+
+- [**Breaking**] Removed `netstandard1.0` target framework
+- [**Breaking**] Changed `Parser<T>.Filters` property to `GetFilters()` method
+- [**Breaking**] Changed `Parser<T>.ParameterTags` property to `GetParameterTags()` method
+- [**Breaking**] Changed `Parser<T>.Tags` property to `GetTags()` method
+
+### Issues
+
+- [#71](https://github.com/k94ll13nn3/Strinken/issues/71): Remove .NET Standard 1.0
+
 ## [4.1.1] - 2018-08-27
 
 ### Fixed
@@ -56,13 +69,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.2.1] - 2017-07-01
 
-### Fixed 
+### Fixed
 
 - Fix regression : arguments were no longer passed to the filter validation process.
 
 ## [3.2.0] - 2017-06-18
 
-### Added 
+### Added
 
 - New tag : Value tag
 - New tags : Number tags
@@ -84,7 +97,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.1.0] - 2017-04-23
 
-### Added 
+### Added
 
 - New filter : Repeat
 - Add possibility to register and unregister base filters
@@ -167,6 +180,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Initial release.
 
+[5.0.0]: https://github.com/k94ll13nn3/Strinken/compare/v4.1.1...v5.0.0
 [4.1.1]: https://github.com/k94ll13nn3/Strinken/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/k94ll13nn3/Strinken/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/k94ll13nn3/Strinken/compare/v3.3.0...v4.0.0

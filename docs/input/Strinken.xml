@@ -9,7 +9,7 @@
             Action dictionary used by the token stack to resolve the string.
             </summary>
         </member>
-        <member name="F:Strinken.Core.ActionDictionary.items">
+        <member name="F:Strinken.Core.ActionDictionary._items">
             <summary>
             Internal dictionary containing the list of actions and the related token propeties.
             </summary>
@@ -28,48 +28,12 @@
             <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
             <returns>The element with the specified key, or null if the key is not present.</returns>
         </member>
-        <member name="M:Strinken.Core.ActionDictionary.Get(Strinken.Core.TokenType,System.Char,System.Char)">
+        <member name="M:Strinken.Core.ActionDictionary.Get(System.ValueTuple{Strinken.Core.TokenType,System.Char,System.Char})">
             <summary>
             Gets a value in the <see cref="T:Strinken.Core.ActionDictionary"/>.
             </summary>
-            <param name="type">Ttype part of the key of the element to get or set.</param>
-            <param name="operatorSymbol">The operator symbol part of the key  of the element to get or set.</param>
-            <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
+            <param name="key">The key of the element to get or set.</param>
             <returns>The element with the specified key, or null if the key is not present.</returns>
-        </member>
-        <member name="T:Strinken.Core.ActionDictionary.TokenProperties">
-            <summary>
-            Represents a key in the action dictionary.
-            </summary>
-        </member>
-        <member name="M:Strinken.Core.ActionDictionary.TokenProperties.#ctor(Strinken.Core.TokenType,System.Char,System.Char)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Core.ActionDictionary.TokenProperties"/> class.
-            </summary>
-            <param name="type">Ttype part of the key of the element to get or set.</param>
-            <param name="operatorSymbol">The operator symbol part of the key  of the element to get or set.</param>
-            <param name="indicatorSymbol">The indicator symbol part of the key  of the element to get or set.</param>
-        </member>
-        <member name="P:Strinken.Core.ActionDictionary.TokenProperties.TokenType">
-            <summary>
-            Gets the type part of the key of the element to get or set.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.ActionDictionary.TokenProperties.OperatorSymbol">
-            <summary>
-            Gets the operator symbol part of the key  of the element to get or set.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.ActionDictionary.TokenProperties.IndicatorSymbol">
-            <summary>
-            Gets the indicator symbol part of the key  of the element to get or set.
-            </summary>
-        </member>
-        <member name="M:Strinken.Core.ActionDictionary.TokenProperties.Equals(System.Object)">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Core.ActionDictionary.TokenProperties.GetHashCode">
-            <inheritdoc/>
         </member>
         <member name="T:Strinken.Core.BaseOperators">
             <summary>
@@ -86,9 +50,19 @@
             Cursor used to read a string.
             </summary>
         </member>
-        <member name="F:Strinken.Core.Cursor.reader">
+        <member name="F:Strinken.Core.Cursor._reader">
             <summary>
             The reader used to read the string.
+            </summary>
+        </member>
+        <member name="F:Strinken.Core.Cursor._position">
+            <summary>
+            Gets the current position of the cursor.
+            </summary>
+        </member>
+        <member name="F:Strinken.Core.Cursor._value">
+            <summary>
+            Gets the current value of the cursor.
             </summary>
         </member>
         <member name="M:Strinken.Core.Cursor.#ctor(System.String)">
@@ -97,46 +71,8 @@
             </summary>
             <param name="input">The string to read.</param>
         </member>
-        <member name="P:Strinken.Core.Cursor.CharValue">
-            <summary>
-            Gets the current value of the cursor as a <see cref="T:System.Char"/>.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.Cursor.Position">
-            <summary>
-            Gets the current position of the cursor.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.Cursor.Value">
-            <summary>
-            Gets the current value of the cursor.
-            </summary>
-        </member>
         <member name="M:Strinken.Core.Cursor.Dispose">
             <inheritdoc/>
-        </member>
-        <member name="M:Strinken.Core.Cursor.HasEnded">
-            <summary>
-            Indicates if the cursor has reached the end.
-            </summary>
-            <returns>A value indicating whether the cursor as reached the end.</returns>
-        </member>
-        <member name="M:Strinken.Core.Cursor.Next">
-            <summary>
-            Moves the cursor.
-            </summary>
-        </member>
-        <member name="M:Strinken.Core.Cursor.Peek">
-            <summary>
-            Peeks the next character of the cursor.
-            </summary>
-            <returns>The next character of the cursor.</returns>
-        </member>
-        <member name="M:Strinken.Core.Cursor.PeekIsEnd">
-            <summary>
-            Indicates if the next character is the end.
-            </summary>
-            <returns>A value indicating whether the next character is the end.</returns>
         </member>
         <member name="M:Strinken.Core.Cursor.ParseName(System.Collections.Generic.ICollection{System.Int32},Strinken.Core.TokenType)">
             <summary>
@@ -194,6 +130,34 @@
             </summary>
             <returns>The result of the parsing.</returns>
         </member>
+        <member name="M:Strinken.Core.Cursor.GetValueAsChar">
+            <summary>
+            Gets the current value of the cursor as a <see cref="T:System.Char"/>.
+            </summary>
+        </member>
+        <member name="M:Strinken.Core.Cursor.HasEnded">
+            <summary>
+            Indicates if the cursor has reached the end.
+            </summary>
+            <returns>A value indicating whether the cursor as reached the end.</returns>
+        </member>
+        <member name="M:Strinken.Core.Cursor.Next">
+            <summary>
+            Moves the cursor.
+            </summary>
+        </member>
+        <member name="M:Strinken.Core.Cursor.Peek">
+            <summary>
+            Peeks the next character of the cursor.
+            </summary>
+            <returns>The next character of the cursor.</returns>
+        </member>
+        <member name="M:Strinken.Core.Cursor.PeekIsEnd">
+            <summary>
+            Indicates if the next character is the end.
+            </summary>
+            <returns>A value indicating whether the next character is the end.</returns>
+        </member>
         <member name="M:Strinken.Core.Cursor.ParseNameInternal(Strinken.Core.TokenType,System.Collections.Generic.List{System.Int32},Strinken.Core.Operator,Strinken.Core.Indicator)">
             <summary>
             Parses a string inside a token and returns the first name in it.
@@ -203,34 +167,6 @@
             <param name="operatorDefined">The operator defined.</param>
             <param name="indicatorDefined">The indicator defined.</param>
             <returns>The result of the parsing.</returns>
-        </member>
-        <member name="T:Strinken.Core.EngineResult">
-            <summary>
-            Results of the engine's run.
-            </summary>
-        </member>
-        <member name="M:Strinken.Core.EngineResult.#ctor(System.Boolean,Strinken.Core.TokenStack,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Core.EngineResult"/> class.
-            </summary>
-            <param name="success">A value indicating whether the parsing was successful.</param>
-            <param name="stack">The parsed stack.</param>
-            <param name="errorMessage">The message associated to the parsing.</param>
-        </member>
-        <member name="P:Strinken.Core.EngineResult.Success">
-            <summary>
-            Gets or sets a value indicating whether the engine's run succeed.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.EngineResult.Stack">
-            <summary>
-            Gets or sets the resulting stack created after the run in case of success.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.EngineResult.ErrorMessage">
-            <summary>
-            Gets or sets an error message describing the failure in case of failure.
-            </summary>
         </member>
         <member name="T:Strinken.Core.Errors">
             <summary>
@@ -332,53 +268,14 @@
             Gets or sets the resolution method linked to the indicator.
             </summary>
         </member>
-        <member name="T:Strinken.Core.Operator">
-            <summary>
-            An operator that defines a set of indicators.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.Operator.Indicators">
-            <summary>
-            Gets or sets the set of indicators defines by the operator.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.Operator.Symbol">
-            <summary>
-            Gets or sets the symbol linked to the operator.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.Operator.TokenType">
-            <summary>
-            Gets or sets the type of token on which the operator is used.
-            </summary>
-        </member>
         <member name="T:Strinken.Core.ParseResult`1">
             <summary>
-            Base class for all parsing result.
+            Results of the parsing.
             </summary>
-            <typeparam name="T">The type of the parsed data.</typeparam>
         </member>
         <member name="M:Strinken.Core.ParseResult`1.#ctor(System.Boolean,`0,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Core.ParseResult`1"/> class.
-            </summary>
-            <param name="result">A value indicating whether the parsing was successful.</param>
-            <param name="value">The parsed value.</param>
-            <param name="message">The message associated to the parsing.</param>
-        </member>
-        <member name="P:Strinken.Core.ParseResult`1.Result">
-            <summary>
-            Gets a value indicating whether the parsing was successful.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.ParseResult`1.Value">
-            <summary>
-            Gets the parsed value.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.ParseResult`1.Message">
-            <summary>
-            Gets the message associated to the parsing.
+            Results of the parsing.
             </summary>
         </member>
         <member name="M:Strinken.Core.ParseResult`1.Success(`0)">
@@ -439,6 +336,36 @@
         <member name="F:Strinken.Core.ParsingMethod.Hexadecimal">
             <summary>
             Parse an hexadecimal number [0-9a-fA-F].
+            </summary>
+        </member>
+        <member name="T:Strinken.Core.EngineResult">
+            <summary>
+            Results of the engine's run.
+            </summary>
+        </member>
+        <member name="M:Strinken.Core.EngineResult.#ctor(System.Boolean,Strinken.Core.TokenStack,System.String)">
+            <summary>
+            Results of the engine's run.
+            </summary>
+        </member>
+        <member name="T:Strinken.Core.Operator">
+            <summary>
+            An operator that defines a set of indicators.
+            </summary>
+        </member>
+        <member name="M:Strinken.Core.Operator.#ctor(System.Char,Strinken.Core.TokenType,System.Collections.Generic.IEnumerable{Strinken.Core.Indicator})">
+            <summary>
+            An operator that defines a set of indicators.
+            </summary>
+        </member>
+        <member name="T:Strinken.Core.TokenDefinition">
+            <summary>
+            An element in the stack.
+            </summary>
+        </member>
+        <member name="M:Strinken.Core.TokenDefinition.#ctor(System.String,Strinken.Core.TokenType,System.Char,System.Char)">
+            <summary>
+            An element in the stack.
             </summary>
         </member>
         <member name="T:Strinken.Core.ResolutionMethod">
@@ -508,46 +435,55 @@
             <param name="input">The string to process.</param>
             <returns>A <see cref="T:Strinken.Core.EngineResult"/> containing data about the run.</returns>
         </member>
-        <member name="T:Strinken.Core.TokenDefinition">
+        <member name="T:Strinken.Core.TagFactory">
             <summary>
-            An element in the stack.
+            Factory that creates tags.
             </summary>
         </member>
-        <member name="M:Strinken.Core.TokenDefinition.#ctor(System.String,Strinken.Core.TokenType,System.Char,System.Char)">
+        <member name="M:Strinken.Core.TagFactory.Create``1(System.String,System.String,System.Func{``0,System.String})">
             <summary>
-            Initializes a new instance of the <see cref="T:Strinken.Core.TokenDefinition"/> class.
+            Create a new tag.
             </summary>
-            <param name="data">The data related to the token.</param>
-            <param name="type">The type of the token.</param>
-            <param name="operatorSymbol">The operator symbol of the token.</param>
-            <param name="indicatorSymbol">The indicator symbol of the token.</param>
+            <typeparam name="T">The type related to the parser.</typeparam>
+            <param name="tagName">The description of the tag.</param>
+            <param name="tagDescription">The name of the tag.</param>
+            <param name="resolveAction">The action linked to the tag.</param>
+            <returns>The tag.</returns>
         </member>
-        <member name="P:Strinken.Core.TokenDefinition.Data">
+        <member name="T:Strinken.Core.TagFactory.BaseTag`1">
             <summary>
-            Gets the data related to the token (value or name).
+            Private class used to create tags.
             </summary>
+            <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="P:Strinken.Core.TokenDefinition.Type">
+        <member name="F:Strinken.Core.TagFactory.BaseTag`1._resolve">
             <summary>
-            Gets the type of the token.
-            </summary>
-        </member>
-        <member name="P:Strinken.Core.TokenDefinition.OperatorSymbol">
-            <summary>
-            Gets the operator symbol of the token.
+            Action linked to the tag.
             </summary>
         </member>
-        <member name="P:Strinken.Core.TokenDefinition.IndicatorSymbol">
+        <member name="M:Strinken.Core.TagFactory.BaseTag`1.#ctor(System.String,System.String,System.Func{`0,System.String})">
             <summary>
-            Gets the indicator symbol of the token.
+            Initializes a new instance of the <see cref="T:Strinken.Core.TagFactory.BaseTag`1"/> class.
             </summary>
+            <param name="name">The description of the tag.</param>
+            <param name="description">The name of the tag.</param>
+            <param name="resolveAction">The action linked to the tag.</param>
+        </member>
+        <member name="P:Strinken.Core.TagFactory.BaseTag`1.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:Strinken.Core.TagFactory.BaseTag`1.Name">
+            <inheritdoc/>
+        </member>
+        <member name="M:Strinken.Core.TagFactory.BaseTag`1.Resolve(`0)">
+            <inheritdoc/>
         </member>
         <member name="T:Strinken.Core.TokenStack">
             <summary>
             Stack used by the engine to manage a list of tokens.
             </summary>
         </member>
-        <member name="F:Strinken.Core.TokenStack.tokenStack">
+        <member name="F:Strinken.Core.TokenStack._tokenStack">
             <summary>
             Internal stack.
             </summary>
@@ -789,11 +725,6 @@
             The list of registered filters.
             </summary>
         </member>
-        <member name="P:Strinken.BaseFilters.RegisteredFilters">
-            <summary>
-            Gets base filters shared by all parsers.
-            </summary>
-        </member>
         <member name="M:Strinken.BaseFilters.Register(Strinken.IFilter)">
             <summary>
             Registers a filter that will be used as a base filter for all parser built after.
@@ -807,6 +738,11 @@
             Unregisters a filter from the base filters.
             </summary>
             <param name="filterName">The name of the filter to unregister.</param>
+        </member>
+        <member name="M:Strinken.BaseFilters.GetRegisteredFilters">
+            <summary>
+            Gets base filters shared by all parsers.
+            </summary>
         </member>
         <member name="T:Strinken.CompiledString">
             <summary>
@@ -999,17 +935,17 @@
             </summary>
             <typeparam name="T">The type related to the parser.</typeparam>
         </member>
-        <member name="F:Strinken.Parser`1.filters">
+        <member name="F:Strinken.Parser`1._filters">
             <summary>
             Filters used by the parser.
             </summary>
         </member>
-        <member name="F:Strinken.Parser`1.tags">
+        <member name="F:Strinken.Parser`1._tags">
             <summary>
             Tags used by the parser.
             </summary>
         </member>
-        <member name="F:Strinken.Parser`1.parameterTags">
+        <member name="F:Strinken.Parser`1._parameterTags">
             <summary>
             Parameter tags used by the parser.
             </summary>
@@ -1025,19 +961,19 @@
             </summary>
             <param name="ignoreBaseFilters">A value indicating whether the base filters should be ignored.</param>
         </member>
-        <member name="P:Strinken.Parser`1.Filters">
+        <member name="M:Strinken.Parser`1.GetFilters">
             <summary>
             Gets the filters used by the parser.
             </summary>
         </member>
-        <member name="P:Strinken.Parser`1.Tags">
+        <member name="M:Strinken.Parser`1.GetTags">
             <summary>
             Gets the tags used by the parser.
             </summary>
         </member>
-        <member name="P:Strinken.Parser`1.ParameterTags">
+        <member name="M:Strinken.Parser`1.GetParameterTags">
             <summary>
-            Gets the tags used by the parser.
+            Gets the parameters tags used by the parser.
             </summary>
         </member>
         <member name="M:Strinken.Parser`1.Resolve(System.String,`0)">
@@ -1144,53 +1080,17 @@
             <param name="value">The value passed for resolution.</param>
             <returns>An <see cref="T:Strinken.Core.ActionDictionary"/>.</returns>
         </member>
-        <member name="T:Strinken.TagFactory">
-            <summary>
-            Factory that creates tags.
-            </summary>
-        </member>
-        <member name="M:Strinken.TagFactory.Create``1(System.String,System.String,System.Func{``0,System.String})">
-            <summary>
-            Create a new tag.
-            </summary>
-            <typeparam name="T">The type related to the parser.</typeparam>
-            <param name="tagName">The description of the tag.</param>
-            <param name="tagDescription">The name of the tag.</param>
-            <param name="resolveAction">The action linked to the tag.</param>
-            <returns>The tag.</returns>
-        </member>
-        <member name="T:Strinken.TagFactory.BaseTag`1">
-            <summary>
-            Private class used to create tags.
-            </summary>
-            <typeparam name="T">The type related to the parser.</typeparam>
-        </member>
-        <member name="F:Strinken.TagFactory.BaseTag`1.resolve">
-            <summary>
-            Action linked to the tag.
-            </summary>
-        </member>
-        <member name="M:Strinken.TagFactory.BaseTag`1.#ctor(System.String,System.String,System.Func{`0,System.String})">
-            <summary>
-            Initializes a new instance of the <see cref="T:Strinken.TagFactory.BaseTag`1"/> class.
-            </summary>
-            <param name="name">The description of the tag.</param>
-            <param name="description">The name of the tag.</param>
-            <param name="resolveAction">The action linked to the tag.</param>
-        </member>
-        <member name="P:Strinken.TagFactory.BaseTag`1.Description">
-            <inheritdoc/>
-        </member>
-        <member name="P:Strinken.TagFactory.BaseTag`1.Name">
-            <inheritdoc/>
-        </member>
-        <member name="M:Strinken.TagFactory.BaseTag`1.Resolve(`0)">
-            <inheritdoc/>
-        </member>
         <member name="T:Strinken.ValidationResult">
             <summary>
             Class representing the result of the validation process.
             </summary>
+        </member>
+        <member name="M:Strinken.ValidationResult.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Strinken.ValidationResult"/> class.
+            </summary>
+            <param name="message">A message describing why the input is not valid.</param>
+            <param name="isValid">A value indicating whether the input was valid.</param>
         </member>
         <member name="P:Strinken.ValidationResult.Message">
             <summary>
@@ -1200,6 +1100,12 @@
         <member name="P:Strinken.ValidationResult.IsValid">
             <summary>
             Gets or sets a value indicating whether the input was valid.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
             </summary>
         </member>
     </members>
