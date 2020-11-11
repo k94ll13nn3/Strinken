@@ -21,11 +21,11 @@ Here is the list of all base filters that are defined in <strong>Strinken.dll</s
                     <th class="col-md-5">Usage</th>
                 </tr>
             </thead>
-            
+
             <tbody>
                 @{
                     var p = new Parser<object>();
-                    foreach (var filter in p.Filters.OrderBy(x => x.Name))
+                    foreach (var filter in p.GetFilters().OrderBy(x => x.Name))
                     {
                         <tr>
                             @if (string.IsNullOrWhiteSpace(filter.AlternativeName))
@@ -35,30 +35,30 @@ Here is the list of all base filters that are defined in <strong>Strinken.dll</s
                             else
                             {
                                 <td><strong>@filter.Name</strong> or <strong>@filter.AlternativeName</strong></td>
-                            }       
+                            }
                             <td>@filter.Description</td>
                             <td><code>@filter.Usage</code></td>
                         </tr>
                     }
                 }
-            </tbody>				
+            </tbody>
         </table>
     </div>
-</div> 
+</div>
 
 <h1 id="fitlers-modification">Base filters modification</h1>
 
-The <a href="@Context.GetLink("api/Strinken/BaseFilters/")">BaseFilters</a> class provide two 
-methods for interacting with base filters : 
+The <a href="@Context.GetLink("api/Strinken/BaseFilters/")">BaseFilters</a> class provide two
+methods for interacting with base filters :
 <ul>
-    <li><code>Register</code>: Adds a new parser to the list of base filter.</li> 
-    <li><code>Unregister</code>: Removes a parser from the list of base filter.</li> 
+    <li><code>Register</code>: Adds a new parser to the list of base filter.</li>
+    <li><code>Unregister</code>: Removes a parser from the list of base filter.</li>
 </ul>
 
-<p>Each filter in the base filters must have an unique name, and for the deregistration, only the name is used, no type check is done 
+<p>Each filter in the base filters must have an unique name, and for the deregistration, only the name is used, no type check is done
 (to allow the deregistration of base filters presents in the assembly, whose type are not directly available).</p>
 
-<p>A parser will only get the base filters that are currently set at the time of its creation. If you add 
+<p>A parser will only get the base filters that are currently set at the time of its creation. If you add
 or remove a filter from the base filters after the parser creation, the parser won't be affected.</p>
 
 <h1 id="ignoring-filters">Ignoring base filters</h1>
