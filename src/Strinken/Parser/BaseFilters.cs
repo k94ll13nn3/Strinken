@@ -14,7 +14,7 @@ namespace Strinken
         /// <summary>
         /// Lock object for operations on the filters list.
         /// </summary>
-        private static readonly object Lock = new object();
+        private static readonly object Lock = new();
 
         /// <summary>
         /// The list of registered filters.
