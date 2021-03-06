@@ -15,6 +15,7 @@ namespace Strinken.Core
         /// <summary>
         /// The reader used to read the string.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213", Justification = "Null-conditional confuses the code analysis")]
         private readonly StringReader _reader;
 
         /// <summary>

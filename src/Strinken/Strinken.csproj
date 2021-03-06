@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>A parametrized string library!</Description>
@@ -15,6 +15,11 @@
     <RepositoryUrl>https://github.com/k94ll13nn3/Strinken</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageOutputPath>..\..\artifacts\</PackageOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <DeterministicSourcePaths>true</DeterministicSourcePaths>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,6 +45,7 @@
 
   <!-- MinVer properties -->
   <PropertyGroup>
+    <MinVerAutoIncrement>Minor</MinVerAutoIncrement>
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerDefaultPreReleasePhase>ci</MinVerDefaultPreReleasePhase>
   </PropertyGroup>
