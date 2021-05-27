@@ -39,28 +39,28 @@ var searchModule = function() {
     a(
         {
             id:0,
-            title:"IToken",
-            content:"IToken",
+            title:"CompiledString",
+            content:"CompiledString",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/IToken',
-            title:"IToken",
+            url:'/Strinken/api/Strinken/CompiledString',
+            title:"CompiledString",
             description:""
         }
     );
     a(
         {
             id:1,
-            title:"FilterWithoutArguments",
-            content:"FilterWithoutArguments",
+            title:"BaseFilters",
+            content:"BaseFilters",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/FilterWithoutArguments',
-            title:"FilterWithoutArguments",
+            url:'/Strinken/api/Strinken/BaseFilters',
+            title:"BaseFilters",
             description:""
         }
     );
@@ -81,6 +81,20 @@ var searchModule = function() {
     a(
         {
             id:3,
+            title:"IToken",
+            content:"IToken",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/IToken',
+            title:"IToken",
+            description:""
+        }
+    );
+    a(
+        {
+            id:4,
             title:"Parser",
             content:"Parser",
             description:'',
@@ -94,7 +108,21 @@ var searchModule = function() {
     );
     a(
         {
-            id:4,
+            id:5,
+            title:"IParameterTag",
+            content:"IParameterTag",
+            description:'',
+            tags:''
+        },
+        {
+            url:'/Strinken/api/Strinken/IParameterTag',
+            title:"IParameterTag",
+            description:""
+        }
+    );
+    a(
+        {
+            id:6,
             title:"ParserExtensions",
             content:"ParserExtensions",
             description:'',
@@ -108,43 +136,15 @@ var searchModule = function() {
     );
     a(
         {
-            id:5,
-            title:"IFilter",
-            content:"IFilter",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/IFilter',
-            title:"IFilter",
-            description:""
-        }
-    );
-    a(
-        {
-            id:6,
-            title:"CompiledString",
-            content:"CompiledString",
-            description:'',
-            tags:''
-        },
-        {
-            url:'/Strinken/api/Strinken/CompiledString',
-            title:"CompiledString",
-            description:""
-        }
-    );
-    a(
-        {
             id:7,
-            title:"BaseFilters",
-            content:"BaseFilters",
+            title:"FilterWithoutArguments",
+            content:"FilterWithoutArguments",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/BaseFilters',
-            title:"BaseFilters",
+            url:'/Strinken/api/Strinken/FilterWithoutArguments',
+            title:"FilterWithoutArguments",
             description:""
         }
     );
@@ -165,14 +165,14 @@ var searchModule = function() {
     a(
         {
             id:9,
-            title:"IParameterTag",
-            content:"IParameterTag",
+            title:"IFilter",
+            content:"IFilter",
             description:'',
             tags:''
         },
         {
-            url:'/Strinken/api/Strinken/IParameterTag',
-            title:"IParameterTag",
+            url:'/Strinken/api/Strinken/IFilter',
+            title:"IFilter",
             description:""
         }
     );
