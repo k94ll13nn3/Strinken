@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Strinken.Core;
+﻿using System.Collections.ObjectModel;
 
-namespace Strinken
+namespace Strinken;
+
+/// <summary>
+/// Class that handles the base filters and (un)registration of base filters.
+/// </summary>
+public static class BaseFilters
 {
     /// <summary>
-    /// Class that handles the base filters and (un)registration of base filters.
+    /// Lock object for operations on the filters list.
     /// </summary>
-    public static class BaseFilters
-    {
-        /// <summary>
-        /// Lock object for operations on the filters list.
-        /// </summary>
-        private static readonly object Lock = new();
+    private static readonly object Lock = new();
 
-        /// <summary>
-        /// The list of registered filters.
-        /// </summary>
-        private static readonly IDictionary<string, IFilter> InternalRegisteredFilters =
-            new List<IFilter>
-            {
+    /// <summary>
+    /// The list of registered filters.
+    /// </summary>
+    private static readonly IDictionary<string, IFilter> InternalRegisteredFilters =
+        new List<IFilter>
+        {
                 new UpperFilter(),
                 new LengthFilter(),
                 new LowerFilter(),
@@ -30,69 +26,68 @@ namespace Strinken
                 new IfEqualFilter(),
                 new ReplaceFilter(),
                 new RepeatFilter()
-            }.ToDictionary(x => x.Name, x => x);
+        }.ToDictionary(x => x.Name, x => x);
 
-        /// <summary>
-        /// Registers a filter that will be used as a base filter for all parser built after.
-        /// </summary>
-        /// <param name="filter">The filter to register.</param>
-        /// <exception cref="ArgumentNullException">The filter is null.</exception>
-        /// <exception cref="ArgumentException">The filter name is invalid or already present.</exception>
-        public static void Register(IFilter filter)
+    /// <summary>
+    /// Registers a filter that will be used as a base filter for all parser built after.
+    /// </summary>
+    /// <param name="filter">The filter to register.</param>
+    /// <exception cref="ArgumentNullException">The filter is null.</exception>
+    /// <exception cref="ArgumentException">The filter name is invalid or already present.</exception>
+    public static void Register(IFilter filter)
+    {
+        if (filter is null)
         {
-            if (filter is null)
-            {
-                throw new ArgumentNullException(nameof(filter));
-            }
+            throw new ArgumentNullException(nameof(filter));
+        }
 
-            lock (Lock)
+        lock (Lock)
+        {
+            if (!InternalRegisteredFilters.ContainsKey(filter.Name))
             {
-                if (!InternalRegisteredFilters.ContainsKey(filter.Name))
+                filter.Name.ThrowIfInvalidName();
+                if (!string.IsNullOrWhiteSpace(filter.AlternativeName))
                 {
-                    filter.Name.ThrowIfInvalidName();
-                    if (!string.IsNullOrWhiteSpace(filter.AlternativeName))
+                    if (InternalRegisteredFilters.Values.Select(x => x.AlternativeName).Contains(filter.AlternativeName))
                     {
-                        if (InternalRegisteredFilters.Values.Select(x => x.AlternativeName).Contains(filter.AlternativeName))
-                        {
-                            throw new ArgumentException($"A base filter already has {filter.AlternativeName} as its alternative name.");
-                        }
-
-                        filter.AlternativeName.ThrowIfInvalidAlternativeName();
+                        throw new ArgumentException($"A base filter already has {filter.AlternativeName} as its alternative name.");
                     }
 
-                    InternalRegisteredFilters.Add(filter.Name, filter);
+                    filter.AlternativeName.ThrowIfInvalidAlternativeName();
                 }
-                else
-                {
-                    throw new ArgumentException($"{filter.Name} was already registered in the base filter list.");
-                }
+
+                InternalRegisteredFilters.Add(filter.Name, filter);
+            }
+            else
+            {
+                throw new ArgumentException($"{filter.Name} was already registered in the base filter list.");
             }
         }
+    }
 
-        /// <summary>
-        /// Unregisters a filter from the base filters.
-        /// </summary>
-        /// <param name="filterName">The name of the filter to unregister.</param>
-        public static void Unregister(string filterName)
+    /// <summary>
+    /// Unregisters a filter from the base filters.
+    /// </summary>
+    /// <param name="filterName">The name of the filter to unregister.</param>
+    public static void Unregister(string filterName)
+    {
+        lock (Lock)
         {
-            lock (Lock)
+            if (InternalRegisteredFilters.ContainsKey(filterName))
             {
-                if (InternalRegisteredFilters.ContainsKey(filterName))
-                {
-                    InternalRegisteredFilters.Remove(filterName);
-                }
+                InternalRegisteredFilters.Remove(filterName);
             }
         }
+    }
 
-        /// <summary>
-        /// Gets base filters shared by all parsers.
-        /// </summary>
-        internal static IReadOnlyCollection<IFilter> GetRegisteredFilters()
+    /// <summary>
+    /// Gets base filters shared by all parsers.
+    /// </summary>
+    internal static IReadOnlyCollection<IFilter> GetRegisteredFilters()
+    {
+        lock (Lock)
         {
-            lock (Lock)
-            {
-                return new ReadOnlyCollection<IFilter>(InternalRegisteredFilters.Values.ToList());
-            }
+            return new ReadOnlyCollection<IFilter>(InternalRegisteredFilters.Values.ToList());
         }
     }
 }

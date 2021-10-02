@@ -1,24 +1,21 @@
-﻿using Strinken.Core;
+﻿namespace Strinken;
 
-namespace Strinken
+/// <summary>
+/// A compiled string for fast resolution.
+/// </summary>
+public sealed class CompiledString
 {
     /// <summary>
-    /// A compiled string for fast resolution.
+    /// Initializes a new instance of the <see cref="CompiledString"/> class with the specified <see cref="TokenStack"/>.
     /// </summary>
-    public sealed class CompiledString
+    /// <param name="stack">The compiled stack.</param>
+    internal CompiledString(TokenStack stack)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompiledString"/> class with the specified <see cref="TokenStack"/>.
-        /// </summary>
-        /// <param name="stack">The compiled stack.</param>
-        internal CompiledString(TokenStack stack)
-        {
-            Stack = stack;
-        }
-
-        /// <summary>
-        /// The compiled stack.
-        /// </summary>
-        internal TokenStack Stack { get; }
+        Stack = stack;
     }
+
+    /// <summary>
+    /// The compiled stack.
+    /// </summary>
+    internal TokenStack Stack { get; }
 }

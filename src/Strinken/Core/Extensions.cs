@@ -1,84 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Strinken.Core;
 
-namespace Strinken.Core
+/// <summary>
+/// Collection of common extensions methods.
+/// </summary>
+internal static class Extensions
 {
+    private static readonly List<char> ValidAlternativeNameCharacter = new("!%&*./<=>@^|~?$#".ToCharArray());
+
     /// <summary>
-    /// Collection of common extensions methods.
+    /// Tests if a <see cref="char"/> is an invalid token name character i.e. not a-z, A-Z, 0-9, - or _.
     /// </summary>
-    internal static class Extensions
+    /// <param name="c">The <see cref="char"/> to test.</param>
+    /// <returns>A value indicating whether the <see cref="char"/> is an invalid token name character</returns>
+    public static bool IsInvalidTokenNameCharacter(this char c)
     {
-        private static readonly List<char> ValidAlternativeNameCharacter = new("!%&*./<=>@^|~?$#".ToCharArray());
+        return !char.IsLetter(c) && c != '-' && c != '_';
+    }
 
-        /// <summary>
-        /// Tests if a <see cref="char"/> is an invalid token name character i.e. not a-z, A-Z, 0-9, - or _.
-        /// </summary>
-        /// <param name="c">The <see cref="char"/> to test.</param>
-        /// <returns>A value indicating whether the <see cref="char"/> is an invalid token name character</returns>
-        public static bool IsInvalidTokenNameCharacter(this char c)
+    /// <summary>
+    /// Tests if a <see cref="char"/> is an invalid alternative name character i.e. not in <see cref="ValidAlternativeNameCharacter"/>.
+    /// </summary>
+    /// <param name="c">The <see cref="char"/> to test.</param>
+    /// <returns>A value indicating whether the <see cref="char"/> is an invalid alternative name character</returns>
+    public static bool IsInvalidAlternativeNameCharacter(this char c)
+    {
+        return !ValidAlternativeNameCharacter.Contains(c);
+    }
+
+    /// <summary>
+    /// Tests if a <see cref="char"/> is an invalid hexadecimal character i.e. not a-f, A-F or 0-9.
+    /// </summary>
+    /// <param name="c">The <see cref="char"/> to test.</param>
+    /// <returns>A value indicating whether the <see cref="char"/> is an invalid hexadecimal character</returns>
+    public static bool IsInvalidHexadecimalCharacter(this char c)
+    {
+        return !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
+    }
+
+    /// <summary>
+    /// Validates a name and throws a <see cref="ArgumentException"/> if the name is invalid.
+    /// </summary>
+    /// <param name="name">The name to validate.</param>
+    /// <exception cref="ArgumentException">When the name is invalid.</exception>
+    public static void ThrowIfInvalidName(this string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return !char.IsLetter(c) && c != '-' && c != '_';
+            throw new ArgumentException("A name cannot be empty.");
         }
 
-        /// <summary>
-        /// Tests if a <see cref="char"/> is an invalid alternative name character i.e. not in <see cref="ValidAlternativeNameCharacter"/>.
-        /// </summary>
-        /// <param name="c">The <see cref="char"/> to test.</param>
-        /// <returns>A value indicating whether the <see cref="char"/> is an invalid alternative name character</returns>
-        public static bool IsInvalidAlternativeNameCharacter(this char c)
+        for (int i = 0; i < name.Length; i++)
         {
-            return !ValidAlternativeNameCharacter.Contains(c);
-        }
-
-        /// <summary>
-        /// Tests if a <see cref="char"/> is an invalid hexadecimal character i.e. not a-f, A-F or 0-9.
-        /// </summary>
-        /// <param name="c">The <see cref="char"/> to test.</param>
-        /// <returns>A value indicating whether the <see cref="char"/> is an invalid hexadecimal character</returns>
-        public static bool IsInvalidHexadecimalCharacter(this char c)
-        {
-            return !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
-        }
-
-        /// <summary>
-        /// Validates a name and throws a <see cref="ArgumentException"/> if the name is invalid.
-        /// </summary>
-        /// <param name="name">The name to validate.</param>
-        /// <exception cref="ArgumentException">When the name is invalid.</exception>
-        public static void ThrowIfInvalidName(this string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
+            if (name[i].IsInvalidTokenNameCharacter())
             {
-                throw new ArgumentException("A name cannot be empty.");
-            }
-
-            for (int i = 0; i < name.Length; i++)
-            {
-                if (name[i].IsInvalidTokenNameCharacter())
-                {
-                    throw new ArgumentException($"{name[i]} is an invalid character for a name.");
-                }
+                throw new ArgumentException($"{name[i]} is an invalid character for a name.");
             }
         }
+    }
 
-        /// <summary>
-        /// Validates an alternative name and throws a <see cref="ArgumentException"/> if the alternative name is invalid.
-        /// </summary>
-        /// <param name="alternativeName">The alternative name to validate.</param>
-        /// <exception cref="ArgumentException">When the alternative name is invalid.</exception>
-        public static void ThrowIfInvalidAlternativeName(this string alternativeName)
+    /// <summary>
+    /// Validates an alternative name and throws a <see cref="ArgumentException"/> if the alternative name is invalid.
+    /// </summary>
+    /// <param name="alternativeName">The alternative name to validate.</param>
+    /// <exception cref="ArgumentException">When the alternative name is invalid.</exception>
+    public static void ThrowIfInvalidAlternativeName(this string alternativeName)
+    {
+        if (string.IsNullOrWhiteSpace(alternativeName))
         {
-            if (string.IsNullOrWhiteSpace(alternativeName))
-            {
-                return;
-            }
+            return;
+        }
 
-            for (int i = 0; i < alternativeName.Length; i++)
+        for (int i = 0; i < alternativeName.Length; i++)
+        {
+            if (alternativeName[i].IsInvalidAlternativeNameCharacter())
             {
-                if (alternativeName[i].IsInvalidAlternativeNameCharacter())
-                {
-                    throw new ArgumentException($"{alternativeName[i]} is an invalid character for an alternative name.");
-                }
+                throw new ArgumentException($"{alternativeName[i]} is an invalid character for an alternative name.");
             }
         }
     }

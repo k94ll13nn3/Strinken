@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
+﻿namespace Strinken.Core;
 
-namespace Strinken.Core
+/// <summary>
+/// Class that handles the base operators.
+/// </summary>
+internal static class BaseOperators
 {
     /// <summary>
-    /// Class that handles the base operators.
+    /// Gets base operators shared by all parsers.
     /// </summary>
-    internal static class BaseOperators
-    {
-        /// <summary>
-        /// Gets base operators shared by all parsers.
-        /// </summary>
-        internal static IEnumerable<Operator> RegisteredOperators { get; } = new List<Operator>
+    internal static IEnumerable<Operator> RegisteredOperators { get; } = new List<Operator>
         {
             new Operator
             (
@@ -72,5 +70,4 @@ namespace Strinken.Core
                 }
             )
         };
-    }
 }
