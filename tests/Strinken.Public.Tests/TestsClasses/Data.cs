@@ -1,7 +1,6 @@
-namespace Strinken.Public.Tests.TestsClasses
+namespace Strinken.Public.Tests.TestsClasses;
+
+public class Data
 {
-    public class Data
-    {
-        public string Name { get; set; } = string.Empty;
-    }
+    public string Name { get; set; } = string.Empty;
 }
