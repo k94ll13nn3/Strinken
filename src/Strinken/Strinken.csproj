@@ -17,11 +17,6 @@
     <PackageOutputPath>..\..\artifacts\</PackageOutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <DeterministicSourcePaths>true</DeterministicSourcePaths>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="..\..\docs\input\assets\img\logo_64x64.png" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
@@ -34,13 +29,18 @@
     </PackageReference>
   </ItemGroup>
 
-  <!-- SourceLink properties -->
+  <!-- SourceLink properties / https://github.com/dotnet/reproducible-builds-->
   <PropertyGroup>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>embedded</DebugType>
+    <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <DeterministicSourcePaths>true</DeterministicSourcePaths>
   </PropertyGroup>
 
   <!-- MinVer properties -->
@@ -49,13 +49,6 @@
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerDefaultPreReleasePhase>ci</MinVerDefaultPreReleasePhase>
   </PropertyGroup>
-
-  <!-- Update FileVersion after running MinVer to add APPVEYOR_BUILD_NUMBER (on AppVeyor) -->
-  <Target Name="UpdateFileVersion" AfterTargets="MinVer" Condition="'$(APPVEYOR_BUILD_NUMBER)' != ''">
-    <PropertyGroup>
-      <FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).$(APPVEYOR_BUILD_NUMBER)</FileVersion>
-    </PropertyGroup>
-  </Target>
 
   <!-- Generate InternalsVisibleToAttribute -->
   <ItemGroup>
