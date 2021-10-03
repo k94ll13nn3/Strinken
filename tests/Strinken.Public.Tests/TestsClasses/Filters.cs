@@ -10,9 +10,15 @@ public class AppendFilter : IFilter
 
     public string AlternativeName => "..";
 
-    public string Resolve(string value, string[] arguments) => value + string.Concat(arguments);
+    public string Resolve(string value, string[] arguments)
+    {
+        return value + string.Concat(arguments);
+    }
 
-    public bool Validate(string[] arguments) => arguments?.Length >= 1;
+    public bool Validate(string[] arguments)
+    {
+        return arguments?.Length >= 1;
+    }
 }
 
 public class EmptyNameFilter : IFilter
@@ -25,9 +31,15 @@ public class EmptyNameFilter : IFilter
 
     public string AlternativeName => string.Empty;
 
-    public string Resolve(string value, string[] arguments) => value;
+    public string Resolve(string value, string[] arguments)
+    {
+        return value;
+    }
 
-    public bool Validate(string[] arguments) => true;
+    public bool Validate(string[] arguments)
+    {
+        return true;
+    }
 }
 
 public class InvalidNameFilter : IFilter
@@ -40,9 +52,15 @@ public class InvalidNameFilter : IFilter
 
     public string AlternativeName => string.Empty;
 
-    public string Resolve(string value, string[] arguments) => value;
+    public string Resolve(string value, string[] arguments)
+    {
+        return value;
+    }
 
-    public bool Validate(string[] arguments) => true;
+    public bool Validate(string[] arguments)
+    {
+        return true;
+    }
 }
 
 public class InvalidAlternativeNameFilter : IFilter
@@ -55,9 +73,15 @@ public class InvalidAlternativeNameFilter : IFilter
 
     public string AlternativeName => "??name";
 
-    public string Resolve(string value, string[] arguments) => value;
+    public string Resolve(string value, string[] arguments)
+    {
+        return value;
+    }
 
-    public bool Validate(string[] arguments) => true;
+    public bool Validate(string[] arguments)
+    {
+        return true;
+    }
 }
 
 public class SomeFilter : IFilter
@@ -70,9 +94,15 @@ public class SomeFilter : IFilter
 
     public string AlternativeName => "!*";
 
-    public string Resolve(string value, string[] arguments) => value;
+    public string Resolve(string value, string[] arguments)
+    {
+        return value;
+    }
 
-    public bool Validate(string[] arguments) => true;
+    public bool Validate(string[] arguments)
+    {
+        return true;
+    }
 }
 
 public class SomeBisFilter : IFilter
@@ -85,7 +115,13 @@ public class SomeBisFilter : IFilter
 
     public string AlternativeName => "!*";
 
-    public string Resolve(string value, string[] arguments) => value;
+    public string Resolve(string value, string[] arguments)
+    {
+        return value;
+    }
 
-    public bool Validate(string[] arguments) => true;
+    public bool Validate(string[] arguments)
+    {
+        return true;
+    }
 }

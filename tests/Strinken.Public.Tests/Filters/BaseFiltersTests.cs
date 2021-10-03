@@ -1,4 +1,4 @@
-﻿namespace Strinken.Public.Tests.Filters;
+namespace Strinken.Public.Tests.Filters;
 
 public class BaseFiltersTests
 {
@@ -104,8 +104,14 @@ public class BaseFiltersTests
 
         public string AlternativeName { get; }
 
-        public string Resolve(string value, string[] arguments) => value;
+        public string Resolve(string value, string[] arguments)
+        {
+            return value;
+        }
 
-        public bool Validate(string[] arguments) => true;
+        public bool Validate(string[] arguments)
+        {
+            return true;
+        }
     }
 }

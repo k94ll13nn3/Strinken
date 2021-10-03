@@ -1,4 +1,4 @@
-﻿namespace Strinken.Core;
+namespace Strinken.Core;
 
 /// <summary>
 /// Stack used by the engine to manage a list of tokens.

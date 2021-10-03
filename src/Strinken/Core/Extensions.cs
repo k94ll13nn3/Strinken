@@ -1,4 +1,4 @@
-﻿namespace Strinken.Core;
+namespace Strinken.Core;
 
 /// <summary>
 /// Collection of common extensions methods.
@@ -34,7 +34,7 @@ internal static class Extensions
     /// <returns>A value indicating whether the <see cref="char"/> is an invalid hexadecimal character</returns>
     public static bool IsInvalidHexadecimalCharacter(this char c)
     {
-        return !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
+        return c is not ((>= '0' and <= '9') or (>= 'a' and <= 'f') or (>= 'A' and <= 'F'));
     }
 
     /// <summary>
