@@ -1,4 +1,4 @@
-﻿namespace Strinken;
+namespace Strinken;
 
 /// <summary>
 /// Extensions for the <see cref="Parser{T}"/> class.
@@ -12,6 +12,7 @@ public static class ParserExtensions
     /// <param name="filter">The filter to add.</param>
     /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
     /// <typeparam name="T">The type related to the parser.</typeparam>
+    /// <exception cref="ArgumentNullException"><paramref name="parser"/> is null.</exception>
     public static Parser<T> WithFilter<T>(this Parser<T> parser, IFilter filter)
     {
         _ = parser ?? throw new ArgumentNullException(nameof(parser));
@@ -28,6 +29,7 @@ public static class ParserExtensions
     /// <param name="filters">The filters to add.</param>
     /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
     /// <typeparam name="T">The type related to the parser.</typeparam>
+    /// <exception cref="ArgumentNullException"><paramref name="parser"/> or <paramref name="filters"/> are null.</exception>
     public static Parser<T> WithFilters<T>(this Parser<T> parser, IEnumerable<IFilter> filters)
     {
         _ = parser ?? throw new ArgumentNullException(nameof(parser));
@@ -49,6 +51,7 @@ public static class ParserExtensions
     /// <param name="tag">The tag to add.</param>
     /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
     /// <typeparam name="T">The type related to the parser.</typeparam>
+    /// <exception cref="ArgumentNullException"><paramref name="parser"/> is null.</exception>
     public static Parser<T> WithTag<T>(this Parser<T> parser, ITag<T> tag)
     {
         _ = parser ?? throw new ArgumentNullException(nameof(parser));
@@ -67,6 +70,7 @@ public static class ParserExtensions
     /// <param name="resolveAction">The action linked to the tag.</param>
     /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
     /// <typeparam name="T">The type related to the parser.</typeparam>
+    /// <exception cref="ArgumentNullException"><paramref name="parser"/> is null.</exception>
     public static Parser<T> WithTag<T>(this Parser<T> parser, string tagName, string tagDescription, Func<T, string> resolveAction)
     {
         _ = parser ?? throw new ArgumentNullException(nameof(parser));
@@ -84,6 +88,7 @@ public static class ParserExtensions
     /// <param name="tags">The tags to add.</param>
     /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
     /// <typeparam name="T">The type related to the parser.</typeparam>
+    /// <exception cref="ArgumentNullException"><paramref name="parser"/> or <paramref name="tags"/> are null.</exception>
     public static Parser<T> WithTags<T>(this Parser<T> parser, IEnumerable<ITag<T>> tags)
     {
         _ = parser ?? throw new ArgumentNullException(nameof(parser));
@@ -105,6 +110,7 @@ public static class ParserExtensions
     /// <param name="parameterTag">The parameter tag to add.</param>
     /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
     /// <typeparam name="T">The type related to the parser.</typeparam>
+    /// <exception cref="ArgumentNullException"><paramref name="parser"/> is null.</exception>
     public static Parser<T> WithParameterTag<T>(this Parser<T> parser, IParameterTag parameterTag)
     {
         _ = parser ?? throw new ArgumentNullException(nameof(parser));
@@ -121,6 +127,7 @@ public static class ParserExtensions
     /// <param name="parameterTags">The parameter tags to add.</param>
     /// <returns>A <see cref="Parser{T}"/> for chaining.</returns>
     /// <typeparam name="T">The type related to the parser.</typeparam>
+    /// <exception cref="ArgumentNullException"><paramref name="parser"/> or <paramref name="parameterTags"/> are null.</exception>
     public static Parser<T> WithParameterTags<T>(this Parser<T> parser, IEnumerable<IParameterTag> parameterTags)
     {
         _ = parser ?? throw new ArgumentNullException(nameof(parser));

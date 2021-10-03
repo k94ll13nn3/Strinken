@@ -1,4 +1,4 @@
-﻿namespace Strinken.Core;
+namespace Strinken.Core;
 
 /// <summary>
 /// Cursor used to read a string.
@@ -81,12 +81,10 @@ internal sealed class Cursor : IDisposable
     public ParseResult<TokenDefinition> ParseArgument()
     {
         ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, TokenType.Argument);
-        if (result)
-        {
-            return result;
-        }
-
-        return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyArgument);
+        string message = result.Message != Errors.EmptyName ? result.Message : Errors.EmptyArgument;
+        return result
+            ? result
+            : ParseResult<TokenDefinition>.FailureWithMessage(message);
     }
 
     /// <summary>
@@ -96,12 +94,10 @@ internal sealed class Cursor : IDisposable
     public ParseResult<TokenDefinition> ParseFilter()
     {
         ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator }, TokenType.Filter);
-        if (result)
-        {
-            return result;
-        }
-
-        return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyFilter);
+        string message = result.Message != Errors.EmptyName ? result.Message : Errors.EmptyFilter;
+        return result
+            ? result
+            : ParseResult<TokenDefinition>.FailureWithMessage(message);
     }
 
     /// <summary>
@@ -111,12 +107,10 @@ internal sealed class Cursor : IDisposable
     public ParseResult<TokenDefinition> ParseTag()
     {
         ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator }, TokenType.Tag);
-        if (result)
-        {
-            return result;
-        }
-
-        return ParseResult<TokenDefinition>.FailureWithMessage(result.Message != Errors.EmptyName ? result.Message : Errors.EmptyTag);
+        string message = result.Message != Errors.EmptyName ? result.Message : Errors.EmptyTag;
+        return result
+            ? result
+            : ParseResult<TokenDefinition>.FailureWithMessage(message);
     }
 
     /// <summary>
@@ -135,7 +129,7 @@ internal sealed class Cursor : IDisposable
         tokenList.Add(filterParseResult.Value);
         while (_value != SpecialCharacter.FilterSeparator && _value != SpecialCharacter.TokenEndIndicator && !HasEnded())
         {
-            if (_value != SpecialCharacter.ArgumentIndicator && _value != SpecialCharacter.ArgumentSeparator)
+            if (_value is not SpecialCharacter.ArgumentIndicator and not SpecialCharacter.ArgumentSeparator)
             {
                 return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));
             }
@@ -208,7 +202,7 @@ internal sealed class Cursor : IDisposable
 
                 // Start of token or end of string
                 case SpecialCharacter.TokenStartIndicator:
-                case int _ when HasEnded():
+                case int when HasEnded():
                     return ParseResult<TokenDefinition>.Success(new TokenDefinition(builder.ToString(), TokenType.None, '\0', '\0'));
 
                 case SpecialCharacter.TokenEndIndicator when PeekIsEnd():
@@ -352,29 +346,29 @@ internal sealed class Cursor : IDisposable
         {
             switch (_value)
             {
-                case int _ when updatedEnd.Contains(_value):
+                case int when updatedEnd.Contains(_value):
                     string parsedName = builder.ToString();
                     return !string.IsNullOrEmpty(parsedName) ?
                         ParseResult<TokenDefinition>.Success(new TokenDefinition(parsedName, tokenType, operatorDefined.Symbol, indicatorDefined.Symbol)) :
                         ParseResult<TokenDefinition>.FailureWithMessage(Errors.EmptyName);
 
-                case int _ when HasEnded():
+                case int when HasEnded():
                     return ParseResult<TokenDefinition>.FailureWithMessage(Errors.EndOfString);
 
-                case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Name && GetValueAsChar().IsInvalidTokenNameCharacter():
-                case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Binary && GetValueAsChar() != '0' && GetValueAsChar() != '1':
-                case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Octal && (GetValueAsChar() < '0' || GetValueAsChar() > '7'):
-                case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Decimal && (GetValueAsChar() < '0' || GetValueAsChar() > '9'):
-                case int _ when indicatorDefined.ParsingMethod == ParsingMethod.Hexadecimal && GetValueAsChar().IsInvalidHexadecimalCharacter():
-                case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol
+                case int when indicatorDefined.ParsingMethod == ParsingMethod.Name && GetValueAsChar().IsInvalidTokenNameCharacter():
+                case int when indicatorDefined.ParsingMethod == ParsingMethod.Binary && GetValueAsChar() != '0' && GetValueAsChar() != '1':
+                case int when indicatorDefined.ParsingMethod == ParsingMethod.Octal && (GetValueAsChar() < '0' || GetValueAsChar() > '7'):
+                case int when indicatorDefined.ParsingMethod == ParsingMethod.Decimal && (GetValueAsChar() < '0' || GetValueAsChar() > '9'):
+                case int when indicatorDefined.ParsingMethod == ParsingMethod.Hexadecimal && GetValueAsChar().IsInvalidHexadecimalCharacter():
+                case int when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol
                     && ((isSymbolContext == false && GetValueAsChar().IsInvalidTokenNameCharacter()) || (isSymbolContext == true && GetValueAsChar().IsInvalidAlternativeNameCharacter())):
                     return ParseResult<TokenDefinition>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));
 
-                case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !GetValueAsChar().IsInvalidTokenNameCharacter():
+                case int when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !GetValueAsChar().IsInvalidTokenNameCharacter():
                     isSymbolContext = false;
                     break;
 
-                case int _ when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !GetValueAsChar().IsInvalidAlternativeNameCharacter():
+                case int when indicatorDefined.ParsingMethod == ParsingMethod.NameOrSymbol && isSymbolContext == null && !GetValueAsChar().IsInvalidAlternativeNameCharacter():
                     isSymbolContext = true;
                     break;
             }

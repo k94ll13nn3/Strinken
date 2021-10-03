@@ -1,4 +1,4 @@
-﻿namespace Strinken.Core;
+namespace Strinken.Core;
 
 /// <summary>
 /// Results of the parsing.
@@ -30,5 +30,8 @@ internal sealed record ParseResult<T>(bool Result, T Value, string Message)
     /// Defines an implicit conversion of a <see cref="ParseResult{T}"/> to a <see cref="bool"/>.
     /// </summary>
     /// <param name="parseResult">The value to convert.</param>
-    public static implicit operator bool(ParseResult<T> parseResult) => parseResult.Result;
+    public static implicit operator bool(ParseResult<T> parseResult)
+    {
+        return parseResult.Result;
+    }
 }

@@ -5,7 +5,10 @@ internal class DataNameTag : ITag<Data>
     public string Description => "DataName";
     public string Name => "DataName";
 
-    public string Resolve(Data value) => value.Name;
+    public string Resolve(Data value)
+    {
+        return value.Name;
+    }
 }
 
 internal class EmptyNameTag : ITag<string>
@@ -13,7 +16,10 @@ internal class EmptyNameTag : ITag<string>
     public string Description => string.Empty;
     public string Name => string.Empty;
 
-    public string Resolve(string value) => value;
+    public string Resolve(string value)
+    {
+        return value;
+    }
 }
 
 internal class InvalidNameTag : ITag<string>
@@ -21,5 +27,8 @@ internal class InvalidNameTag : ITag<string>
     public string Description => string.Empty;
     public string Name => "dollar$";
 
-    public string Resolve(string value) => value;
+    public string Resolve(string value)
+    {
+        return value;
+    }
 }

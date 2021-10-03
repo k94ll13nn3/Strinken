@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 
 namespace Strinken;
 
@@ -114,10 +114,7 @@ public sealed class Parser<T>
     /// <exception cref="ArgumentNullException">Values is null.</exception>
     public IEnumerable<string> Resolve(string input, IEnumerable<T> values)
     {
-        if (values == null)
-        {
-            throw new ArgumentNullException(nameof(values));
-        }
+        _ = values ?? throw new ArgumentNullException(nameof(values));
 
         return ResolveInternal(Compile(input));
         IEnumerable<string> ResolveInternal(CompiledString compiledString)
@@ -139,15 +136,8 @@ public sealed class Parser<T>
     /// <exception cref="ArgumentNullException">Values is null.</exception>
     public IEnumerable<string> Resolve(CompiledString compiledString, IEnumerable<T> values)
     {
-        if (values == null)
-        {
-            throw new ArgumentNullException(nameof(values));
-        }
-
-        if (compiledString == null)
-        {
-            throw new ArgumentNullException(nameof(compiledString));
-        }
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+        _ = compiledString ?? throw new ArgumentNullException(nameof(compiledString));
 
         return ResolveInternal();
         IEnumerable<string> ResolveInternal()
@@ -167,12 +157,9 @@ public sealed class Parser<T>
     public CompiledString Compile(string input)
     {
         EngineResult runResult = StrinkenEngine.Run(input);
-        if (runResult.Success)
-        {
-            return new CompiledString(runResult.Stack);
-        }
-
-        throw new FormatException(runResult.ErrorMessage);
+        return runResult.Success
+            ? new CompiledString(runResult.Stack)
+            : throw new FormatException(runResult.ErrorMessage);
     }
 
     /// <summary>
@@ -203,6 +190,7 @@ public sealed class Parser<T>
     /// </summary>
     /// <param name="filter">The filter to add.</param>
     /// <exception cref="ArgumentException">The filter name is already present in the filter list.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="filter"/> is null.</exception>
     public void AddFilter(IFilter filter)
     {
         _ = filter ?? throw new ArgumentNullException(nameof(filter));
@@ -232,6 +220,7 @@ public sealed class Parser<T>
     /// </summary>
     /// <param name="tag">The tag to add.</param>
     /// <exception cref="ArgumentException">The tag name is already present in the tag list.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="tag"/> is null.</exception>
     public void AddTag(ITag<T> tag)
     {
         _ = tag ?? throw new ArgumentNullException(nameof(tag));
@@ -250,6 +239,7 @@ public sealed class Parser<T>
     /// </summary>
     /// <param name="parameterTag">The parameter tag to add.</param>
     /// <exception cref="ArgumentException">The parameter tag name is already present in the parameter tag list.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="parameterTag"/> is null.</exception>
     public void AddParameterTag(IParameterTag parameterTag)
     {
         _ = parameterTag ?? throw new ArgumentNullException(nameof(parameterTag));
@@ -413,14 +403,9 @@ public sealed class Parser<T>
                     case ResolutionMethod.Filter:
                         actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                         {
-                            if (_filters.ContainsKey(a[0]))
-                            {
-                                return _filters[a[0]].Resolve(a[1], a.Skip(2).ToArray());
-                            }
-                            else
-                            {
-                                return _filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], a.Skip(2).ToArray());
-                            }
+                            return _filters.ContainsKey(a[0])
+                                ? _filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+                                : _filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], a.Skip(2).ToArray());
                         };
                         break;
 

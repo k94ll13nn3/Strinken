@@ -8,20 +8,20 @@ internal enum TokenType
     /// <summary>
     /// The token is an argument.
     /// </summary>
-    Argument,
+    Argument = 0,
 
     /// <summary>
     /// The token is a tag.
     /// </summary>
-    Tag,
+    Tag = 1,
 
     /// <summary>
     /// The token is a filter.
     /// </summary>
-    Filter,
+    Filter = 2,
 
     /// <summary>
     /// The token is a string that will be rendered without modifications.
     /// </summary>
-    None
+    None = 3
 }
