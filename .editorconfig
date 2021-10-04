@@ -172,23 +172,6 @@ csharp_space_between_method_declaration_parameter_list_parentheses = false
 csharp_space_between_parentheses = false
 csharp_space_between_square_brackets = false
 
-# See https://github.com/dotnet/roslyn/issues/47832
-dotnet_diagnostic.IDE0058.severity = none
-
-# Folder must match namespaces
-dotnet_diagnostic.IDE0130.severity = none
-
-# Populate switch
-dotnet_diagnostic.IDE0010.severity = none
-
-# Incomplete documentation
-dotnet_diagnostic.RCS1140.severity = none
-dotnet_diagnostic.RCS1141.severity = none
-dotnet_diagnostic.RCS1142.severity = none
-
-# S3903 : Move class to namespace. Not detecting file scoped namespace
-dotnet_diagnostic.S3903.severity = silent
-
 # Restore incomplete documentation warning for public api
 [src/Strinken/Parser/*.cs]
 dotnet_diagnostic.RCS1140.severity = warning
