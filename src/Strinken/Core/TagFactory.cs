@@ -22,7 +22,7 @@ internal static class TagFactory
     /// Private class used to create tags.
     /// </summary>
     /// <typeparam name="T">The type related to the parser.</typeparam>
-    private class BaseTag<T> : ITag<T>
+    private sealed class BaseTag<T> : ITag<T>
     {
         /// <summary>
         /// Action linked to the tag.

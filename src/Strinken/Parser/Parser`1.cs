@@ -177,7 +177,7 @@ public sealed class Parser<T>
 
         var tagList = new List<string>();
         var parameterTagList = new List<string>();
-        var filterList = new List<Tuple<string, string[]>>();
+        var filterList = new List<(string name, string[] arguments)>();
         ActionDictionary actions = GenerateActionDictionaryForValidation(tagList, parameterTagList, filterList);
 
         runResult.Stack.Resolve(actions);
@@ -285,7 +285,7 @@ public sealed class Parser<T>
     /// <param name="parameterTagList">The parameter tags to validate.</param>
     /// <param name="filterList">The filters to validate.</param>
     /// <returns>An <see cref="ActionDictionary"/>.</returns>
-    private static ActionDictionary GenerateActionDictionaryForValidation(List<string> tagList, List<string> parameterTagList, List<Tuple<string, string[]>> filterList)
+    private static ActionDictionary GenerateActionDictionaryForValidation(List<string> tagList, List<string> parameterTagList, List<(string name, string[] arguments)> filterList)
     {
         var actions = new ActionDictionary();
         foreach (Operator op in BaseOperators.RegisteredOperators)
@@ -313,7 +313,7 @@ public sealed class Parser<T>
                     case ResolutionMethod.Filter:
                         actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                         {
-                            filterList.Add(Tuple.Create(a[0], a.Skip(2).ToArray()));
+                            filterList.Add((a[0], a.Skip(2).ToArray()));
                             return string.Empty;
                         };
                         break;
@@ -335,7 +335,7 @@ public sealed class Parser<T>
     /// <param name="parameterTagList">The parameter tags to validate.</param>
     /// <param name="filterList">The filters to validate.</param>
     /// <returns>A value indicating whether the input is valid.</returns>
-    private ValidationResult ValidateLists(List<string> tagList, List<string> parameterTagList, List<Tuple<string, string[]>> filterList)
+    private ValidationResult ValidateLists(List<string> tagList, List<string> parameterTagList, List<(string name, string[] arguments)> filterList)
     {
         // Find the first tag that was not registered in the parser.
         foreach (string tag in tagList)
@@ -357,21 +357,21 @@ public sealed class Parser<T>
 
         // Find the first filter that was not registered in the parser.
         IEnumerable<string> alternativeNames = _filters.Values.Select(x => x.AlternativeName).Where(x => !string.IsNullOrWhiteSpace(x));
-        foreach (Tuple<string, string[]> filter in filterList)
+        foreach ((string name, _) in filterList)
         {
-            if (!_filters.ContainsKey(filter.Item1) && !alternativeNames.Contains(filter.Item1))
+            if (!_filters.ContainsKey(name) && !alternativeNames.Contains(name))
             {
-                return new ValidationResult($"{filter.Item1} is not a valid filter.", false);
+                return new ValidationResult($"{name} is not a valid filter.", false);
             }
         }
 
         // Find the first filter that has invalid arguments.
-        foreach (Tuple<string, string[]> filter in filterList)
+        foreach ((string name, string[] arguments) in filterList)
         {
-            if ((_filters.ContainsKey(filter.Item1) && !_filters[filter.Item1].Validate(filter.Item2))
-                || (!_filters.ContainsKey(filter.Item1) && !_filters.Values.First(x => x.AlternativeName == filter.Item1).Validate(filter.Item2)))
+            if ((_filters.ContainsKey(name) && !_filters[name].Validate(arguments))
+                || (!_filters.ContainsKey(name) && !_filters.Values.First(x => x.AlternativeName == name).Validate(arguments)))
             {
-                return new ValidationResult($"{filter.Item1} does not have valid arguments.", false);
+                return new ValidationResult($"{name} does not have valid arguments.", false);
             }
         }
 
