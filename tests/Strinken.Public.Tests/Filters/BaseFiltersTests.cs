@@ -83,7 +83,7 @@ public class BaseFiltersTests
         act.Should().Throw<ArgumentException>().WithMessage("n is an invalid character for an alternative name.");
     }
 
-    private class FilterGenerator : IFilter
+    private sealed class FilterGenerator : IFilter
     {
         public FilterGenerator(string name)
             : this(name, string.Empty)

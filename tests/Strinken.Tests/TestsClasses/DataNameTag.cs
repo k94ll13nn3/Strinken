@@ -1,6 +1,6 @@
 namespace Strinken.Tests.TestsClasses;
 
-internal class DataNameTag : ITag<Data>
+internal sealed class DataNameTag : ITag<Data>
 {
     public string Description => "DataName";
     public string Name => "DataName";
