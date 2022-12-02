@@ -8,7 +8,6 @@ internal sealed class Cursor : IDisposable
     /// <summary>
     /// The reader used to read the string.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213", Justification = "Null-conditional confuses the code analysis")]
     private readonly StringReader _reader;
 
     /// <summary>
@@ -47,10 +46,7 @@ internal sealed class Cursor : IDisposable
     public ParseResult<TokenDefinition> ParseName(ICollection<int> ends, TokenType tokenType)
     {
         var updatedEnd = new List<int> { SpecialCharacter.TokenEndIndicator };
-        foreach (int end in ends ?? Enumerable.Empty<int>())
-        {
-            updatedEnd.Add(end);
-        }
+        updatedEnd.AddRange(ends ?? Enumerable.Empty<int>());
 
         Operator operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == GetValueAsChar() && x.TokenType == tokenType);
         if (operatorDefined is not null)
@@ -273,10 +269,7 @@ internal sealed class Cursor : IDisposable
             ParseResult<IEnumerable<TokenDefinition>> tokenParseResult = ParseTokenAndOutsideString();
             if (tokenParseResult)
             {
-                foreach (TokenDefinition token in tokenParseResult.Value)
-                {
-                    tokenList.Add(token);
-                }
+                tokenList.AddRange(tokenParseResult.Value);
             }
             else
             {
