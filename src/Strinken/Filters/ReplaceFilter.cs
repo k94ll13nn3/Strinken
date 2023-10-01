@@ -1,4 +1,4 @@
-﻿namespace Strinken;
+namespace Strinken;
 
 /// <summary>
 /// Takes some couples of arguments, and replace each occurrence of each first argument by the second.
@@ -35,6 +35,6 @@ internal class ReplaceFilter : IFilter
     /// <inheritdoc/>
     public bool Validate(string[] arguments)
     {
-        return arguments?.Length > 0 && arguments?.Length % 2 == 0;
+        return arguments?.Length > 0 && arguments.Length % 2 == 0;
     }
 }

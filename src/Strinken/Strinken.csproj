@@ -49,7 +49,7 @@
   <PropertyGroup>
     <MinVerAutoIncrement>Minor</MinVerAutoIncrement>
     <MinVerTagPrefix>v</MinVerTagPrefix>
-    <MinVerDefaultPreReleasePhase>ci</MinVerDefaultPreReleasePhase>
+    <MinVerDefaultPreReleasePhaseIdentifiers>ci.0</MinVerDefaultPreReleasePhaseIdentifiers>
   </PropertyGroup>
 
   <!-- Generate InternalsVisibleToAttribute -->
