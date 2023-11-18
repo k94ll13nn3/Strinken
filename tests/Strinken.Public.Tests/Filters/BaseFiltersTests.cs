@@ -83,26 +83,20 @@ public class BaseFiltersTests
         act.Should().Throw<ArgumentException>().WithMessage("n is an invalid character for an alternative name.");
     }
 
-    private sealed class FilterGenerator : IFilter
+    private sealed class FilterGenerator(string name, string alternativeName) : IFilter
     {
         public FilterGenerator(string name)
             : this(name, string.Empty)
         {
         }
 
-        public FilterGenerator(string name, string alternativeName)
-        {
-            Name = name;
-            AlternativeName = alternativeName;
-        }
-
         public string Description => Name;
 
-        public string Name { get; }
+        public string Name { get; } = name;
 
         public string Usage => "";
 
-        public string AlternativeName { get; }
+        public string AlternativeName { get; } = alternativeName;
 
         public string Resolve(string value, string[] arguments)
         {

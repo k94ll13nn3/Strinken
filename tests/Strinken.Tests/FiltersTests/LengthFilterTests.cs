@@ -7,7 +7,7 @@ public class LengthFilterTests
     {
         var filter = new LengthFilter();
 
-        filter.Resolve("DAta", Array.Empty<string>()).Should().Be("4");
+        filter.Resolve("DAta", []).Should().Be("4");
     }
 
     [Fact]
@@ -16,7 +16,7 @@ public class LengthFilterTests
         var filter = new LengthFilter();
 
         filter.Validate(null!).Should().BeTrue();
-        filter.Validate(Array.Empty<string>()).Should().BeTrue();
+        filter.Validate([]).Should().BeTrue();
     }
 
     [Fact]
@@ -24,8 +24,8 @@ public class LengthFilterTests
     {
         var filter = new LengthFilter();
 
-        filter.Validate(new string[] { "" }).Should().BeFalse();
-        filter.Validate(new string[] { "", "" }).Should().BeFalse();
+        filter.Validate([""]).Should().BeFalse();
+        filter.Validate(["", ""]).Should().BeFalse();
     }
 
     [Fact]

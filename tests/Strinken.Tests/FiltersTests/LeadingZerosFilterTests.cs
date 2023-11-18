@@ -7,9 +7,9 @@ public class LeadingZerosFilterTests
     {
         var filter = new LeadingZerosFilter();
 
-        filter.Resolve("3", new string[] { "4" }).Should().Be("0003");
-        filter.Resolve("3000", new string[] { "4" }).Should().Be("3000");
-        filter.Resolve("30000", new string[] { "4" }).Should().Be("30000");
+        filter.Resolve("3", ["4"]).Should().Be("0003");
+        filter.Resolve("3000", ["4"]).Should().Be("3000");
+        filter.Resolve("30000", ["4"]).Should().Be("30000");
     }
 
     [Fact]
@@ -18,7 +18,7 @@ public class LeadingZerosFilterTests
         var filter = new LeadingZerosFilter();
 
         filter.Validate(null!).Should().BeFalse();
-        filter.Validate(Array.Empty<string>()).Should().BeFalse();
+        filter.Validate([]).Should().BeFalse();
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class LeadingZerosFilterTests
     {
         var filter = new LeadingZerosFilter();
 
-        filter.Validate(new string[] { "t" }).Should().BeFalse();
+        filter.Validate(["t"]).Should().BeFalse();
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class LeadingZerosFilterTests
     {
         var filter = new LeadingZerosFilter();
 
-        filter.Validate(new string[] { "", "", "" }).Should().BeFalse();
+        filter.Validate(["", "", ""]).Should().BeFalse();
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class LeadingZerosFilterTests
     {
         var filter = new LeadingZerosFilter();
 
-        filter.Validate(new string[] { "3" }).Should().BeTrue();
+        filter.Validate(["3"]).Should().BeTrue();
     }
 
     [Fact]

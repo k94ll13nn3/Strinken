@@ -1,4 +1,4 @@
-﻿namespace Strinken.Public.Tests.Parser;
+namespace Strinken.Public.Tests.Parser;
 
 public class CompilationTests
 {
@@ -50,8 +50,8 @@ public class CompilationTests
 
         CompiledString compiledString = stringSolver.Compile("The {DataName} is in the kitchen.");
 
-        string[] expected = new[] { "The Lorem is in the kitchen.", "The Ipsum is in the kitchen.", "The Sanctum is in the kitchen." };
-        Data[] data = new[] { new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" } };
+        string[] expected = ["The Lorem is in the kitchen.", "The Ipsum is in the kitchen.", "The Sanctum is in the kitchen."];
+        Data[] data = [new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" }];
         stringSolver.Resolve(compiledString, data).Should().BeEquivalentTo(expected);
     }
 

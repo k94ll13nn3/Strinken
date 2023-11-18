@@ -22,32 +22,24 @@ internal static class TagFactory
     /// Private class used to create tags.
     /// </summary>
     /// <typeparam name="T">The type related to the parser.</typeparam>
-    private sealed class BaseTag<T> : ITag<T>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="BaseTag{T}"/> class.
+    /// </remarks>
+    /// <param name="name">The name of the tag.</param>
+    /// <param name="description">The description of the tag.</param>
+    /// <param name="resolveAction">The action linked to the tag.</param>
+    private sealed class BaseTag<T>(string name, string description, Func<T, string> resolveAction) : ITag<T>
     {
         /// <summary>
         /// Action linked to the tag.
         /// </summary>
-        private readonly Func<T, string> _resolve;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseTag{T}"/> class.
-        /// </summary>
-        /// <param name="name">The description of the tag.</param>
-        /// <param name="description">The name of the tag.</param>
-        /// <param name="resolveAction">The action linked to the tag.</param>
-        public BaseTag(string name, string description, Func<T, string> resolveAction)
-        {
-            _resolve = resolveAction;
-
-            Description = description;
-            Name = name;
-        }
+        private readonly Func<T, string> _resolve = resolveAction;
 
         /// <inheritdoc/>
-        public string Description { get; }
+        public string Description { get; } = description;
 
         /// <inheritdoc/>
-        public string Name { get; }
+        public string Name { get; } = name;
 
         /// <inheritdoc/>
         public string Resolve(T value)

@@ -7,9 +7,9 @@ public class RepeatFilterTests
     {
         var filter = new RepeatFilter();
 
-        filter.Resolve("some string", new string[] { "4" }).Should().Be("some stringsome stringsome stringsome string");
-        filter.Resolve("", new string[] { "4" }).Should().Be("");
-        filter.Resolve("string", new string[] { "1" }).Should().Be("string");
+        filter.Resolve("some string", ["4"]).Should().Be("some stringsome stringsome stringsome string");
+        filter.Resolve("", ["4"]).Should().Be("");
+        filter.Resolve("string", ["1"]).Should().Be("string");
     }
 
     [Fact]
@@ -18,7 +18,7 @@ public class RepeatFilterTests
         var filter = new RepeatFilter();
 
         filter.Validate(null!).Should().BeFalse();
-        filter.Validate(Array.Empty<string>()).Should().BeFalse();
+        filter.Validate([]).Should().BeFalse();
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class RepeatFilterTests
     {
         var filter = new RepeatFilter();
 
-        filter.Validate(new string[] { "t" }).Should().BeFalse();
+        filter.Validate(["t"]).Should().BeFalse();
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class RepeatFilterTests
     {
         var filter = new RepeatFilter();
 
-        filter.Validate(new string[] { "", "", "" }).Should().BeFalse();
+        filter.Validate(["", "", ""]).Should().BeFalse();
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class RepeatFilterTests
     {
         var filter = new RepeatFilter();
 
-        filter.Validate(new string[] { "3" }).Should().BeTrue();
+        filter.Validate(["3"]).Should().BeTrue();
     }
 
     [Fact]

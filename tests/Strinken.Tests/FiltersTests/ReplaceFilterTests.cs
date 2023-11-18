@@ -7,9 +7,9 @@ public class ReplaceFilterTests
     {
         var filter = new ReplaceFilter();
 
-        filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol" }).Should().Be("Merol ipsum");
-        filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol", "ipsum", "-----" }).Should().Be("Merol -----");
-        filter.Resolve("lorem ipsum", new string[] { "lorem", "Merol", "Merol", "-----" }).Should().Be("----- ipsum");
+        filter.Resolve("lorem ipsum", ["lorem", "Merol"]).Should().Be("Merol ipsum");
+        filter.Resolve("lorem ipsum", ["lorem", "Merol", "ipsum", "-----"]).Should().Be("Merol -----");
+        filter.Resolve("lorem ipsum", ["lorem", "Merol", "Merol", "-----"]).Should().Be("----- ipsum");
     }
 
     [Fact]
@@ -18,9 +18,9 @@ public class ReplaceFilterTests
         var filter = new ReplaceFilter();
 
         filter.Validate(null!).Should().BeFalse();
-        filter.Validate(Array.Empty<string>()).Should().BeFalse();
-        filter.Validate(new string[] { "" }).Should().BeFalse();
-        filter.Validate(new string[] { "", "", "" }).Should().BeFalse();
+        filter.Validate([]).Should().BeFalse();
+        filter.Validate([""]).Should().BeFalse();
+        filter.Validate(["", "", ""]).Should().BeFalse();
     }
 
     [Fact]
@@ -28,8 +28,8 @@ public class ReplaceFilterTests
     {
         var filter = new ReplaceFilter();
 
-        filter.Validate(new string[] { "", "" }).Should().BeTrue();
-        filter.Validate(new string[] { "", "", "", "" }).Should().BeTrue();
+        filter.Validate(["", ""]).Should().BeTrue();
+        filter.Validate(["", "", "", ""]).Should().BeTrue();
     }
 
     [Fact]

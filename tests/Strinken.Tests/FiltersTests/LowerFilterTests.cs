@@ -7,7 +7,7 @@ public class LowerFilterTests
     {
         var filter = new LowerFilter();
 
-        filter.Resolve("DAta", Array.Empty<string>()).Should().Be("data");
+        filter.Resolve("DAta", []).Should().Be("data");
     }
 
     [Fact]
@@ -16,7 +16,7 @@ public class LowerFilterTests
         var filter = new LowerFilter();
 
         filter.Validate(null!).Should().BeTrue();
-        filter.Validate(Array.Empty<string>()).Should().BeTrue();
+        filter.Validate([]).Should().BeTrue();
     }
 
     [Fact]
@@ -24,8 +24,8 @@ public class LowerFilterTests
     {
         var filter = new LowerFilter();
 
-        filter.Validate(new string[] { "" }).Should().BeFalse();
-        filter.Validate(new string[] { "", "" }).Should().BeFalse();
+        filter.Validate([""]).Should().BeFalse();
+        filter.Validate(["", ""]).Should().BeFalse();
     }
 
     [Fact]

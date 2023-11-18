@@ -7,7 +7,7 @@ public class IfEqualFilterTests
     {
         var filter = new IfEqualFilter();
 
-        filter.Resolve("data", new string[] { "data", "true", "false" }).Should().Be("true");
+        filter.Resolve("data", ["data", "true", "false"]).Should().Be("true");
     }
 
     [Fact]
@@ -15,7 +15,7 @@ public class IfEqualFilterTests
     {
         var filter = new IfEqualFilter();
 
-        filter.Resolve("value", new string[] { "data", "true", "false" }).Should().Be("false");
+        filter.Resolve("value", ["data", "true", "false"]).Should().Be("false");
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class IfEqualFilterTests
         var filter = new IfEqualFilter();
 
         filter.Validate(null!).Should().BeFalse();
-        filter.Validate(Array.Empty<string>()).Should().BeFalse();
+        filter.Validate([]).Should().BeFalse();
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class IfEqualFilterTests
     {
         var filter = new IfEqualFilter();
 
-        filter.Validate(new string[] { "" }).Should().BeFalse();
+        filter.Validate([""]).Should().BeFalse();
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class IfEqualFilterTests
     {
         var filter = new IfEqualFilter();
 
-        filter.Validate(new string[] { "", "", "" }).Should().BeTrue();
+        filter.Validate(["", "", ""]).Should().BeTrue();
     }
 
     [Fact]

@@ -146,8 +146,8 @@ public class ResolveTests
     {
         Parser<Data> stringSolver = new Parser<Data>().WithTag(new DataNameTag()).WithFilter(new AppendFilter()).WithParameterTag(new BlueParameterTag());
 
-        string[] expected = new[] { "The 5 is in the kitchen.", "The 5 is in the kitchen.", "The 7 is in the kitchen." };
-        Data[] data = new[] { new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" } };
+        string[] expected = ["The 5 is in the kitchen.", "The 5 is in the kitchen.", "The 7 is in the kitchen."];
+        Data[] data = [new Data { Name = "Lorem" }, new Data { Name = "Ipsum" }, new Data { Name = "Sanctum" }];
         stringSolver.Resolve("The {DataName:Length} is in the kitchen.", data).Should().BeEquivalentTo(expected);
     }
 

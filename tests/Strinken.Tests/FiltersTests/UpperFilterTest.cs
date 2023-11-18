@@ -7,7 +7,7 @@ public class UpperFilterTest
     {
         var filter = new UpperFilter();
 
-        filter.Resolve("data", Array.Empty<string>()).Should().Be("DATA");
+        filter.Resolve("data", []).Should().Be("DATA");
     }
 
     [Fact]
@@ -16,7 +16,7 @@ public class UpperFilterTest
         var filter = new UpperFilter();
 
         filter.Validate(null!).Should().BeTrue();
-        filter.Validate(Array.Empty<string>()).Should().BeTrue();
+        filter.Validate([]).Should().BeTrue();
     }
 
     [Fact]
@@ -24,8 +24,8 @@ public class UpperFilterTest
     {
         var filter = new UpperFilter();
 
-        filter.Validate(new string[] { "" }).Should().BeFalse();
-        filter.Validate(new string[] { "", "" }).Should().BeFalse();
+        filter.Validate([""]).Should().BeFalse();
+        filter.Validate(["", ""]).Should().BeFalse();
     }
 
     [Fact]

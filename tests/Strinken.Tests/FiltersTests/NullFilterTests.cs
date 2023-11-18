@@ -7,7 +7,7 @@ public class NullFilterTests
     {
         var filter = new NullFilter();
 
-        filter.Resolve("value", new string[] { "data" }).Should().Be("value");
+        filter.Resolve("value", ["data"]).Should().Be("value");
     }
 
     [Fact]
@@ -15,7 +15,7 @@ public class NullFilterTests
     {
         var filter = new NullFilter();
 
-        filter.Resolve(null!, new string[] { "data" }).Should().Be("data");
+        filter.Resolve(null!, ["data"]).Should().Be("data");
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class NullFilterTests
         var filter = new NullFilter();
 
         filter.Validate(null!).Should().BeFalse();
-        filter.Validate(Array.Empty<string>()).Should().BeFalse();
+        filter.Validate([]).Should().BeFalse();
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class NullFilterTests
     {
         var filter = new NullFilter();
 
-        filter.Validate(new string[] { "", "", "" }).Should().BeFalse();
+        filter.Validate(["", "", ""]).Should().BeFalse();
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class NullFilterTests
     {
         var filter = new NullFilter();
 
-        filter.Validate(new string[] { "data" }).Should().BeTrue();
+        filter.Validate(["data"]).Should().BeTrue();
     }
 
     [Fact]

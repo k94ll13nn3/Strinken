@@ -88,7 +88,7 @@ internal class TokenStack
             switch (currentToken.Type)
             {
                 case TokenType.Argument:
-                    arguments.Insert(0, actions[TokenType.Argument, currentToken.OperatorSymbol, currentToken.IndicatorSymbol](new[] { currentToken.Data }));
+                    arguments.Insert(0, actions[TokenType.Argument, currentToken.OperatorSymbol, currentToken.IndicatorSymbol]([currentToken.Data]));
                     break;
 
                 case TokenType.Filter:
@@ -102,7 +102,7 @@ internal class TokenStack
                     return actions[TokenType.Filter, currentToken.OperatorSymbol, currentToken.IndicatorSymbol](concatenatedArguments);
 
                 case TokenType.Tag:
-                    return actions[TokenType.Tag, currentToken.OperatorSymbol, currentToken.IndicatorSymbol](new[] { currentToken.Data });
+                    return actions[TokenType.Tag, currentToken.OperatorSymbol, currentToken.IndicatorSymbol]([currentToken.Data]);
             }
         }
 
