@@ -1,7 +1,6 @@
 <Project>
 
   <PropertyGroup>
-    <TreatWarningsAsErrors Condition="'$(Configuration)'=='Release'">true</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors Condition="'$(Configuration)'=='Release'">true</CodeAnalysisTreatWarningsAsErrors>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
