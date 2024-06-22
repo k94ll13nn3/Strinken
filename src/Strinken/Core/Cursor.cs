@@ -41,15 +41,15 @@ internal sealed class Cursor : IDisposable
     /// <summary>
     /// Parses a string inside a token and returns the first name in it.
     /// </summary>
-    /// <param name="ends">A list of valid ends.</param>
     /// <param name="tokenType">The type of the token to parse.</param>
+    /// <param name="ends">A list of valid ends.</param>
     /// <returns>The result of the parsing.</returns>
-    public ParseResult<TokenDefinition> ParseName(ICollection<int> ends, TokenType tokenType)
+    public ParseResult<TokenDefinition> ParseName(TokenType tokenType, params int[] ends)
     {
         var updatedEnd = new List<int> { SpecialCharacter.TokenEndIndicator };
         updatedEnd.AddRange(ends ?? Enumerable.Empty<int>());
 
-        Operator operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == GetValueAsChar() && x.TokenType == tokenType);
+        Operator? operatorDefined = BaseOperators.RegisteredOperators.FirstOrDefault(x => x.Symbol == GetValueAsChar() && x.TokenType == tokenType);
         if (operatorDefined is not null)
         {
             Next();
@@ -59,7 +59,7 @@ internal sealed class Cursor : IDisposable
             operatorDefined = BaseOperators.RegisteredOperators.Single(x => x.Symbol == '\0' && x.TokenType == tokenType);
         }
 
-        Indicator indicatorDefined = operatorDefined.Indicators.FirstOrDefault(x => x.Symbol == GetValueAsChar());
+        Indicator? indicatorDefined = operatorDefined.Indicators.FirstOrDefault(x => x.Symbol == GetValueAsChar());
         if (indicatorDefined is not null)
         {
             Next();
@@ -78,7 +78,7 @@ internal sealed class Cursor : IDisposable
     /// <returns>The result of the parsing.</returns>
     public ParseResult<TokenDefinition> ParseArgument()
     {
-        ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator }, TokenType.Argument);
+        ParseResult<TokenDefinition> result = ParseName(TokenType.Argument, SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentSeparator);
         string message = result.Message != Errors.EmptyName ? result.Message : Errors.EmptyArgument;
         return result
             ? result
@@ -91,7 +91,7 @@ internal sealed class Cursor : IDisposable
     /// <returns>The result of the parsing.</returns>
     public ParseResult<TokenDefinition> ParseFilter()
     {
-        ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator }, TokenType.Filter);
+        ParseResult<TokenDefinition> result = ParseName(TokenType.Filter, SpecialCharacter.FilterSeparator, SpecialCharacter.ArgumentIndicator);
         string message = result.Message != Errors.EmptyName ? result.Message : Errors.EmptyFilter;
         return result
             ? result
@@ -104,7 +104,7 @@ internal sealed class Cursor : IDisposable
     /// <returns>The result of the parsing.</returns>
     public ParseResult<TokenDefinition> ParseTag()
     {
-        ParseResult<TokenDefinition> result = ParseName(new[] { SpecialCharacter.FilterSeparator }, TokenType.Tag);
+        ParseResult<TokenDefinition> result = ParseName(TokenType.Tag, SpecialCharacter.FilterSeparator);
         string message = result.Message != Errors.EmptyName ? result.Message : Errors.EmptyTag;
         return result
             ? result
@@ -170,7 +170,7 @@ internal sealed class Cursor : IDisposable
             ParseResult<IEnumerable<TokenDefinition>> filterAndArgumentsParseResult = ParseFilterAndArguments();
             if (filterAndArgumentsParseResult)
             {
-                tokenList.AddRange(filterAndArgumentsParseResult.Value ?? Enumerable.Empty<TokenDefinition>());
+                tokenList.AddRange(filterAndArgumentsParseResult.Value ?? []);
             }
             else
             {
@@ -228,7 +228,7 @@ internal sealed class Cursor : IDisposable
             return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(tokenParseResult.Message);
         }
 
-        tokenList.AddRange(tokenParseResult.Value ?? Enumerable.Empty<TokenDefinition>());
+        tokenList.AddRange(tokenParseResult.Value ?? []);
         if (_value != SpecialCharacter.TokenEndIndicator)
         {
             return ParseResult<IEnumerable<TokenDefinition>>.FailureWithMessage(string.Format(CultureInfo.InvariantCulture, Errors.IllegalCharacter, GetValueAsChar(), _position));

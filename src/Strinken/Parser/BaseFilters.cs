@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 
 namespace Strinken;
 
@@ -15,7 +15,7 @@ public static class BaseFilters
     /// <summary>
     /// The list of registered filters.
     /// </summary>
-    private static readonly IDictionary<string, IFilter> InternalRegisteredFilters =
+    private static readonly Dictionary<string, IFilter> InternalRegisteredFilters =
         new List<IFilter>
         {
                 new UpperFilter(),
@@ -36,10 +36,14 @@ public static class BaseFilters
     /// <exception cref="ArgumentException">The filter name is invalid or already present.</exception>
     public static void Register(IFilter filter)
     {
-        if (filter is null)
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(filter);
+#else
+        if (filter == null)
         {
             throw new ArgumentNullException(nameof(filter));
         }
+#endif
 
         lock (Lock)
         {
@@ -73,10 +77,7 @@ public static class BaseFilters
     {
         lock (Lock)
         {
-            if (InternalRegisteredFilters.ContainsKey(filterName))
-            {
-                InternalRegisteredFilters.Remove(filterName);
-            }
+            InternalRegisteredFilters.Remove(filterName);
         }
     }
 
@@ -87,7 +88,7 @@ public static class BaseFilters
     {
         lock (Lock)
         {
-            return new ReadOnlyCollection<IFilter>(InternalRegisteredFilters.Values.ToList());
+            return new ReadOnlyCollection<IFilter>([.. InternalRegisteredFilters.Values]);
         }
     }
 }

@@ -11,17 +11,17 @@ public sealed class Parser<T>
     /// <summary>
     /// Filters used by the parser.
     /// </summary>
-    private readonly IDictionary<string, IFilter> _filters;
+    private readonly Dictionary<string, IFilter> _filters;
 
     /// <summary>
     /// Tags used by the parser.
     /// </summary>
-    private readonly IDictionary<string, ITag<T>> _tags;
+    private readonly Dictionary<string, ITag<T>> _tags;
 
     /// <summary>
     /// Parameter tags used by the parser.
     /// </summary>
-    private readonly IDictionary<string, IParameterTag> _parameterTags;
+    private readonly Dictionary<string, IParameterTag> _parameterTags;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Parser{T}"/> class.
@@ -37,9 +37,9 @@ public sealed class Parser<T>
     /// <param name="ignoreBaseFilters">A value indicating whether the base filters should be ignored.</param>
     public Parser(bool ignoreBaseFilters)
     {
-        _tags = new Dictionary<string, ITag<T>>();
-        _parameterTags = new Dictionary<string, IParameterTag>();
-        _filters = new Dictionary<string, IFilter>();
+        _tags = [];
+        _parameterTags = [];
+        _filters = [];
 
         if (!ignoreBaseFilters)
         {
@@ -55,7 +55,7 @@ public sealed class Parser<T>
     /// </summary>
     public IReadOnlyCollection<IFilter> GetFilters()
     {
-        return new ReadOnlyCollection<IFilter>(_filters.Values.ToList());
+        return new ReadOnlyCollection<IFilter>([.. _filters.Values]);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public sealed class Parser<T>
     /// </summary>
     public IReadOnlyCollection<ITag<T>> GetTags()
     {
-        return new ReadOnlyCollection<ITag<T>>(_tags.Values.ToList());
+        return new ReadOnlyCollection<ITag<T>>([.. _tags.Values]);
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public sealed class Parser<T>
     /// </summary>
     public IReadOnlyCollection<IParameterTag> GetParameterTags()
     {
-        return new ReadOnlyCollection<IParameterTag>(_parameterTags.Values.ToList());
+        return new ReadOnlyCollection<IParameterTag>([.. _parameterTags.Values]);
     }
 
     /// <summary>
@@ -95,10 +95,14 @@ public sealed class Parser<T>
     /// <exception cref="ArgumentNullException">The compiled string is null.</exception>
     public string Resolve(CompiledString compiledString, T value)
     {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(compiledString);
+#else
         if (compiledString == null)
         {
             throw new ArgumentNullException(nameof(compiledString));
         }
+#endif
 
         ActionDictionary actions = GenerateActionDictionaryForResolution(value);
         return compiledString.Stack.Resolve(actions);
@@ -356,7 +360,7 @@ public sealed class Parser<T>
         }
 
         // Find the first filter that was not registered in the parser.
-        IEnumerable<string> alternativeNames = _filters.Values.Select(x => x.AlternativeName).Where(x => !string.IsNullOrWhiteSpace(x));
+        List<string> alternativeNames = [.. _filters.Values.Select(x => x.AlternativeName).Where(x => !string.IsNullOrWhiteSpace(x))];
         foreach ((string name, _) in filterList)
         {
             if (!_filters.ContainsKey(name) && !alternativeNames.Contains(name))
@@ -403,8 +407,8 @@ public sealed class Parser<T>
                     case ResolutionMethod.Filter:
                         actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                         {
-                            return _filters.ContainsKey(a[0])
-                                ? _filters[a[0]].Resolve(a[1], a.Skip(2).ToArray())
+                            return _filters.TryGetValue(a[0], out IFilter? value)
+                                ? value.Resolve(a[1], a.Skip(2).ToArray())
                                 : _filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], a.Skip(2).ToArray());
                         };
                         break;

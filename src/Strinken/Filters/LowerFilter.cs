@@ -15,6 +15,10 @@ internal class LowerFilter : FilterWithoutArguments
     public override string AlternativeName => string.Empty;
 
     /// <inheritdoc/>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Globalization",
+        "CA1308:Normalize strings to uppercase",
+        Justification = "It is the goal of the filter")]
     public override string Resolve(string value)
     {
         return value?.ToLowerInvariant() ?? string.Empty;

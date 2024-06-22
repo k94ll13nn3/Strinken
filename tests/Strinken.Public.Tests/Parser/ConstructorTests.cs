@@ -21,7 +21,7 @@ public class ConstructorTests
     [Fact]
     public void Constructor_TwoFilterWithSameName_ThrowsArgumentException()
     {
-        Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new AppendFilter(), new AppendFilter() });
+        Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters([new AppendFilter(), new AppendFilter()]);
 
         act.Should().Throw<ArgumentException>().WithMessage("Append was already registered in the filter list.");
     }
@@ -29,7 +29,7 @@ public class ConstructorTests
     [Fact]
     public void Constructor_TwoFilterWithSameAlternativeName_ThrowsArgumentException()
     {
-        Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters(new IFilter[] { new SomeFilter(), new SomeBisFilter() });
+        Action act = () => new Parser<Data>().WithTag(new DataNameTag()).WithFilters([new SomeFilter(), new SomeBisFilter()]);
 
         act.Should().Throw<ArgumentException>().WithMessage("A filter already has !* as its alternative name.");
     }
@@ -37,7 +37,7 @@ public class ConstructorTests
     [Fact]
     public void Constructor_TwoParameterTagsWithSameName_ThrowsArgumentException()
     {
-        Action act = () => new Parser<Data>().WithParameterTags(new IParameterTag[] { new BlueParameterTag(), new BlueParameterTag() });
+        Action act = () => new Parser<Data>().WithParameterTags([new BlueParameterTag(), new BlueParameterTag()]);
 
         act.Should().Throw<ArgumentException>().WithMessage("Blue was already registered in the parameter tag list.");
     }

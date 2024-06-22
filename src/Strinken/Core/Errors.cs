@@ -1,4 +1,4 @@
-﻿namespace Strinken.Core;
+namespace Strinken.Core;
 
 /// <summary>
 /// Class that contains error messages.
@@ -30,6 +30,17 @@ internal static class Errors
     /// </summary>
     public const string EmptyName = "Empty name";
 
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Error: Illegal '{0}' at position {1}
+    /// </summary>
+    public static readonly CompositeFormat IllegalCharacter = CompositeFormat.Parse("Illegal '{0}' at position {1}");
+
+    /// <summary>
+    /// Error: Illegal '{0}' at the end of the string
+    /// </summary>
+    public static readonly CompositeFormat IllegalCharacterAtStringEnd = CompositeFormat.Parse("Illegal '{0}' at the end of the string");
+#else
     /// <summary>
     /// Error: Illegal '{0}' at position {1}
     /// </summary>
@@ -39,4 +50,5 @@ internal static class Errors
     /// Error: Illegal '{0}' at the end of the string
     /// </summary>
     public const string IllegalCharacterAtStringEnd = "Illegal '{0}' at the end of the string";
+#endif
 }

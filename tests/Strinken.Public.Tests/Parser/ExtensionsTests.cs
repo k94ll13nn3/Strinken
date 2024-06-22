@@ -1,4 +1,4 @@
-﻿namespace Strinken.Public.Tests.Parser;
+namespace Strinken.Public.Tests.Parser;
 
 public class ExtensionsTests
 {
@@ -26,7 +26,7 @@ public class ExtensionsTests
     public void WithTags_Called_DoesNotModifyCallingInstance()
     {
         Parser<Data> solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name);
-        Parser<Data> solver2 = solver.WithTags(new[] { new DataNameTag() });
+        Parser<Data> solver2 = solver.WithTags([new DataNameTag()]);
 
         solver.Validate("The {DataName} {Tag} is in the kitchen.").IsValid.Should().BeFalse();
         solver2.Validate("The {DataName} {Tag} is in the kitchen.").IsValid.Should().BeTrue();
@@ -46,7 +46,7 @@ public class ExtensionsTests
     public void WithFilters_Called_DoesNotModifyCallingInstance()
     {
         Parser<Data> solver = new Parser<Data>().WithTag("Tag", "Tag", a => a.Name).WithFilter(new SomeFilter());
-        Parser<Data> solver2 = solver.WithFilters(new[] { new AppendFilter() });
+        Parser<Data> solver2 = solver.WithFilters([new AppendFilter()]);
 
         solver.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeFalse();
         solver2.Validate("The {Tag:Append+One:Some} is in the kitchen.").IsValid.Should().BeTrue();
@@ -66,7 +66,7 @@ public class ExtensionsTests
     public void WithParameterTags_Called_DoesNotModifyCallingInstance()
     {
         Parser<Data> solver = new Parser<Data>().WithParameterTag(new RedParameterTag());
-        Parser<Data> solver2 = solver.WithParameterTags(new[] { new BlueParameterTag() });
+        Parser<Data> solver2 = solver.WithParameterTags([new BlueParameterTag()]);
 
         solver.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeFalse();
         solver2.Validate("The {!Red} {!Blue} is in the kitchen.").IsValid.Should().BeTrue();

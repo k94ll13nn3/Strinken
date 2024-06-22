@@ -70,7 +70,7 @@ public class CompilationTests
     {
         var stringSolver = new Parser<Data>();
 
-        Action act = () => stringSolver.Resolve((CompiledString)null!, Array.Empty<Data>());
+        Action act = () => stringSolver.Resolve((CompiledString)null!, []);
 
         act.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == "compiledString");
     }
