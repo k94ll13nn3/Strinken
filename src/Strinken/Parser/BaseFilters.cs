@@ -34,6 +34,9 @@ public static class BaseFilters
     /// <param name="filter">The filter to register.</param>
     /// <exception cref="ArgumentNullException">The filter is null.</exception>
     /// <exception cref="ArgumentException">The filter name is invalid or already present.</exception>
+#if NET8_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1864:Prefer the 'IDictionary.TryAdd(TKey, TValue)' method", Justification = "Cannot just call TryAdd, this would change the behavior")]
+#endif
     public static void Register(IFilter filter)
     {
 #if NET6_0_OR_GREATER

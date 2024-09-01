@@ -1,4 +1,7 @@
 using System.Collections.ObjectModel;
+#if NET6_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+#endif
 
 namespace Strinken;
 
@@ -53,6 +56,9 @@ public sealed class Parser<T>
     /// <summary>
     /// Gets the filters used by the parser.
     /// </summary>
+#if NET6_0_OR_GREATER
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Won't change to avoid breaking change")]
+#endif
     public IReadOnlyCollection<IFilter> GetFilters()
     {
         return new ReadOnlyCollection<IFilter>([.. _filters.Values]);
@@ -61,6 +67,9 @@ public sealed class Parser<T>
     /// <summary>
     /// Gets the tags used by the parser.
     /// </summary>
+#if NET6_0_OR_GREATER
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Won't change to avoid breaking change")]
+#endif
     public IReadOnlyCollection<ITag<T>> GetTags()
     {
         return new ReadOnlyCollection<ITag<T>>([.. _tags.Values]);
@@ -69,6 +78,9 @@ public sealed class Parser<T>
     /// <summary>
     /// Gets the parameters tags used by the parser.
     /// </summary>
+#if NET6_0_OR_GREATER
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Won't change to avoid breaking change")]
+#endif
     public IReadOnlyCollection<IParameterTag> GetParameterTags()
     {
         return new ReadOnlyCollection<IParameterTag>([.. _parameterTags.Values]);

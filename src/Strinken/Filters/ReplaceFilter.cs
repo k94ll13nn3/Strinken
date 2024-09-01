@@ -25,7 +25,11 @@ internal class ReplaceFilter : IFilter
         {
             for (int i = 0; i < arguments.Length / 2; i++)
             {
+#if NET6_0_OR_GREATER
+                newValue = newValue.Replace(arguments[i * 2], arguments[(i * 2) + 1], StringComparison.OrdinalIgnoreCase);
+#else
                 newValue = newValue.Replace(arguments[i * 2], arguments[(i * 2) + 1]);
+#endif
             }
         }
 
