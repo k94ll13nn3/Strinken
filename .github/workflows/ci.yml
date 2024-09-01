@@ -1,44 +1,48 @@
 on:
-  push:
-    branches:
-    - main
-  pull_request:
+    push:
+        branches:
+            - main
+    pull_request:
 
 jobs:
-  build:
-    name: windows-latest
-    runs-on: windows-latest
+    build:
+        name: windows-latest
+        runs-on: windows-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 # for minver
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-    - name: Setup .NET Core for Wyam
-      if: contains(github.event.head_commit.message, '[build-doc]') && github.ref == 'refs/heads/main'
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 2.1.811
-    - name: Execute build
-      run: |
-        dotnet build --configuration Release /nologo
-        dotnet test --configuration Release
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: strinken
-        path: artifacts/*
-    - name: Generate doc
-      if: contains(github.event.head_commit.message, '[build-doc]') && github.ref == 'refs/heads/main'
-      run: |
-        dotnet tool install -g wyam.tool
-        wyam build docs
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      if: contains(github.event.head_commit.message, '[build-doc]') && github.ref == 'refs/heads/main'
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/output
-        commit_message: Update docs with commit
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # for minver
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+            - name: Setup .NET 6
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 6.0.425
+            - name: Setup .NET Core for Wyam
+              if: contains(github.event.head_commit.message, '[build-doc]') && github.ref == 'refs/heads/main'
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 2.1.811
+            - name: Execute build
+              run: |
+                  dotnet build --configuration Release /nologo
+                  dotnet test --configuration Release
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: strinken
+                  path: artifacts/*
+            - name: Generate doc
+              if: contains(github.event.head_commit.message, '[build-doc]') && github.ref == 'refs/heads/main'
+              run: |
+                  dotnet tool install -g wyam.tool
+                  wyam build docs
+            - name: Deploy
+              uses: peaceiris/actions-gh-pages@v3
+              if: contains(github.event.head_commit.message, '[build-doc]') && github.ref == 'refs/heads/main'
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: docs/output
+                  commit_message: Update docs with commit
