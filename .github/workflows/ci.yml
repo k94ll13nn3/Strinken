@@ -16,6 +16,10 @@ jobs:
                   fetch-depth: 0 # for minver
             - name: Setup .NET
               uses: actions/setup-dotnet@v4
+            - name: Setup .NET 5
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 5.0.408
             - name: Setup .NET 6
               uses: actions/setup-dotnet@v4
               with:
