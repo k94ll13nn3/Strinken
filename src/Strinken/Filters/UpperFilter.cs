@@ -1,4 +1,4 @@
-﻿namespace Strinken;
+namespace Strinken;
 
 /// <summary>
 /// Transforms the input to uppercase.

@@ -10,7 +10,11 @@ public static class BaseFilters
     /// <summary>
     /// Lock object for operations on the filters list.
     /// </summary>
+#if NET9_0_OR_GREATER
+    private static readonly Lock Lock = new();
+#else
     private static readonly object Lock = new();
+#endif
 
     /// <summary>
     /// The list of registered filters.

@@ -1,6 +1,6 @@
 namespace Strinken.Public.Tests.TestsClasses;
 
-public class Data
+internal sealed class Data
 {
     public string Name { get; set; } = string.Empty;
 }

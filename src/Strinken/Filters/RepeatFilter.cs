@@ -1,4 +1,4 @@
-﻿namespace Strinken;
+namespace Strinken;
 
 /// <summary>
 /// Repeats the input as many times as specified.

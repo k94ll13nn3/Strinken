@@ -1,6 +1,6 @@
 ﻿namespace Strinken.Public.Tests.TestsClasses;
 
-public class BlueParameterTag : IParameterTag
+internal sealed class BlueParameterTag : IParameterTag
 {
     public string Description => "Blue";
     public string Name => "Blue";
@@ -11,7 +11,7 @@ public class BlueParameterTag : IParameterTag
     }
 }
 
-public class EmptyNameParameterTag : IParameterTag
+internal sealed class EmptyNameParameterTag : IParameterTag
 {
     public string Description => string.Empty;
     public string Name => string.Empty;
@@ -22,7 +22,7 @@ public class EmptyNameParameterTag : IParameterTag
     }
 }
 
-public class InvalidNameParameterTag : IParameterTag
+internal sealed class InvalidNameParameterTag : IParameterTag
 {
     public string Description => string.Empty;
     public string Name => "dollar$";
@@ -33,7 +33,7 @@ public class InvalidNameParameterTag : IParameterTag
     }
 }
 
-public class RedParameterTag : IParameterTag
+internal sealed class RedParameterTag : IParameterTag
 {
     public string Description => "Red";
     public string Name => "Red";

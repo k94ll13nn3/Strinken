@@ -1,4 +1,4 @@
-﻿namespace Strinken.Tests.FiltersTests;
+namespace Strinken.Tests.FiltersTests;
 
 public class RepeatFilterTests
 {

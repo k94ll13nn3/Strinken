@@ -1,4 +1,4 @@
-﻿namespace Strinken;
+namespace Strinken;
 
 /// <summary>
 /// Base class for all filters that do not have arguments.

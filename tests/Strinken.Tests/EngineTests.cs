@@ -1,4 +1,4 @@
-﻿using Strinken.Core;
+using Strinken.Core;
 
 namespace Strinken.Tests;
 

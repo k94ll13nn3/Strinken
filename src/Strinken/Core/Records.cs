@@ -1,4 +1,4 @@
-﻿namespace Strinken.Core;
+namespace Strinken.Core;
 
 /// <summary>
 /// Results of the engine's run.

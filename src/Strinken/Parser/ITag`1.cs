@@ -1,4 +1,4 @@
-﻿namespace Strinken;
+namespace Strinken;
 
 /// <summary>
 /// Interface describing a tag.

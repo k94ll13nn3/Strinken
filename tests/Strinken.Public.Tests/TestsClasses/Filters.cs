@@ -1,6 +1,6 @@
 namespace Strinken.Public.Tests.TestsClasses;
 
-public class AppendFilter : IFilter
+internal sealed class AppendFilter : IFilter
 {
     public string Description => "Append";
 
@@ -21,7 +21,7 @@ public class AppendFilter : IFilter
     }
 }
 
-public class EmptyNameFilter : IFilter
+internal sealed class EmptyNameFilter : IFilter
 {
     public string Description => string.Empty;
 
@@ -42,7 +42,7 @@ public class EmptyNameFilter : IFilter
     }
 }
 
-public class InvalidNameFilter : IFilter
+internal sealed class InvalidNameFilter : IFilter
 {
     public string Description => string.Empty;
 
@@ -63,7 +63,7 @@ public class InvalidNameFilter : IFilter
     }
 }
 
-public class InvalidAlternativeNameFilter : IFilter
+internal sealed class InvalidAlternativeNameFilter : IFilter
 {
     public string Description => string.Empty;
 
@@ -84,7 +84,7 @@ public class InvalidAlternativeNameFilter : IFilter
     }
 }
 
-public class SomeFilter : IFilter
+internal sealed class SomeFilter : IFilter
 {
     public string Description => "Some";
 
@@ -105,7 +105,7 @@ public class SomeFilter : IFilter
     }
 }
 
-public class SomeBisFilter : IFilter
+internal sealed class SomeBisFilter : IFilter
 {
     public string Description => "SomeBis";
 

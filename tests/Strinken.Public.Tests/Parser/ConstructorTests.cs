@@ -1,4 +1,4 @@
-﻿namespace Strinken.Public.Tests.Parser;
+namespace Strinken.Public.Tests.Parser;
 
 public class ConstructorTests
 {
