@@ -420,8 +420,8 @@ public sealed class Parser<T>
                         actions[op.TokenType, op.Symbol, ind.Symbol] = a =>
                         {
                             return _filters.TryGetValue(a[0], out IFilter? value)
-                                ? value.Resolve(a[1], a.Skip(2).ToArray())
-                                : _filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], a.Skip(2).ToArray());
+                                ? value.Resolve(a[1], [.. a.Skip(2)])
+                                : _filters.SingleOrDefault(x => x.Value.AlternativeName == a[0]).Value.Resolve(a[1], [.. a.Skip(2)]);
                         };
                         break;
 

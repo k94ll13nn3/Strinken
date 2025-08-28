@@ -227,7 +227,7 @@ public class ActionsTests
             [TokenType.Filter, '\0', '\0'] = a =>
             {
                 numberOfCall++;
-                filterSeen.Add(a[0], a.Skip(2).ToArray());
+                filterSeen.Add(a[0], [.. a.Skip(2)]);
                 return a[0];
             },
             [TokenType.Argument, '\0', '\0'] = a => a[0]
@@ -254,7 +254,7 @@ public class ActionsTests
             [TokenType.Filter, '\0', '\0'] = a =>
             {
                 numberOfCall++;
-                filterSeen.Add(a[0], a.Skip(2).ToArray());
+                filterSeen.Add(a[0], [.. a.Skip(2)]);
                 return a[0];
             },
             [TokenType.Argument, '\0', '\0'] = a => a[0]
@@ -284,7 +284,7 @@ public class ActionsTests
             [TokenType.Filter, '\0', '\0'] = a =>
             {
                 numberOfCall++;
-                filterSeen.Add(a[0], a.Skip(2).ToArray());
+                filterSeen.Add(a[0], [.. a.Skip(2)]);
                 return a[0];
             }
         };
@@ -312,7 +312,7 @@ public class ActionsTests
             [TokenType.Filter, '\0', '\0'] = a =>
             {
                 numberOfCall++;
-                filterSeen.Add(a[0], a.Skip(2).ToArray());
+                filterSeen.Add(a[0], [.. a.Skip(2)]);
                 return a[0];
             },
             [TokenType.Argument, '\0', '\0'] = a => a[0]
@@ -435,7 +435,7 @@ public class ActionsTests
             [TokenType.Filter, '\0', '\0'] = a =>
             {
                 numberOfCall++;
-                filterSeen.Add(a[0], a.Skip(2).ToArray());
+                filterSeen.Add(a[0], [.. a.Skip(2)]);
                 return a[0];
             }
         };
